@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/bottom_nav_home"
+        android:icon="@drawable/ic_menu_home"
+        android:title="主页" />
+
+    <item
+        android:id="@+id/bottom_nav_board"
+        android:icon="@drawable/ic_menu_article"
+        android:title="帖子" />
+
+    <item
+        android:id="@+id/bottom_nav_mail"
+        android:icon="@drawable/ic_menu_mail"
+        android:title="邮箱" />
+
+</menu>
