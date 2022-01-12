@@ -11,13 +11,13 @@ public class Board {
     public String id;
     public String name;
     public String section;
-    public boolean isDisplayed;
+    public boolean favourite;
 
-    public Board(@NonNull String id, String name, String section, boolean isDisplayed) {
+    public Board(@NonNull String id, String name, String section, boolean favourite) {
         this.id = id;
         this.name = name;
         this.section = section;
-        this.isDisplayed = isDisplayed;
+        this.favourite = favourite;
     }
 
     @NonNull
@@ -45,11 +45,11 @@ public class Board {
         this.section = section;
     }
 
-    public boolean isDisplayed() {
-        return isDisplayed;
+    public boolean isFavourite() {
+        return favourite;
     }
 
-    public void setDisplayed(boolean displayed) {
-        isDisplayed = displayed;
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 }

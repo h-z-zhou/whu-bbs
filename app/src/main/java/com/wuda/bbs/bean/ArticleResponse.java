@@ -5,11 +5,13 @@ import java.util.List;
 
 public class ArticleResponse {
     boolean success;
-    int currentPage;
-    int totalPage;
+    Integer currentPage;
+    Integer totalPage;
     List<Article> articleList;
 
     public ArticleResponse() {
+        currentPage = 1;
+        totalPage = 1;
         articleList = new ArrayList<>();
     }
 
@@ -21,7 +23,7 @@ public class ArticleResponse {
         this.success = success;
     }
 
-    public int getCurrentPage() {
+    public Integer getCurrentPage() {
         return currentPage;
     }
 
@@ -29,7 +31,7 @@ public class ArticleResponse {
         this.currentPage = currentPage;
     }
 
-    public int getTotalPage() {
+    public Integer getTotalPage() {
         return totalPage;
     }
 

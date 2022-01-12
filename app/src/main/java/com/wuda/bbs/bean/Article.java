@@ -8,11 +8,12 @@ public class Article {
     String GID;
     String replyNum;
     String time;
+    String flag;
 
     public Article() {
     }
 
-    public Article(String boardName, String boardID, String title, String author, String GID, String replyNum, String time) {
+    public Article(String boardName, String boardID, String title, String author, String GID, String replyNum, String time, String flag) {
         this.boardName = boardName;
         this.boardID = boardID;
         this.title = title;
@@ -20,6 +21,7 @@ public class Article {
         this.GID = GID;
         this.replyNum = replyNum;
         this.time = time;
+        this.flag = flag;
     }
 
     public String getBoardName() {
@@ -76,5 +78,13 @@ public class Article {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 }

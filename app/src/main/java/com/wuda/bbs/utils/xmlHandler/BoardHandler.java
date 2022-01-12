@@ -19,8 +19,6 @@ public class BoardHandler extends DefaultHandler {
     public void startDocument() throws SAXException {
         super.startDocument();
         boardList = new ArrayList<>();
-        boardList.add(new Board("recomm", "推荐", "com.wuda.bbs.local", true));
-        boardList.add(new Board("hot", "十大热点", "com.wuda.bbs.local", true));
     }
 
     @Override

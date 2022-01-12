@@ -73,7 +73,8 @@ public class HtmlParser {
         return articleResponse;
     }
 
-    public static List<Board> parseFavoriteBoard(String htmlData) {
+    public static List<Board> parseFavouriteBoard(String htmlData) {
+
         List<Board> favBoardList = new ArrayList<>();
 
         Document doc = Jsoup.parse(htmlData);

@@ -11,14 +11,17 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.wuda.bbs.R;
+import com.wuda.bbs.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 drawer.openDrawer(GravityCompat.START);
 
+            }
+        });
+
+        drawer_nav.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                startActivity(intent);
+//                drawer.close();
             }
         });
 

@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.Board;
 import com.wuda.bbs.ui.adapter.ArticleRecyclerAdapter;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.network.MobileService;

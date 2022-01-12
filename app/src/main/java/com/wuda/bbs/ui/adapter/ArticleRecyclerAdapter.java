@@ -23,19 +23,19 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecyclerAdapter.ViewHolder> {
 
     Context mContext;
-    boolean mAddBoard;  // 在推荐文章，热点，新帖等多板块的内容上添加 board
+//    boolean mAddBoardName;  // 在推荐文章，热点，新帖等多板块的内容上添加 board
     List<Article> mArticleList;
 
-    public ArticleRecyclerAdapter(Context context, List<Article> articleList, boolean addBoard) {
-        this.mContext = context;
-        this.mArticleList = articleList;
-        this.mAddBoard = addBoard;
-    }
+//    public ArticleRecyclerAdapter(Context context, List<Article> articleList, boolean addBoard) {
+//        this.mContext = context;
+//        this.mArticleList = articleList;
+//        this.mAddBoardName = addBoard;
+//    }
 
     public ArticleRecyclerAdapter(Context mContext, List<Article> mArticleList) {
         this.mContext = mContext;
         this.mArticleList = mArticleList;
-        this.mAddBoard = false;
+//        this.mAddBoardName = false;
     }
 
     @NonNull
@@ -55,11 +55,17 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         } else {
             holder.replyNum_tv.setText(article.getReplyNum());
         }
-        if (!mAddBoard) {
-            holder.content_tv.setText(article.getTitle());
-        }
-        else {
+
+        if (article.getFlag() == null) {
             holder.content_tv.setText(buildSpannableContent(article));
+        } else {
+            SpannableStringBuilder content = new SpannableStringBuilder();
+            if (article.getFlag().equals("TOP")) {
+                content.append("#顶置# ");
+                content.setSpan(new ForegroundColorSpan(Color.parseColor("#eb507e")), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            content.append(article.getTitle());
+            holder.content_tv.setText(content);
         }
     }
 

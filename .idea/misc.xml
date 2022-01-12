@@ -22,10 +22,13 @@
         <entry key="app/src/main/res/drawable/ic_short_text.xml" value="0.18611111111111112" />
         <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.18611111111111112" />
         <entry key="app/src/main/res/layout/activity_app.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/activity_article_detail.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.26222826086956524" />
         <entry key="app/src/main/res/layout/article_container_fragment.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/article_detail_main_item.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/article_detail_reply_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/article_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/article_view.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/board_fragment.xml" value="0.3359375" />
@@ -33,7 +36,7 @@
         <entry key="app/src/main/res/layout/bottom_nav_main.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/contact_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.20380434782608695" />
-        <entry key="app/src/main/res/layout/drawer_nav_header_main.xml" value="0.178125" />
+        <entry key="app/src/main/res/layout/drawer_nav_header_main.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/fragment_contact.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/hot_fragment.xml" value="0.3359375" />

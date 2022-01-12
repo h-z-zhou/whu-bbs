@@ -14,17 +14,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.ArticleResponse;
 import com.wuda.bbs.bean.Board;
 import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.BoardDao;
-import com.wuda.bbs.ui.adapter.BoardViewPager2Adapter;
 import com.wuda.bbs.utils.network.MobileService;
+import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -60,7 +61,7 @@ public class BoardFragment extends Fragment {
         View view = inflater.inflate(R.layout.board_fragment, container, false);
         board_tl = view.findViewById(R.id.board_tabLayout);
         board_vp2 = view.findViewById(R.id.board_viewPager2);
-
+        requestFavouriteBoardsFromServer();
         return view;
     }
 
@@ -69,19 +70,33 @@ public class BoardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(BoardViewModel.class);
 
+//        board_vp2.setAdapter(new BoardViewPager2Adapter(getContext(), mViewModel.favoriteBoardList.getValue()));
+        board_vp2.setAdapter(new FragmentStateAdapter(requireActivity().getSupportFragmentManager(), getLifecycle()) {
+            @NonNull
+            @Override
+            public Fragment createFragment(int position) {
 
-        board_vp2.setAdapter(new BoardViewPager2Adapter(getContext(), mViewModel.displacedBoardList.getValue()));
+                BoardArticleFragment boardArticleFragment = new BoardArticleFragment();
+                boardArticleFragment.setBoard(mViewModel.favoriteBoardList.getValue().get(position));
+                return boardArticleFragment;
+            }
+
+            @Override
+            public int getItemCount() {
+                return mViewModel.favoriteBoardList.getValue().size();
+            }
+        });
 
         new TabLayoutMediator(board_tl, board_vp2, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText(mViewModel.displacedBoardList.getValue().get(position).getName());
+                tab.setText(mViewModel.favoriteBoardList.getValue().get(position).getName());
             }
         }).attach();
 
         eventBinding();
 
-        queryBoardsFromDB();
+//        queryBoardsFromDB();
     }
 
     @Override
@@ -92,9 +107,8 @@ public class BoardFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void eventBinding() {
-        mViewModel.displacedBoardList.observe(getViewLifecycleOwner(), boardList -> {
+        mViewModel.favoriteBoardList.observe(getViewLifecycleOwner(), boardList -> {
             if (board_vp2.getAdapter() != null) {
-                ((BoardViewPager2Adapter)board_vp2.getAdapter()).updateBoardList(boardList);
                 board_vp2.getAdapter().notifyDataSetChanged();
             }
         });
@@ -103,8 +117,6 @@ public class BoardFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mViewModel.currentBoardIdx.setValue(tab.getPosition());
-                Toast.makeText(getContext(), Integer.valueOf(tab.getPosition()).toString(), Toast.LENGTH_SHORT).show();
-                requestArticleFromServer();
             }
 
             @Override
@@ -125,20 +137,19 @@ public class BoardFragment extends Fragment {
         BoardDao boardDao = AppDatabase.getDatabase(getContext()).getBoardDao();
         List<Board> boardList = boardDao.loadAllBoards();
         if (boardList.isEmpty()) {
-            requestBoardsFromServer();
+            requestAllBoardsFromServer();
         } else {
             List<Board> boards = new ArrayList<>();
             for (Board b: boardList) {
-                if (b.isDisplayed()) {
+                if (!b.isFavourite()) {
                     boards.add(b);
                 }
             }
-//            mViewModel.allBoardList.postValue(boardList);
-            mViewModel.displacedBoardList.postValue(boards);
+            mViewModel.favoriteBoardList.postValue(boards);
         }
     }
 
-    private void requestBoardsFromServer() {
+    private void requestAllBoardsFromServer() {
         MobileService appBaseService = ServiceCreator.create(MobileService.class);
         appBaseService.request("boards", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -165,29 +176,25 @@ public class BoardFragment extends Fragment {
         });
     }
 
-    private void requestArticleFromServer() {
-        Board currentBoard = mViewModel.displacedBoardList.getValue().get(mViewModel.currentBoardIdx.getValue());
-        if (currentBoard.getSection().equals("com.wuda.bbs.local")) {
-            MobileService mobileService = ServiceCreator.create(MobileService.class);
-            mobileService.request(currentBoard.id, new HashMap<>()).enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try {
-                        String text = response.body().string();
-                        if (currentBoard.getId().equals("recomm")) {
-                            ArticleResponse articleResponse = XMLParser.parseRecommend(text);
-                            Log.d("Article", text);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+    private void requestFavouriteBoardsFromServer() {
+        RootService rootService = ServiceCreator.create(RootService.class);
+        Map<String, String> form = new HashMap<>();
+        form.put("select", "0");
+        rootService.request("bbsfav.php", form).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    String text = new String(response.body().bytes(), "GBK");
+                    Log.d("fav", text);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                }
-            });
-        }
+            }
+        });
     }
 }

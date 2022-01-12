@@ -63,4 +63,16 @@ public class XMLParser {
 
         return hotHandler.getArticleResponse();
     }
+
+    public static ArticleResponse parseTopic(String xmlData) {
+        TopicHandler topicHandler = new TopicHandler();
+        xmlReader.setContentHandler(topicHandler);
+        try {
+            xmlReader.parse(new InputSource(new StringReader(xmlData)));
+        } catch (SAXException | IOException e) {
+            e.printStackTrace();
+        }
+
+        return topicHandler.getArticleResponse();
+    }
 }

@@ -17,6 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.Board;
 import com.wuda.bbs.ui.adapter.ArticleRecyclerAdapter;
 import com.wuda.bbs.utils.htmlParser.HtmlParser;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -36,6 +37,14 @@ public abstract class ArticleContainerFragment extends Fragment {
     protected SwipeRefreshLayout article_srl;
     protected RecyclerView article_rv;
 
+//    public ArticleContainerFragment(){};
+
+//    public ArticleContainerFragment(Board board){
+//        mViewModel = new ViewModelProvider(this, new ArticleContainerViewModelFactory(board))
+//                .get(ArticleContainerViewModel.class);
+//        mViewModel.board.setValue(board);
+//    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -54,7 +63,7 @@ public abstract class ArticleContainerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ArticleContainerViewModel.class);
-        article_rv.setAdapter(new ArticleRecyclerAdapter(getContext(), mViewModel.articleResponse.getValue().getArticleList(), true));
+        article_rv.setAdapter(new ArticleRecyclerAdapter(getContext(), mViewModel.articleResponse.getValue().getArticleList()));
         eventBinding();
 
         article_srl.setRefreshing(true);
