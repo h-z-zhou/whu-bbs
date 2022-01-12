@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.ArticleResponse;
 import com.wuda.bbs.ui.adapter.ArticleRecyclerAdapter;
+import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
@@ -34,57 +35,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RecommendFragment extends Fragment {
-
-    private RecommendViewModel mViewModel;
-
-    private SwipeRefreshLayout article_srl;
-    private RecyclerView article_rv;
-
-    public static RecommendFragment newInstance() {
-        return new RecommendFragment();
-    }
+public class RecommendFragment extends ArticleContainerFragment {
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.recommend_fragment, container, false);
-
-        article_srl = view.findViewById(R.id.article_swipeRefresh);
-        article_rv = view.findViewById(R.id.article_recyclerView);
-        article_rv.setLayoutManager(new LinearLayoutManager(getContext()));
-//        article_rv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(RecommendViewModel.class);
-        article_rv.setAdapter(new ArticleRecyclerAdapter(getContext(), mViewModel.recommendArticleResponse.getValue().getArticleList(), true));
-        eventBinding();
-
-        requestArticleFromServer();
-    }
-
-
-    private void eventBinding() {
-        mViewModel.recommendArticleResponse.observe(getViewLifecycleOwner(), new Observer<ArticleResponse>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onChanged(ArticleResponse articleResponse) {
-                if (article_rv.getAdapter() != null) {
-                    ArticleRecyclerAdapter adapter = (ArticleRecyclerAdapter) article_rv.getAdapter();
-                    adapter.updateArticleList(articleResponse.getArticleList());
-                    adapter.notifyDataSetChanged();
-                }
-
-            }
-        });
-    }
-
-    private void requestArticleFromServer() {
+    protected void requestArticleFromServer() {
         MobileService mobileService = ServiceCreator.create(MobileService.class);
         mobileService.request("recomm", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -92,17 +46,19 @@ public class RecommendFragment extends Fragment {
                 try {
                     String text = response.body().string();
                     ArticleResponse articleResponse = XMLParser.parseRecommend(text);
-                    mViewModel.recommendArticleResponse.postValue(articleResponse);
-                    Log.d("Article", text);
+                    mViewModel.articleResponse.postValue(articleResponse);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                article_srl.setRefreshing(false);
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
+                article_srl.setRefreshing(false);
             }
         });
+
     }
 }

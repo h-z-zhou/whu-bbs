@@ -25,6 +25,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.ArticleResponse;
 import com.wuda.bbs.ui.adapter.ArticleRecyclerAdapter;
+import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.ui.main.mail.ContactFragment;
 import com.wuda.bbs.ui.main.mail.LetterFragment;
 import com.wuda.bbs.utils.htmlParser.HtmlParser;
@@ -41,56 +42,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class NewsTodayFragment extends Fragment {
-
-    private NewsTodayViewModel mViewModel;
-    private SwipeRefreshLayout article_srl;
-    private RecyclerView article_rv;
-
-    public static NewsTodayFragment newInstance() {
-        return new NewsTodayFragment();
-    }
+public class NewsTodayFragment extends ArticleContainerFragment {
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.news_today_fragment, container, false);
+    protected void requestArticleFromServer() {
 
-        article_srl = view.findViewById(R.id.article_swipeRefresh);
-        article_rv = view.findViewById(R.id.article_recyclerView);
-        article_rv.setLayoutManager(new LinearLayoutManager(getContext()));
-//        article_rv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(NewsTodayViewModel.class);
-        article_rv.setAdapter(new ArticleRecyclerAdapter(getContext(), mViewModel.newsTodayArticleResponse.getValue().getArticleList(), true));
-        eventBinding();
-
-        requestArticleFromServer();
-    }
-
-
-    private void eventBinding() {
-        mViewModel.newsTodayArticleResponse.observe(getViewLifecycleOwner(), new Observer<ArticleResponse>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onChanged(ArticleResponse articleResponse) {
-                if (article_rv.getAdapter() != null) {
-                    ArticleRecyclerAdapter adapter = (ArticleRecyclerAdapter) article_rv.getAdapter();
-                    adapter.updateArticleList(articleResponse.getArticleList());
-                    adapter.notifyDataSetChanged();
-                }
-
-            }
-        });
-    }
-
-    private void requestArticleFromServer() {
         WebService webService = ServiceCreator.create(WebService.class);
         webService.request("newtopic.php", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -103,13 +59,15 @@ public class NewsTodayFragment extends Fragment {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mViewModel.newsTodayArticleResponse.postValue(articleResponse);
+                    mViewModel.articleResponse.postValue(articleResponse);
                 }
+                article_srl.setRefreshing(false);
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
+                article_srl.setRefreshing(false);
             }
         });
     }

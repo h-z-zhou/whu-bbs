@@ -45,9 +45,9 @@ public class HotHandler extends BaseArticleHandler {
             case "lasttime":
                 article.setTime(new String(ch, start, length));
                 break;
-            case "number":
-                article.setReplyNum(new String(ch, start, length));
-                break;
+//            case "number":
+//                article.setReplyNum(new String(ch, start, length));
+//                break;
             default:
         }
     }

@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.ui.base.NavigationHost;
+import com.wuda.bbs.ui.main.base.NavigationHost;
 
 public class LoginActivity extends AppCompatActivity implements NavigationHost {
 

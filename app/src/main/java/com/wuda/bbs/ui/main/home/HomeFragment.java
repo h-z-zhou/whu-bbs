@@ -42,11 +42,11 @@ public class HomeFragment extends Fragment {
             @Override
             public Fragment createFragment(int position) {
                 if (position == 0) {
-                    return RecommendFragment.newInstance();
+                    return new RecommendFragment();
                 } else if (position == 1) {
-                    return HotFragment.newInstance();
+                    return new HotFragment();
                 } else if (position == 2) {
-                    return NewsTodayFragment.newInstance();
+                    return new NewsTodayFragment();
                 }
                 return null;
             }

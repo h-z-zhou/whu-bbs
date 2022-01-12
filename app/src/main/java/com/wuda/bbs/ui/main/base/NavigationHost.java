@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.base;
+package com.wuda.bbs.ui.main.base;
 
 import androidx.fragment.app.Fragment;
 
