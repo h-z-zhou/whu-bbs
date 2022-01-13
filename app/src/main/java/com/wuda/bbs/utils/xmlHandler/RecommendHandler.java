@@ -22,6 +22,7 @@ public class RecommendHandler extends BaseArticleHandler {
         nodeName = localName;
         if (nodeName.equals("recomm")) {
             article = new Article();
+            article.setFlag(Article.FLAG_SYSTEM);
         }
     }
 

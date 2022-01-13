@@ -20,6 +20,7 @@ public class HotHandler extends BaseArticleHandler {
         nodeName = localName;
         if (nodeName.equals("hot")) {
             article = new Article();
+            article.setFlag(Article.FLAG_SYSTEM);
         }
     }
 

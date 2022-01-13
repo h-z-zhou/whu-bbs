@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.wuda.bbs.bean.Article;
 import com.wuda.bbs.bean.ArticleResponse;
-import com.wuda.bbs.bean.Board;
+import com.wuda.bbs.bean.DetailBoard;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -29,7 +29,10 @@ public class HtmlParser {
             try {
                 Elements trs = tables.get(1).getElementsByTag("tr");
                 for (int i = 1; i < trs.size(); ++i) {
+
                     Article article = new Article();
+                    article.setFlag(Article.FLAG_SYSTEM);
+
                     Elements links = trs.get(i).getElementsByTag("a");
                     article.setGID(links.get(0).attr("href").split("=")[2]);
                     article.setTitle(links.get(0).text());
@@ -73,9 +76,9 @@ public class HtmlParser {
         return articleResponse;
     }
 
-    public static List<Board> parseFavouriteBoard(String htmlData) {
+    public static List<DetailBoard> parseFavouriteBoard(String htmlData) {
 
-        List<Board> favBoardList = new ArrayList<>();
+        List<DetailBoard> favDetailBoardList = new ArrayList<>();
 
         Document doc = Jsoup.parse(htmlData);
 
@@ -83,7 +86,7 @@ public class HtmlParser {
             Log.d("js", js.text());
         }
 
-        return favBoardList;
+        return favDetailBoardList;
     }
 
 }

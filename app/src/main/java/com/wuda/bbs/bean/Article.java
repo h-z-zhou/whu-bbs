@@ -8,12 +8,14 @@ public class Article {
     String GID;
     String replyNum;
     String time;
-    String flag;
+    int flag;
+
+    public static int FLAG_NORMAL = 0, FLAG_TOP = 1, FLAG_SYSTEM = 2;
 
     public Article() {
     }
 
-    public Article(String boardName, String boardID, String title, String author, String GID, String replyNum, String time, String flag) {
+    public Article(String boardName, String boardID, String title, String author, String GID, String replyNum, String time, int flag) {
         this.boardName = boardName;
         this.boardID = boardID;
         this.title = title;
@@ -80,11 +82,11 @@ public class Article {
         this.time = time;
     }
 
-    public String getFlag() {
+    public int getFlag() {
         return flag;
     }
 
-    public void setFlag(String flag) {
+    public void setFlag(int flag) {
         this.flag = flag;
     }
 }
