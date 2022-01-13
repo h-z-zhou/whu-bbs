@@ -1,7 +1,8 @@
 package com.wuda.bbs.utils.xmlHandler;
 
 import com.wuda.bbs.bean.ArticleResponse;
-import com.wuda.bbs.bean.Board;
+import com.wuda.bbs.bean.BaseBoard;
+import com.wuda.bbs.bean.DetailBoard;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -25,7 +26,7 @@ public class XMLParser {
         }
     }
 
-    public static List<Board> parseBoard(String xmlData) {
+    public static List<BaseBoard> parseDetailBoard(String xmlData) {
 
         xmlData = xmlData.replaceAll("true", "\"true\"");
         xmlData = xmlData.replace("&", "AND");
@@ -74,5 +75,18 @@ public class XMLParser {
         }
 
         return topicHandler.getArticleResponse();
+    }
+
+    public static List<BaseBoard> parseFavorBoard(String xmlData) {
+        FavorBoardHandler favorBoardHandler = new FavorBoardHandler();
+        xmlReader.setContentHandler(favorBoardHandler);
+
+        try {
+            xmlReader.parse(new InputSource(new StringReader(xmlData)));
+        } catch (IOException | SAXException e) {
+            e.printStackTrace();
+        }
+
+        return favorBoardHandler.getFavorBoards();
     }
 }

@@ -52,7 +52,8 @@ public class TopicHandler extends BaseArticleHandler {
                 article.setTime(new String(ch, start, length));
                 break;
             case "flag":
-                article.setFlag(new String(ch, start, length));
+                int flag = new String(ch, start, length).equals("TOP")? Article.FLAG_TOP: Article.FLAG_NORMAL;
+                article.setFlag(flag);
                 break;
             default:
         }

@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/allAboard"
+        android:id="@+id/favorBoardManager"
         android:icon="@drawable/ic_dashboard_customize"
         android:title="所有板块"
         app:showAsAction="always"/>

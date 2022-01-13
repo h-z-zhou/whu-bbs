@@ -1,7 +1,8 @@
 package com.wuda.bbs.ui.main.board;
 
 import com.wuda.bbs.bean.ArticleResponse;
-import com.wuda.bbs.bean.Board;
+import com.wuda.bbs.bean.BaseBoard;
+import com.wuda.bbs.bean.DetailBoard;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -18,18 +19,18 @@ import retrofit2.Response;
 
 public class BoardArticleFragment extends ArticleContainerFragment {
 
-    Board board;
+    BaseBoard detailBoard;
 
     @Override
     protected void requestArticleFromServer() {
-        if (board == null) {
+        if (detailBoard == null) {
             article_srl.setRefreshing(false);
             return;
         }
         MobileService mobileService = ServiceCreator.create(MobileService.class);
         Map<String, String> form = new HashMap<>();
         form.put("page", mViewModel.articleResponse.getValue().getCurrentPage().toString());
-        form.put("board", board.getId());
+        form.put("board", detailBoard.getId());
         mobileService.request("topics", form).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -52,8 +53,8 @@ public class BoardArticleFragment extends ArticleContainerFragment {
         });
     }
 
-    public void setBoard(Board board) {
+    public void setBoard(BaseBoard baseBoard) {
         // 放到 mViewModel ???
-        this.board = board;
+        this.detailBoard = baseBoard;
     }
 }

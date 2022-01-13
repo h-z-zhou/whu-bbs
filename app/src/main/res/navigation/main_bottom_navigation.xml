@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/bottom_nav_board"
-        android:name="com.wuda.bbs.ui.main.board.BoardFragment"
-        android:label="帖子"
-        tools:layout="@layout/board_fragment" />
+        android:name="com.wuda.bbs.ui.main.board.FavorBoardFragment"
+        android:label="收藏板块"
+        tools:layout="@layout/favor_board_fragment" />
 
     <fragment
         android:id="@+id/bottom_nav_mail"

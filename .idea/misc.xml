@@ -23,6 +23,7 @@
         <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.18611111111111112" />
         <entry key="app/src/main/res/layout/activity_app.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_article_detail.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/activity_favor_board_manager.xml" value="0.31666666666666665" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.26222826086956524" />
@@ -37,6 +38,8 @@
         <entry key="app/src/main/res/layout/contact_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.20380434782608695" />
         <entry key="app/src/main/res/layout/drawer_nav_header_main.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/favorBoard_fragment.xml" value="0.1015625" />
+        <entry key="app/src/main/res/layout/favor_board_fragment.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/fragment_contact.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/hot_fragment.xml" value="0.3359375" />

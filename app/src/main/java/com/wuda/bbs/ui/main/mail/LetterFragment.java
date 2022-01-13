@@ -29,7 +29,7 @@ public class LetterFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.letter_fragment, container, false);
 
-        letter_rv = view.findViewById(R.id.article_recyclerView);
+        letter_rv = view.findViewById(R.id.recyclerView);
 
         return view;
     }

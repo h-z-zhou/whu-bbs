@@ -1,6 +1,7 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.Board;
+import com.wuda.bbs.bean.BaseBoard;
+import com.wuda.bbs.bean.DetailBoard;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -13,12 +14,12 @@ public class BoardHandler extends DefaultHandler {
 
     String section = "";
 
-    private List<Board> boardList;
+    private List<BaseBoard> detailBoardList;
 
     @Override
     public void startDocument() throws SAXException {
         super.startDocument();
-        boardList = new ArrayList<>();
+        detailBoardList = new ArrayList<>();
     }
 
     @Override
@@ -29,13 +30,13 @@ public class BoardHandler extends DefaultHandler {
                 return;
             String boardName = attributes.getValue("name");
             String boardID = attributes.getValue("id");
-            boardList.add(new Board(boardID, boardName, section, false));
+            detailBoardList.add(new DetailBoard(boardID, boardName, section));
         } else if (localName.equals("Section")) {
             section = attributes.getValue("name");
         }
     }
 
-    public List<Board> getHandledResult() {
-        return boardList;
+    public List<BaseBoard> getHandledResult() {
+        return detailBoardList;
     }
 }

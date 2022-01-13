@@ -28,7 +28,7 @@ public class ContactFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.contact_fragment, container, false);
-        contact_rv = view.findViewById(R.id.article_recyclerView);
+        contact_rv = view.findViewById(R.id.recyclerView);
         return view;
     }
 

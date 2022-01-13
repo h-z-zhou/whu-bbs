@@ -17,19 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.ArticleResponse;
-import com.wuda.bbs.bean.Board;
 import com.wuda.bbs.ui.adapter.ArticleRecyclerAdapter;
-import com.wuda.bbs.utils.htmlParser.HtmlParser;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.network.WebService;
-
-import java.io.IOException;
-import java.util.HashMap;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public abstract class ArticleContainerFragment extends Fragment {
 
@@ -52,7 +40,7 @@ public abstract class ArticleContainerFragment extends Fragment {
 
 
         article_srl = view.findViewById(R.id.article_swipeRefresh);
-        article_rv = view.findViewById(R.id.article_recyclerView);
+        article_rv = view.findViewById(R.id.recyclerView);
         article_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 //        article_rv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 

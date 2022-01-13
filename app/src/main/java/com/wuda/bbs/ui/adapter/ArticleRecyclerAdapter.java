@@ -56,11 +56,11 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
             holder.replyNum_tv.setText(article.getReplyNum());
         }
 
-        if (article.getFlag() == null) {
+        if (article.getFlag() == Article.FLAG_SYSTEM) {
             holder.content_tv.setText(buildSpannableContent(article));
         } else {
             SpannableStringBuilder content = new SpannableStringBuilder();
-            if (article.getFlag().equals("TOP")) {
+            if (article.getFlag() == Article.FLAG_TOP) {
                 content.append("#顶置# ");
                 content.setSpan(new ForegroundColorSpan(Color.parseColor("#eb507e")), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
