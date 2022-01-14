@@ -2,7 +2,7 @@ package com.wuda.bbs.ui.main.home;
 
 import androidx.annotation.NonNull;
 
-import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.htmlParser.HtmlParser;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -27,13 +27,13 @@ public class NewsTodayFragment extends ArticleContainerFragment {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 ResponseBody responseBody = response.body();
                 if (responseBody != null) {
-                    ArticleResponse articleResponse = new ArticleResponse();
+                    BriefArticleResponse briefArticleResponse = new BriefArticleResponse();
                     try {
-                        articleResponse = HtmlParser.parseNewsToday(new String(responseBody.bytes(), "GBK"));
+                        briefArticleResponse = HtmlParser.parseNewsToday(new String(responseBody.bytes(), "GBK"));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mViewModel.articleResponse.postValue(articleResponse);
+                    mViewModel.articleResponse.postValue(briefArticleResponse);
                 }
                 article_srl.setRefreshing(false);
             }

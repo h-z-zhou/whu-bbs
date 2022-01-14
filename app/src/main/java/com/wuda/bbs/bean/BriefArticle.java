@@ -1,6 +1,8 @@
 package com.wuda.bbs.bean;
 
-public class Article {
+import java.io.Serializable;
+
+public class BriefArticle implements Serializable {
     String boardName;
     String boardID;
     String title;
@@ -12,10 +14,10 @@ public class Article {
 
     public static int FLAG_NORMAL = 0, FLAG_TOP = 1, FLAG_SYSTEM = 2;
 
-    public Article() {
+    public BriefArticle() {
     }
 
-    public Article(String boardName, String boardID, String title, String author, String GID, String replyNum, String time, int flag) {
+    public BriefArticle(String boardName, String boardID, String title, String author, String GID, String replyNum, String time, int flag) {
         this.boardName = boardName;
         this.boardID = boardID;
         this.title = title;

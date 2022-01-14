@@ -1,19 +1,18 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.Article;
-import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.BriefArticle;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public class RecommendHandler extends BaseArticleHandler {
-    Article article;
+public class RecommendHandlerBase extends BaseBriefArticleHandler {
+    BriefArticle briefArticle;
 
     private String nodeName;
 
-    public RecommendHandler() {
-        articleResponse.setCurrentPage(1);
-        articleResponse.setTotalPage(1);
+    public RecommendHandlerBase() {
+        briefArticleResponse.setCurrentPage(1);
+        briefArticleResponse.setTotalPage(1);
     }
 
     @Override
@@ -21,8 +20,8 @@ public class RecommendHandler extends BaseArticleHandler {
         super.startElement(uri, localName, qName, attributes);
         nodeName = localName;
         if (nodeName.equals("recomm")) {
-            article = new Article();
-            article.setFlag(Article.FLAG_SYSTEM);
+            briefArticle = new BriefArticle();
+            briefArticle.setFlag(BriefArticle.FLAG_SYSTEM);
         }
     }
 
@@ -31,21 +30,21 @@ public class RecommendHandler extends BaseArticleHandler {
         super.characters(ch, start, length);
         switch (nodeName) {
             case "title":
-                article.setTitle(new String(ch, start, length));
+                briefArticle.setTitle(new String(ch, start, length));
                 break;
             case "recommTime":
-                article.setTime(new String(ch, start, length));
+                briefArticle.setTime(new String(ch, start, length));
                 break;
             case "Author":
-                article.setAuthor(new String(ch, start, length));
+                briefArticle.setAuthor(new String(ch, start, length));
                 break;
             case "originBoard":
-                article.setBoardID(new String(ch, start, length));
+                briefArticle.setBoardID(new String(ch, start, length));
                 break;
             case "originBoardName":
-                article.setBoardName(new String(ch, start, length));
+                briefArticle.setBoardName(new String(ch, start, length));
             case "originGID":
-                article.setGID(new String(ch, start, length));
+                briefArticle.setGID(new String(ch, start, length));
                 break;
             default:
         }
@@ -55,7 +54,7 @@ public class RecommendHandler extends BaseArticleHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
         if (localName.equals("recomm")) {
-            articleResponse.addArticle(article);
+            briefArticleResponse.addArticle(briefArticle);
         }
     }
 }

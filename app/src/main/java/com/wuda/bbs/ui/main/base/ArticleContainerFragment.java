@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.ui.adapter.ArticleRecyclerAdapter;
 
 public abstract class ArticleContainerFragment extends Fragment {
@@ -53,7 +53,7 @@ public abstract class ArticleContainerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ArticleContainerViewModel.class);
-        article_rv.setAdapter(new ArticleRecyclerAdapter(getContext(), mViewModel.articleResponse.getValue().getArticleList()));
+        article_rv.setAdapter(new ArticleRecyclerAdapter(getContext(), mViewModel.articleResponse.getValue().getBriefArticleList()));
         eventBinding();
 
         article_srl.setRefreshing(true);
@@ -62,15 +62,15 @@ public abstract class ArticleContainerFragment extends Fragment {
 
 
     protected void eventBinding() {
-        mViewModel.articleResponse.observe(getViewLifecycleOwner(), new Observer<ArticleResponse>() {
+        mViewModel.articleResponse.observe(getViewLifecycleOwner(), new Observer<BriefArticleResponse>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onChanged(ArticleResponse articleResponse) {
+            public void onChanged(BriefArticleResponse briefArticleResponse) {
                 if (article_rv.getAdapter() != null) {
                     ArticleRecyclerAdapter adapter = (ArticleRecyclerAdapter) article_rv.getAdapter();
 //                    adapter.updateArticleList(articleResponse.getArticleList());
 //                    adapter.notifyDataSetChanged();
-                    adapter.appendArticles(articleResponse.getArticleList());
+                    adapter.appendArticles(briefArticleResponse.getBriefArticleList());
                 }
 
             }
@@ -95,8 +95,8 @@ public abstract class ArticleContainerFragment extends Fragment {
                     int totalItem = manager.getItemCount();
                     // 最后一个
                     if (lastVisibleItem == totalItem-1) {
-                        ArticleResponse articleResponse = mViewModel.articleResponse.getValue();
-                        if (articleResponse.getCurrentPage() < articleResponse.getTotalPage()) {
+                        BriefArticleResponse briefArticleResponse = mViewModel.articleResponse.getValue();
+                        if (briefArticleResponse.getCurrentPage() < briefArticleResponse.getTotalPage()) {
                             requestArticleFromServer();
                         }
                     }

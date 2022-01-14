@@ -1,17 +1,17 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.Article;
+import com.wuda.bbs.bean.BriefArticle;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public class HotHandler extends BaseArticleHandler {
-    Article article;
+public class HotHandlerBase extends BaseBriefArticleHandler {
+    BriefArticle briefArticle;
     private String nodeName;
 
-    public HotHandler() {
-        articleResponse.setCurrentPage(1);
-        articleResponse.setTotalPage(1);
+    public HotHandlerBase() {
+        briefArticleResponse.setCurrentPage(1);
+        briefArticleResponse.setTotalPage(1);
     }
 
     @Override
@@ -19,8 +19,8 @@ public class HotHandler extends BaseArticleHandler {
         super.startElement(uri, localName, qName, attributes);
         nodeName = localName;
         if (nodeName.equals("hot")) {
-            article = new Article();
-            article.setFlag(Article.FLAG_SYSTEM);
+            briefArticle = new BriefArticle();
+            briefArticle.setFlag(BriefArticle.FLAG_SYSTEM);
         }
     }
 
@@ -29,22 +29,22 @@ public class HotHandler extends BaseArticleHandler {
         super.characters(ch, start, length);
         switch (nodeName) {
             case "title":
-                article.setTitle(new String(ch, start, length));
+                briefArticle.setTitle(new String(ch, start, length));
                 break;
             case "author":
-                article.setAuthor(new String(ch, start, length));
+                briefArticle.setAuthor(new String(ch, start, length));
                 break;
             case "board":
-                article.setBoardID(new String(ch, start, length));
+                briefArticle.setBoardID(new String(ch, start, length));
                 break;
             case "boardname":
-                article.setBoardName(new String(ch, start, length));
+                briefArticle.setBoardName(new String(ch, start, length));
                 break;
             case "groupid":
-                article.setGID(new String(ch, start, length));
+                briefArticle.setGID(new String(ch, start, length));
                 break;
             case "lasttime":
-                article.setTime(new String(ch, start, length));
+                briefArticle.setTime(new String(ch, start, length));
                 break;
 //            case "number":
 //                article.setReplyNum(new String(ch, start, length));
@@ -57,7 +57,7 @@ public class HotHandler extends BaseArticleHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
         if (localName.equals("hot")) {
-            articleResponse.addArticle(article);
+            briefArticleResponse.addArticle(briefArticle);
         }
     }
 }

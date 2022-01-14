@@ -1,6 +1,8 @@
 package com.wuda.bbs.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -14,7 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.Article;
+import com.wuda.bbs.bean.BriefArticle;
+import com.wuda.bbs.ui.main.article.ArticleDetailActivity;
 
 import java.util.List;
 
@@ -24,7 +27,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
 
     Context mContext;
 //    boolean mAddBoardName;  // 在推荐文章，热点，新帖等多板块的内容上添加 board
-    List<Article> mArticleList;
+    List<BriefArticle> mBriefArticleList;
 
 //    public ArticleRecyclerAdapter(Context context, List<Article> articleList, boolean addBoard) {
 //        this.mContext = context;
@@ -32,9 +35,9 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
 //        this.mAddBoardName = addBoard;
 //    }
 
-    public ArticleRecyclerAdapter(Context mContext, List<Article> mArticleList) {
+    public ArticleRecyclerAdapter(Context mContext, List<BriefArticle> mBriefArticleList) {
         this.mContext = mContext;
-        this.mArticleList = mArticleList;
+        this.mBriefArticleList = mBriefArticleList;
 //        this.mAddBoardName = false;
     }
 
@@ -46,32 +49,41 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Article article = mArticleList.get(position);
-        holder.author_tv.setText(article.getAuthor());
-        holder.time_tv.setText(article.getTime());
-        if (article.getReplyNum() == null) {  // 推荐无
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        BriefArticle briefArticle = mBriefArticleList.get(position);
+        holder.author_tv.setText(briefArticle.getAuthor());
+        holder.time_tv.setText(briefArticle.getTime());
+        if (briefArticle.getReplyNum() == null) {  // 推荐无
             holder.replyNum_tv.setVisibility(View.GONE);
         } else {
-            holder.replyNum_tv.setText(article.getReplyNum());
+            holder.replyNum_tv.setText(briefArticle.getReplyNum());
         }
 
-        if (article.getFlag() == Article.FLAG_SYSTEM) {
-            holder.content_tv.setText(buildSpannableContent(article));
+        if (briefArticle.getFlag() == BriefArticle.FLAG_SYSTEM) {
+            holder.content_tv.setText(buildSpannableContent(briefArticle));
         } else {
             SpannableStringBuilder content = new SpannableStringBuilder();
-            if (article.getFlag() == Article.FLAG_TOP) {
+            if (briefArticle.getFlag() == BriefArticle.FLAG_TOP) {
                 content.append("#顶置# ");
                 content.setSpan(new ForegroundColorSpan(Color.parseColor("#eb507e")), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            content.append(article.getTitle());
+            content.append(briefArticle.getTitle());
             holder.content_tv.setText(content);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, ArticleDetailActivity.class);
+                intent.putExtra("article", mBriefArticleList.get(position));
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return mArticleList.size();
+        return mBriefArticleList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
@@ -91,31 +103,31 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         }
     }
 
-    public void updateArticleList(List<Article> articleList) {
-        mArticleList = articleList;
+    public void updateArticleList(List<BriefArticle> briefArticleList) {
+        mBriefArticleList = briefArticleList;
     }
 
-    public void appendArticles(List<Article> articles) {
+    public void appendArticles(List<BriefArticle> briefArticles) {
         // 为空时使用insert有强烈的跳变感
-        if (mArticleList.isEmpty()) {
-            mArticleList = articles;
+        if (mBriefArticleList.isEmpty()) {
+            mBriefArticleList = briefArticles;
             this.notifyDataSetChanged();
         } else {
-            mArticleList.addAll(articles);
-            this.notifyItemRangeInserted(mArticleList.size() - articles.size(), mArticleList.size());
+            mBriefArticleList.addAll(briefArticles);
+            this.notifyItemRangeInserted(mBriefArticleList.size() - briefArticles.size(), mBriefArticleList.size());
         }
     }
 
     public void removeAll() {
-        mArticleList.clear();
+        mBriefArticleList.clear();
     }
 
-    private SpannableStringBuilder buildSpannableContent(Article article) {
+    private SpannableStringBuilder buildSpannableContent(BriefArticle briefArticle) {
         SpannableStringBuilder content = new SpannableStringBuilder();
-        content.append("#").append(article.getBoardName()).append("#");
+        content.append("#").append(briefArticle.getBoardName()).append("#");
         content.setSpan(new ForegroundColorSpan(Color.parseColor("#5698c3")), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         content.append(" ");
-        content.append(article.getTitle());
+        content.append(briefArticle.getTitle());
         return content;
     }
 }

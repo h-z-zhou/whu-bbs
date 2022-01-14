@@ -3,16 +3,16 @@ package com.wuda.bbs.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleResponse {
+public class BriefArticleResponse {
     boolean success;
     Integer currentPage;
     Integer totalPage;
-    List<Article> articleList;
+    List<BriefArticle> briefArticleList;
 
-    public ArticleResponse() {
+    public BriefArticleResponse() {
         currentPage = 0;
         totalPage = 1;
-        articleList = new ArrayList<>();
+        briefArticleList = new ArrayList<>();
     }
 
     public boolean isSuccess() {
@@ -39,15 +39,15 @@ public class ArticleResponse {
         this.totalPage = totalPage;
     }
 
-    public List<Article> getArticleList() {
-        return articleList;
+    public List<BriefArticle> getBriefArticleList() {
+        return briefArticleList;
     }
 
-    public void setArticleList(List<Article> articleList) {
-        this.articleList = articleList;
+    public void setBriefArticleList(List<BriefArticle> briefArticleList) {
+        this.briefArticleList = briefArticleList;
     }
 
-    public void addArticle(Article article) {
-        articleList.add(article);
+    public void addArticle(BriefArticle briefArticle) {
+        briefArticleList.add(briefArticle);
     }
 }

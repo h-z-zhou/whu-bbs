@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.style.DynamicDrawableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.SuggestionSpan;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,20 +14,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textview.MaterialTextView;
 import com.wuda.bbs.R;
-import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.bean.Article;
+import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.ui.widget.CenterImageSpan;
 
 import java.util.List;
 
 public class BriefArticleRecyclerAdapter extends RecyclerView.Adapter<BriefArticleRecyclerAdapter.ViewHolder> {
 
-    List<Article> mArticleList;
+    List<BriefArticle> mBriefArticleList;
     Context mContext;
 
-    public BriefArticleRecyclerAdapter(Context context, List<Article> articleList) {
+    public BriefArticleRecyclerAdapter(Context context, List<BriefArticle> briefArticleList) {
         this.mContext = context;
-        this.mArticleList = articleList;
+        this.mBriefArticleList = briefArticleList;
     }
 
     @NonNull
@@ -45,12 +42,12 @@ public class BriefArticleRecyclerAdapter extends RecyclerView.Adapter<BriefArtic
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.content_tv.setText(buildSpannableContent(mArticleList.get(position)));
+        holder.content_tv.setText(buildSpannableContent(mBriefArticleList.get(position)));
     }
 
     @Override
     public int getItemCount() {
-        return mArticleList.size();
+        return mBriefArticleList.size();
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {
@@ -61,20 +58,20 @@ public class BriefArticleRecyclerAdapter extends RecyclerView.Adapter<BriefArtic
         }
     }
 
-    public void updateArticleList(List<Article> articleList) {
-        mArticleList = articleList;
+    public void updateArticleList(List<BriefArticle> briefArticleList) {
+        mBriefArticleList = briefArticleList;
     }
 
-    private SpannableStringBuilder buildSpannableContent(Article article) {
+    private SpannableStringBuilder buildSpannableContent(BriefArticle briefArticle) {
         SpannableStringBuilder content = new SpannableStringBuilder();
 
-        content.append(article.getTitle());
+        content.append(briefArticle.getTitle());
         content.setSpan(new RelativeSizeSpan(1.2f), 0, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         content.append("\n");
-        content.append(article.getAuthor());
+        content.append(briefArticle.getAuthor());
         content.append(" | ");
-        content.append(article.getTime());
+        content.append(briefArticle.getTime());
 
 //        content.append("\n");
         Drawable replyIcon = mContext.getDrawable(R.drawable.ic_chat);
@@ -83,7 +80,7 @@ public class BriefArticleRecyclerAdapter extends RecyclerView.Adapter<BriefArtic
         content.append("__");
         content.setSpan(reply_is, content.length()-2, content.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        content.append(article.getReplyNum());
+        content.append(briefArticle.getReplyNum());
         return  content;
     }
 }

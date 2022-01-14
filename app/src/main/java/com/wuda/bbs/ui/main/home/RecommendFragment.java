@@ -2,7 +2,7 @@ package com.wuda.bbs.ui.main.home;
 
 import androidx.annotation.NonNull;
 
-import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -26,8 +26,8 @@ public class RecommendFragment extends ArticleContainerFragment {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     String text = response.body().string();
-                    ArticleResponse articleResponse = XMLParser.parseRecommend(text);
-                    mViewModel.articleResponse.postValue(articleResponse);
+                    BriefArticleResponse briefArticleResponse = XMLParser.parseRecommend(text);
+                    mViewModel.articleResponse.postValue(briefArticleResponse);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -2,8 +2,8 @@ package com.wuda.bbs.utils.htmlParser;
 
 import android.util.Log;
 
-import com.wuda.bbs.bean.Article;
-import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.BriefArticle;
+import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.bean.DetailBoard;
 
 import org.jsoup.Jsoup;
@@ -16,38 +16,38 @@ import java.util.List;
 
 public class HtmlParser {
 
-    public static ArticleResponse parseNewsToday(String htmlData) {
-        ArticleResponse articleResponse = new ArticleResponse();
-        articleResponse.setTotalPage(1);
-        articleResponse.setCurrentPage(1);
+    public static BriefArticleResponse parseNewsToday(String htmlData) {
+        BriefArticleResponse briefArticleResponse = new BriefArticleResponse();
+        briefArticleResponse.setTotalPage(1);
+        briefArticleResponse.setCurrentPage(1);
 
         Document doc = Jsoup.parse(htmlData);
         Elements tables = doc.getElementsByTag("table");
         if (tables.size() != 2) {
-            articleResponse.setSuccess(false);
+            briefArticleResponse.setSuccess(false);
         } else {
             try {
                 Elements trs = tables.get(1).getElementsByTag("tr");
                 for (int i = 1; i < trs.size(); ++i) {
 
-                    Article article = new Article();
-                    article.setFlag(Article.FLAG_SYSTEM);
+                    BriefArticle briefArticle = new BriefArticle();
+                    briefArticle.setFlag(BriefArticle.FLAG_SYSTEM);
 
                     Elements links = trs.get(i).getElementsByTag("a");
-                    article.setGID(links.get(0).attr("href").split("=")[2]);
-                    article.setTitle(links.get(0).text());
-                    article.setAuthor(links.get(1).attr("href").split("=")[1]);
-                    article.setBoardID(links.get(2).attr("href").split("=")[1]);
+                    briefArticle.setGID(links.get(0).attr("href").split("=")[2]);
+                    briefArticle.setTitle(links.get(0).text());
+                    briefArticle.setAuthor(links.get(1).attr("href").split("=")[1]);
+                    briefArticle.setBoardID(links.get(2).attr("href").split("=")[1]);
                     String boardName = links.get(2).text();
-                    article.setBoardName(boardName.substring(1, boardName.length() - 1));
+                    briefArticle.setBoardName(boardName.substring(1, boardName.length() - 1));
 
                     Elements tds = trs.get(i).getElementsByTag("td");
-                    article.setTime(tds.get(tds.size() - 1).text());
+                    briefArticle.setTime(tds.get(tds.size() - 1).text());
 
-                    articleResponse.addArticle(article);
+                    briefArticleResponse.addArticle(briefArticle);
                 }
             } catch (Exception e) {
-                articleResponse.setSuccess(false);
+                briefArticleResponse.setSuccess(false);
             }
 
             /*
@@ -73,7 +73,7 @@ public class HtmlParser {
              */
         }
 
-        return articleResponse;
+        return briefArticleResponse;
     }
 
     public static List<DetailBoard> parseFavouriteBoard(String htmlData) {

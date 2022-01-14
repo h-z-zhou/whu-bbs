@@ -1,8 +1,8 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.DetailBoard;
+import com.wuda.bbs.bean.DetailArticleResponse;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -41,8 +41,8 @@ public class XMLParser {
         return boardHandler.getHandledResult();
     }
 
-    public static ArticleResponse parseRecommend(String xmlData) {
-        RecommendHandler recommendHandler = new RecommendHandler();
+    public static BriefArticleResponse parseRecommend(String xmlData) {
+        RecommendHandlerBase recommendHandler = new RecommendHandlerBase();
         xmlReader.setContentHandler(recommendHandler);
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
@@ -53,8 +53,8 @@ public class XMLParser {
         return recommendHandler.getArticleResponse();
     }
 
-    public static ArticleResponse parseHot(String xmlData) {
-        HotHandler hotHandler = new HotHandler();
+    public static BriefArticleResponse parseHot(String xmlData) {
+        HotHandlerBase hotHandler = new HotHandlerBase();
         xmlReader.setContentHandler(hotHandler);
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
@@ -65,8 +65,8 @@ public class XMLParser {
         return hotHandler.getArticleResponse();
     }
 
-    public static ArticleResponse parseTopic(String xmlData) {
-        TopicHandler topicHandler = new TopicHandler();
+    public static BriefArticleResponse parseTopic(String xmlData) {
+        TopicHandlerBase topicHandler = new TopicHandlerBase();
         xmlReader.setContentHandler(topicHandler);
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
@@ -88,5 +88,18 @@ public class XMLParser {
         }
 
         return favorBoardHandler.getFavorBoards();
+    }
+
+    public static DetailArticleResponse parseDetailArticle(String xmlData) {
+        DetailArticleHandler detailArticleHandler = new DetailArticleHandler();
+        xmlReader.setContentHandler(detailArticleHandler);
+
+        try {
+            xmlReader.parse(new InputSource(new StringReader(xmlData)));
+        } catch (IOException | SAXException e) {
+            e.printStackTrace();
+        }
+
+        return detailArticleHandler.getDetailArticleResponse();
     }
 }

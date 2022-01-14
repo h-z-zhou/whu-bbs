@@ -2,7 +2,7 @@ package com.wuda.bbs.ui.main.board;
 
 import androidx.annotation.NonNull;
 
-import com.wuda.bbs.bean.ArticleResponse;
+import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.network.MobileService;
@@ -39,8 +39,8 @@ public class BoardArticleFragment extends ArticleContainerFragment {
                 article_srl.setRefreshing(false);
                 try {
                     String text = response.body().string();
-                    ArticleResponse articleResponse = XMLParser.parseTopic(text);
-                    mViewModel.articleResponse.postValue(articleResponse);
+                    BriefArticleResponse briefArticleResponse = XMLParser.parseTopic(text);
+                    mViewModel.articleResponse.postValue(briefArticleResponse);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

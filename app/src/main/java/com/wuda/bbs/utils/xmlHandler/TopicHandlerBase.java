@@ -1,17 +1,17 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.Article;
+import com.wuda.bbs.bean.BriefArticle;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-public class TopicHandler extends BaseArticleHandler {
+public class TopicHandlerBase extends BaseBriefArticleHandler {
 
-    Article article;
+    BriefArticle briefArticle;
     String nodeName;
     String boardID;
 
-    public TopicHandler(){
+    public TopicHandlerBase(){
         boardID = "";
     }
 
@@ -20,10 +20,10 @@ public class TopicHandler extends BaseArticleHandler {
         super.startElement(uri, localName, qName, attributes);
         nodeName = localName;
         if (nodeName.equals("topic")) {
-            article = new Article();
+            briefArticle = new BriefArticle();
         } else if (nodeName.equals("topics")) {
-            articleResponse.setCurrentPage(Integer.parseInt(attributes.getValue("page")));
-            articleResponse.setTotalPage(Integer.parseInt(attributes.getValue("totalPages")));
+            briefArticleResponse.setCurrentPage(Integer.parseInt(attributes.getValue("page")));
+            briefArticleResponse.setTotalPage(Integer.parseInt(attributes.getValue("totalPages")));
             boardID = attributes.getValue("board");
         }
     }
@@ -33,27 +33,27 @@ public class TopicHandler extends BaseArticleHandler {
         super.characters(ch, start, length);
         switch (nodeName) {
             case "GID":
-                article.setGID(new String(ch, start, length));
+                briefArticle.setGID(new String(ch, start, length));
                 break;
             case "title":
-                article.setTitle(new String(ch, start, length));
+                briefArticle.setTitle(new String(ch, start, length));
                 break;
             case "author":
-                article.setAuthor(new String(ch, start, length));
+                briefArticle.setAuthor(new String(ch, start, length));
                 break;
 //            case "posttime":
 //                time.append(ch, start, length);
 //                time.append("->");
 //                break;
             case "replyNum":
-                article.setReplyNum(new String(ch, start, length));
+                briefArticle.setReplyNum(new String(ch, start, length));
                 break;
             case "lastReplyTime":
-                article.setTime(new String(ch, start, length));
+                briefArticle.setTime(new String(ch, start, length));
                 break;
             case "flag":
-                int flag = new String(ch, start, length).equals("TOP")? Article.FLAG_TOP: Article.FLAG_NORMAL;
-                article.setFlag(flag);
+                int flag = new String(ch, start, length).equals("TOP")? BriefArticle.FLAG_TOP: BriefArticle.FLAG_NORMAL;
+                briefArticle.setFlag(flag);
                 break;
             default:
         }
@@ -63,8 +63,8 @@ public class TopicHandler extends BaseArticleHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
         if (localName.equals("topic")) {
-            article.setBoardID(boardID);
-            articleResponse.addArticle(article);
+            briefArticle.setBoardID(boardID);
+            briefArticleResponse.addArticle(briefArticle);
         }
     }
 
