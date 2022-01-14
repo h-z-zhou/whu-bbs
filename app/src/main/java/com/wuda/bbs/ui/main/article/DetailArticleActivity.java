@@ -19,7 +19,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ArticleDetailActivity extends AppCompatActivity {
+public class DetailArticleActivity extends AppCompatActivity {
 
     BriefArticle mBriefArticle;
 

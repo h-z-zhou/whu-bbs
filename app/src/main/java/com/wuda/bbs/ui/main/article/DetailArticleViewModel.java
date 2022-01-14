@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.bean.BriefArticle;
 
-public class ArticleDetailViewModel extends ViewModel {
+public class DetailArticleViewModel extends ViewModel {
 
     BriefArticle mBriefArticle;
 

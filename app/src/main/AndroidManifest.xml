@@ -17,7 +17,7 @@
             android:name=".ui.main.board.FavorBoardManagerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.briefArticle.ArticleDetailActivity"
+            android:name=".ui.main.article.DetailArticleActivity"
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"

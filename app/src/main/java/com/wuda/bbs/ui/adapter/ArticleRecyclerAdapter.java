@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BriefArticle;
-import com.wuda.bbs.ui.main.article.ArticleDetailActivity;
+import com.wuda.bbs.ui.main.article.DetailArticleActivity;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, ArticleDetailActivity.class);
+                Intent intent = new Intent(mContext, DetailArticleActivity.class);
                 intent.putExtra("article", mBriefArticleList.get(position));
                 mContext.startActivity(intent);
             }
