@@ -8,7 +8,7 @@ public class ServiceCreator {
     private static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(NetConst.BASE)
             .client(new OkHttpClient.Builder()
-                    .cookieJar(new CookieStore())
+                    .cookieJar(CookieStore.newInstance())
                     .build()
             )
             .build();
