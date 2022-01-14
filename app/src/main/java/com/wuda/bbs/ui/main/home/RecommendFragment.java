@@ -42,4 +42,9 @@ public class RecommendFragment extends ArticleContainerFragment {
         });
 
     }
+
+//    @Override
+//    protected void loadMore() {
+//
+//    }
 }

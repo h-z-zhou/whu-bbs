@@ -1,8 +1,9 @@
 package com.wuda.bbs.ui.main.board;
 
+import androidx.annotation.NonNull;
+
 import com.wuda.bbs.bean.ArticleResponse;
 import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.DetailBoard;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -19,21 +20,22 @@ import retrofit2.Response;
 
 public class BoardArticleFragment extends ArticleContainerFragment {
 
-    BaseBoard detailBoard;
+    BaseBoard baseBoard;
 
     @Override
     protected void requestArticleFromServer() {
-        if (detailBoard == null) {
+        if (baseBoard == null) {
             article_srl.setRefreshing(false);
             return;
         }
         MobileService mobileService = ServiceCreator.create(MobileService.class);
         Map<String, String> form = new HashMap<>();
-        form.put("page", mViewModel.articleResponse.getValue().getCurrentPage().toString());
-        form.put("board", detailBoard.getId());
+        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
+        form.put("page", Integer.toString(requestPage));
+        form.put("board", baseBoard.getId());
         mobileService.request("topics", form).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 article_srl.setRefreshing(false);
                 try {
                     String text = response.body().string();
@@ -46,7 +48,7 @@ public class BoardArticleFragment extends ArticleContainerFragment {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 article_srl.setRefreshing(false);
 
             }
@@ -55,6 +57,6 @@ public class BoardArticleFragment extends ArticleContainerFragment {
 
     public void setBoard(BaseBoard baseBoard) {
         // 放到 mViewModel ???
-        this.detailBoard = baseBoard;
+        this.baseBoard = baseBoard;
     }
 }

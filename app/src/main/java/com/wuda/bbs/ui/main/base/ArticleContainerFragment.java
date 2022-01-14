@@ -42,6 +42,8 @@ public abstract class ArticleContainerFragment extends Fragment {
         article_srl = view.findViewById(R.id.article_swipeRefresh);
         article_rv = view.findViewById(R.id.recyclerView);
         article_rv.setLayoutManager(new LinearLayoutManager(getContext()));
+//        article_rv.setVerticalScrollBarEnabled(true);
+//        article_rv.setScrollBarSize(20);
 //        article_rv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
         return view;
@@ -66,8 +68,9 @@ public abstract class ArticleContainerFragment extends Fragment {
             public void onChanged(ArticleResponse articleResponse) {
                 if (article_rv.getAdapter() != null) {
                     ArticleRecyclerAdapter adapter = (ArticleRecyclerAdapter) article_rv.getAdapter();
-                    adapter.updateArticleList(articleResponse.getArticleList());
-                    adapter.notifyDataSetChanged();
+//                    adapter.updateArticleList(articleResponse.getArticleList());
+//                    adapter.notifyDataSetChanged();
+                    adapter.appendArticles(articleResponse.getArticleList());
                 }
 
             }
@@ -76,9 +79,31 @@ public abstract class ArticleContainerFragment extends Fragment {
         article_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                ((ArticleRecyclerAdapter) article_rv.getAdapter()).removeAll();
+                mViewModel.articleResponse.getValue().setCurrentPage(-1);
                 requestArticleFromServer();
             }
         });
+
+        article_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
+                    int totalItem = manager.getItemCount();
+                    // 最后一个
+                    if (lastVisibleItem == totalItem-1) {
+                        ArticleResponse articleResponse = mViewModel.articleResponse.getValue();
+                        if (articleResponse.getCurrentPage() < articleResponse.getTotalPage()) {
+                            requestArticleFromServer();
+                        }
+                    }
+                }
+            }
+        });
+
     }
 
     protected abstract void requestArticleFromServer(); //{
@@ -106,5 +131,4 @@ public abstract class ArticleContainerFragment extends Fragment {
 //            }
 //        });
 //    }
-
 }

@@ -3,7 +3,6 @@ package com.wuda.bbs.utils.network;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.Xml;
 
 import androidx.annotation.NonNull;

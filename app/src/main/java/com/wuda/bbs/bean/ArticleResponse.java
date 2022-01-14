@@ -10,7 +10,7 @@ public class ArticleResponse {
     List<Article> articleList;
 
     public ArticleResponse() {
-        currentPage = 1;
+        currentPage = 0;
         totalPage = 1;
         articleList = new ArrayList<>();
     }

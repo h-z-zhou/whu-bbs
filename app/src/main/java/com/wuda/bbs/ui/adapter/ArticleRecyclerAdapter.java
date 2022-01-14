@@ -95,6 +95,21 @@ public class ArticleRecyclerAdapter extends RecyclerView.Adapter<ArticleRecycler
         mArticleList = articleList;
     }
 
+    public void appendArticles(List<Article> articles) {
+        // 为空时使用insert有强烈的跳变感
+        if (mArticleList.isEmpty()) {
+            mArticleList = articles;
+            this.notifyDataSetChanged();
+        } else {
+            mArticleList.addAll(articles);
+            this.notifyItemRangeInserted(mArticleList.size() - articles.size(), mArticleList.size());
+        }
+    }
+
+    public void removeAll() {
+        mArticleList.clear();
+    }
+
     private SpannableStringBuilder buildSpannableContent(Article article) {
         SpannableStringBuilder content = new SpannableStringBuilder();
         content.append("#").append(article.getBoardName()).append("#");
