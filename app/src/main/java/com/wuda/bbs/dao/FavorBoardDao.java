@@ -16,6 +16,9 @@ public interface FavorBoardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public abstract void insert(List<FavorBoard> boardList);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insert(FavorBoard favorBoard);
+
     @Query("select * from FavorBoard")
     public abstract List<FavorBoard> loadAllFavorBoards();
 
@@ -23,8 +26,11 @@ public interface FavorBoardDao {
     public abstract List<BaseBoard> loadFavorBoardByUsername(@NonNull String username);
 
     @Query("delete from FavorBoard where favor_by_username = :username")
-    public abstract void clearFavorBoardByUsername(String username);
+    public abstract void clearFavorBoardsByUsername(String username);
 
     @Query("delete from FavorBoard")
     public abstract void clearAll();
+
+    @Query("delete from FavorBoard where id = :id")
+    public abstract void delete(String id);
 }

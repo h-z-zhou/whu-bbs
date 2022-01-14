@@ -4,15 +4,16 @@ package com.wuda.bbs.ui.main.board;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.bean.DetailBoard;
-import com.wuda.bbs.bean.FavorBoard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FavorBoardManagerViewModel extends ViewModel {
+
     MutableLiveData<List<DetailBoard>> allBoards;
-    MutableLiveData<List<FavorBoard>> favorBoards;
+    MutableLiveData<List<BaseBoard>> favorBoards;
     // TODO: Implement the ViewModel
 
     public FavorBoardManagerViewModel() {
@@ -21,5 +22,13 @@ public class FavorBoardManagerViewModel extends ViewModel {
 
         favorBoards = new MutableLiveData<>();
         favorBoards.setValue(new ArrayList<>());
+    }
+
+    public boolean isFavorite(BaseBoard board) {
+        for (BaseBoard favorBoard: favorBoards.getValue()) {
+            if (favorBoard.getId().equals(board.getId()))
+                return true;
+        }
+        return false;
     }
 }

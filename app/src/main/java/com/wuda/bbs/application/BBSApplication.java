@@ -34,4 +34,8 @@ public class BBSApplication extends Application {
 
         editor.apply();
     }
+
+    public static boolean isLogin() {
+        return !username.equals("guest");
+    }
 }

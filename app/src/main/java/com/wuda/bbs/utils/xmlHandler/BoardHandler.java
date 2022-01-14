@@ -30,7 +30,8 @@ public class BoardHandler extends DefaultHandler {
                 return;
             String boardName = attributes.getValue("name");
             String boardID = attributes.getValue("id");
-            detailBoardList.add(new DetailBoard(boardID, boardName, section));
+            String boardNum = attributes.getValue("num");
+            detailBoardList.add(new DetailBoard(boardID, boardName, boardNum, section));
         } else if (localName.equals("Section")) {
             section = attributes.getValue("name");
         }

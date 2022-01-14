@@ -1,7 +1,6 @@
 package com.wuda.bbs.ui.main.board;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Insert;
@@ -155,8 +155,16 @@ public class FavorBoardFragment extends Fragment {
 
         List<BaseBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getUsername());
 
-        if (favorBoardList.isEmpty() && !hadRequest) {
-            requestFavorBoardsFromServer();
+        if (favorBoardList.isEmpty()) {
+            if (!hadRequest) {
+                requestFavorBoardsFromServer();
+            } else {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("空空如也")
+                        .setMessage("点开收藏，选择喜欢的板块")
+                        .create()
+                        .show();
+            }
         } else {
             mViewModel.favorBoardList.setValue(favorBoardList);
         }
