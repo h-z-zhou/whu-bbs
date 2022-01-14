@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,6 +121,8 @@ public class LoginFragment extends Fragment {
                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                         List<String> cookies = response.headers().values("Set-Cookie");
 
+                        Log.d("cookies", cookies.toString());
+
                         Map<String, String> cookiesFilter = new HashMap<>();
 
                         for (String cookie: cookies) {
@@ -134,7 +137,9 @@ public class LoginFragment extends Fragment {
 
                         // 是否成功登录
                         String userID = cookiesFilter.get("UTMPUSERID");
-                        assert userID != null;
+                        if (userID == null)
+                            userID = "guest";
+//                        assert userID != null;
                         if (userID.equals("guest") || userID.equals("deleted")) {
                             if (getContext() == null)
                                 return;
@@ -143,6 +148,8 @@ public class LoginFragment extends Fragment {
                                     .setMessage("请检查用户名和密码")
                                     .create()
                                     .show();
+                            // 不保存帐号
+                            return;
                         }
 
                         mViewModel.updateCurrentUser(new User(username, passwd, User.FLAG_CURRENT));
