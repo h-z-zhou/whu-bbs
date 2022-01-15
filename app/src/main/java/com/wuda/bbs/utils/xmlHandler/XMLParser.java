@@ -42,7 +42,7 @@ public class XMLParser {
     }
 
     public static BriefArticleResponse parseRecommend(String xmlData) {
-        RecommendHandlerBase recommendHandler = new RecommendHandlerBase();
+        RecommendHandler recommendHandler = new RecommendHandler();
         xmlReader.setContentHandler(recommendHandler);
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
@@ -54,7 +54,7 @@ public class XMLParser {
     }
 
     public static BriefArticleResponse parseHot(String xmlData) {
-        HotHandlerBase hotHandler = new HotHandlerBase();
+        HotHandler hotHandler = new HotHandler();
         xmlReader.setContentHandler(hotHandler);
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
@@ -66,7 +66,7 @@ public class XMLParser {
     }
 
     public static BriefArticleResponse parseTopic(String xmlData) {
-        TopicHandlerBase topicHandler = new TopicHandlerBase();
+        TopicHandler topicHandler = new TopicHandler();
         xmlReader.setContentHandler(topicHandler);
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
