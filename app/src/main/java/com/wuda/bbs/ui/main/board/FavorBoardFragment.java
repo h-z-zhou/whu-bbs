@@ -177,7 +177,11 @@ public class FavorBoardFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
-                    String text = response.body().string();
+
+                    String text = "";
+                    if (response.body() != null) {
+                        text = response.body().string();
+                    }
                     if (text.equals(NetConst.FAVOR_BOARD_ERROR)) {
                         if (getContext() != null) {
                             new AlertDialog.Builder(getContext())

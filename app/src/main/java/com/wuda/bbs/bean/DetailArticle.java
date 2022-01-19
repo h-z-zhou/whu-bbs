@@ -7,7 +7,8 @@ public class DetailArticle {
     String userFaceImg;
     String content;
     String time;
-    String replyTo;
+    String reply2username;
+    String reply2content;
 
     public String getFloor() {
         return floor;
@@ -57,11 +58,19 @@ public class DetailArticle {
         this.time = time;
     }
 
-    public String getReplyTo() {
-        return replyTo;
+    public String getReply2username() {
+        return reply2username;
     }
 
-    public void setReplyTo(String replyTo) {
-        this.replyTo = replyTo;
+    public void setReply2username(String reply2username) {
+        this.reply2username = reply2username;
+    }
+
+    public String getReply2content() {
+        return reply2content;
+    }
+
+    public void setReply2content(String reply2content) {
+        this.reply2content = reply2content;
     }
 }

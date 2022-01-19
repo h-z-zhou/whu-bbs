@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView"
+        android:id="@+id/author_avatar_imageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:src="@drawable/ic_face"
@@ -14,35 +15,36 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/replyUserName_textView"
+        android:id="@+id/authorUsername_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:text="zhuzi"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/circleImageView"
-        app:layout_constraintTop_toTopOf="@+id/circleImageView" />
+        app:layout_constraintStart_toEndOf="@+id/author_avatar_imageView"
+        app:layout_constraintTop_toTopOf="@+id/author_avatar_imageView" />
 
     <TextView
-        android:id="@+id/replyTime_textView"
+        android:id="@+id/postTime_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginBottom="4dp"
         android:text="2022-1-1 08:00"
-        app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
-        app:layout_constraintStart_toEndOf="@+id/circleImageView"
-        app:layout_constraintTop_toBottomOf="@+id/replyUserName_textView" />
+        app:layout_constraintBottom_toBottomOf="@+id/author_avatar_imageView"
+        app:layout_constraintStart_toEndOf="@+id/author_avatar_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/authorUsername_textView" />
 
     <TextView
-        android:id="@+id/replyContent_textView"
+        android:id="@+id/postContent_textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="\@zhuzi BBS更新啦\n更新了什么"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
+        app:layout_constraintStart_toStartOf="@+id/postTime_textView"
+        app:layout_constraintTop_toBottomOf="@+id/author_avatar_imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

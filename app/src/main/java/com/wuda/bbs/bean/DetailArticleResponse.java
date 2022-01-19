@@ -65,4 +65,8 @@ public class DetailArticleResponse {
     public void setDetailArticleList(List<DetailArticle> detailArticleList) {
         this.detailArticleList = detailArticleList;
     }
+
+    public void addDetailArticle(DetailArticle article) {
+        detailArticleList.add(article);
+    }
 }

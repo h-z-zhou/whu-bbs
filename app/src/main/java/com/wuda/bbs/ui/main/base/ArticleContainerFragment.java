@@ -17,7 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BriefArticleResponse;
-import com.wuda.bbs.ui.adapter.ArticleRecyclerAdapter;
+import com.wuda.bbs.ui.adapter.BriefArticleRecyclerAdapter;
 
 public abstract class ArticleContainerFragment extends Fragment {
 
@@ -53,7 +53,7 @@ public abstract class ArticleContainerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ArticleContainerViewModel.class);
-        article_rv.setAdapter(new ArticleRecyclerAdapter(getContext(), mViewModel.articleResponse.getValue().getBriefArticleList()));
+        article_rv.setAdapter(new BriefArticleRecyclerAdapter(getContext(), mViewModel.articleResponse.getValue().getBriefArticleList()));
         eventBinding();
 
         article_srl.setRefreshing(true);
@@ -67,7 +67,7 @@ public abstract class ArticleContainerFragment extends Fragment {
             @Override
             public void onChanged(BriefArticleResponse briefArticleResponse) {
                 if (article_rv.getAdapter() != null) {
-                    ArticleRecyclerAdapter adapter = (ArticleRecyclerAdapter) article_rv.getAdapter();
+                    BriefArticleRecyclerAdapter adapter = (BriefArticleRecyclerAdapter) article_rv.getAdapter();
 //                    adapter.updateArticleList(articleResponse.getArticleList());
 //                    adapter.notifyDataSetChanged();
                     adapter.appendArticles(briefArticleResponse.getBriefArticleList());
@@ -79,7 +79,7 @@ public abstract class ArticleContainerFragment extends Fragment {
         article_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ((ArticleRecyclerAdapter) article_rv.getAdapter()).removeAll();
+                ((BriefArticleRecyclerAdapter) article_rv.getAdapter()).removeAll();
                 mViewModel.articleResponse.getValue().setCurrentPage(-1);
                 requestArticleFromServer();
             }
