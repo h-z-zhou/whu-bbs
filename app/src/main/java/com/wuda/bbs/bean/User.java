@@ -9,29 +9,29 @@ import androidx.room.PrimaryKey;
 public class User {
     @PrimaryKey
     @NonNull
-    public String name;
+    public String id;
     public String passwd;
     public int flag;  // 是否为当前用户，登录使用
 
     public static int FLAG_CURRENT = 0, FLAG_HISTORY = 1;
 
-    public User(@NonNull String name, String passwd, int flag) {
-        this.name = name;
+    public User(@NonNull String id, String passwd, int flag) {
+        this.id = id;
         this.passwd = passwd;
         this.flag = flag;
     }
 
     public boolean equals(User user) {
-        return user.name.equals(name) && user.passwd.equals(passwd) && user.flag == flag;
+        return user.id.equals(id) && user.passwd.equals(passwd) && user.flag == flag;
     }
 
     @NonNull
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
     }
 
-    public void setName(@NonNull String name) {
-        this.name = name;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 
     public String getPasswd() {

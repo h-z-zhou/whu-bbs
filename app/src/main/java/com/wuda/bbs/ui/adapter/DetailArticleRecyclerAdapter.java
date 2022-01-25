@@ -1,6 +1,7 @@
 package com.wuda.bbs.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.DetailArticle;
+import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.utils.network.NetConst;
 
 import org.w3c.dom.Text;
@@ -28,6 +30,7 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
     Context mContext;
     List<DetailArticle> mDetailArticleList;
+    Intent userInfoIntent;
 
     private final int TYPE_CONTENT = 0;
     private final int TYPE_REPLY = 1;
@@ -35,6 +38,8 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     public DetailArticleRecyclerAdapter(Context context) {
         mContext = context;
         mDetailArticleList = new ArrayList<>();
+        userInfoIntent = new Intent(mContext, UserInfoActivity.class);
+        userInfoIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     @Override
@@ -50,6 +55,7 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         } else {
             return new ReplyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_detail_reply_item, parent, false));
         }
+
     }
 
     @Override
@@ -59,14 +65,34 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             ((ReplyViewHolder) holder).replierUsername_tv.setText(article.getAuthor());
             ((ReplyViewHolder) holder).replyTime_tv.setText(article.getTime());
             ((ReplyViewHolder) holder).replyContent_tv.setText(replyContentBuilder(article));
-            Glide.with(mContext).load(NetConst.BASE + "/" + article.getUserFaceImg()).into(((ReplyViewHolder) holder).replierAvatar_iv);
+            Glide.with(mContext)
+                    .load(NetConst.BASE + "/" + article.getUserFaceImg())
+                    .error(R.drawable.ic_face)
+                    .into(((ReplyViewHolder) holder).replierAvatar_iv);
+            ((ReplyViewHolder) holder).replierAvatar_iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    userInfoIntent.putExtra("userId", article.getAuthor());
+                    mContext.startActivity(userInfoIntent);
+                }
+            });
         } else if (holder instanceof ContentViewHolder) {
 //            ((ContentViewHolder) holder).authorAvatar_iv
             ((ContentViewHolder) holder).authorUsername_tv.setText(article.getAuthor());
             ((ContentViewHolder) holder).postTime_tv.setText(article.getTime());
             ((ContentViewHolder) holder).postContent_tv.setText(article.getContent());
-            Glide.with(mContext).load(NetConst.BASE + "/" + article.getUserFaceImg()).into(((ContentViewHolder) holder).authorAvatar_iv);
+            Glide.with(mContext)
+                    .load(NetConst.BASE + "/" + article.getUserFaceImg())
+                    .error(R.drawable.ic_face)
+                    .into(((ContentViewHolder) holder).authorAvatar_iv);
 //            ((ContentViewHolder) holder).replyNum_tv.setText(article.);
+            ((ContentViewHolder) holder).authorAvatar_iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    userInfoIntent.putExtra("userId", article.getAuthor());
+                    mContext.startActivity(userInfoIntent);
+                }
+            });
         }
     }
 

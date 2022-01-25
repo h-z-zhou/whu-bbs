@@ -7,20 +7,17 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.wuda.bbs.R;
+import com.wuda.bbs.ui.drawer.FavArticleActivity;
 import com.wuda.bbs.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.detailArticle_toolbar);
         setSupportActionBar(toolbar);
         if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -77,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
         drawer_nav.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                if (item.getItemId() == R.id.drawer_nav_fav_article) {
+                    Intent intent = new Intent(MainActivity.this, FavArticleActivity.class);
+                    startActivity(intent);
+                }
+
                 drawer.close();
                 return true;
             }

@@ -6,7 +6,7 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="decoration_width_1">8dp</dimen>
-    <dimen name="topic_decoration_height_content">4dp</dimen>
-    <dimen name="topic_decoration_height_reply">2dp</dimen>
-    <dimen name="topic_decoration_replyIndentWidth">64dp</dimen>
+    <dimen name="topic_decoration_height_content">8dp</dimen>
+    <dimen name="topic_decoration_height_reply">1dp</dimen>
+    <dimen name="topic_decoration_replyIndentWidth">72dp</dimen>
 </resources>

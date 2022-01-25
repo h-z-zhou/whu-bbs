@@ -1,13 +1,17 @@
 package com.wuda.bbs.ui.main.article;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.bean.DetailArticleResponse;
@@ -30,9 +34,12 @@ import retrofit2.Response;
 
 public class DetailArticleActivity extends AppCompatActivity {
 
-    BriefArticle mBriefArticle;
+//    BriefArticle mBriefArticle;
+    String boardId;
+    String groupId;
     DetailArticleResponse detailArticleResponse;
 
+    Toolbar toolbar;
     RecyclerView article_rv;
 
     @Override
@@ -40,28 +47,47 @@ public class DetailArticleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
 
-        article_rv = findViewById(R.id.recyclerView);
+        article_rv = findViewById(R.id.detailArticle_recyclerView);
         article_rv.setLayoutManager(new LinearLayoutManager(DetailArticleActivity.this));
         article_rv.setAdapter(new DetailArticleRecyclerAdapter(getBaseContext()));
         article_rv.addItemDecoration(new TopicDecoration(getBaseContext()));
 
-        mBriefArticle = (BriefArticle) getIntent().getSerializableExtra("article");
+        toolbar = findViewById(R.id.detailArticle_toolbar);
+
+//        mBriefArticle = (BriefArticle) getIntent().getSerializableExtra("article");
+        boardId = getIntent().getStringExtra("boardId");
+        groupId = getIntent().getStringExtra("groupId");
+
+        String title = getIntent().getStringExtra("title");
+        if (title != null) {
+            toolbar.setTitle(title);
+        }
+
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 
         requestContentFromServer();
 
     }
 
+
     private void requestContentFromServer() {
         MobileService mobileService = ServiceCreator.create(MobileService.class);
         Map<String, String> form = new HashMap<>();
 //        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
-        form.put("GID", mBriefArticle.getGID());
-        form.put("board", mBriefArticle.getBoardID());
+        form.put("GID", groupId);
+        form.put("board", boardId);
         form.put("page", "1");
         Log.d("article", form.toString());
         mobileService.request("read", form).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     if (response.body() != null) {
                         String text = response.body().string();
@@ -74,7 +100,7 @@ public class DetailArticleActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
 
             }
         });

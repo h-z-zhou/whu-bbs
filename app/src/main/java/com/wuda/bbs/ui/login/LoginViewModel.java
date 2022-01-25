@@ -20,7 +20,7 @@ public class LoginViewModel extends ViewModel {
             for (int i=0; i<historyUserList.size(); ++i) {
                 // 修正历史记录
                 historyUserList.get(i).flag = User.FLAG_HISTORY;
-                if (historyUserList.get(i).name.equals(user.name)){
+                if (historyUserList.get(i).id.equals(user.id)){
                     historyUserList.remove(i);
                 }
             }

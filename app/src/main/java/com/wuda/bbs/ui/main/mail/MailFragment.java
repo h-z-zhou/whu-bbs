@@ -1,5 +1,6 @@
 package com.wuda.bbs.ui.main.mail;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -7,34 +8,38 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager2.adapter.FragmentStateAdapter;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
+import com.wuda.bbs.bean.FriendResponse;
+import com.wuda.bbs.bean.MailResponse;
+import com.wuda.bbs.ui.adapter.MailAdapter;
+import com.wuda.bbs.utils.network.MobileService;
+import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.utils.xmlHandler.XMLParser;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MailFragment extends Fragment {
 
     private MailViewModel mViewModel;
-
-    private TabLayout mail_tl;
-    private ViewPager2 mail_vp2;
+    RecyclerView mail_rv;
 
     public static MailFragment newInstance() {
         return new MailFragment();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -42,37 +47,9 @@ public class MailFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mail_fragment, container, false);
 
-        mail_tl = view.findViewById(R.id.home_tabLayout);
-        mail_vp2 = view.findViewById(R.id.home_viewPager2);
-
-        mail_vp2.setAdapter(new FragmentStateAdapter(requireActivity().getSupportFragmentManager(), getLifecycle()) {
-            @NonNull
-            @Override
-            public Fragment createFragment(int position) {
-                if (position == 0) {
-                    return LetterFragment.newInstance();
-                } else if (position == 1) {
-                    return ContactFragment.newInstance();
-                }
-                return null;
-            }
-
-            @Override
-            public int getItemCount() {
-                return 2;
-            }
-        });
-
-        new TabLayoutMediator(mail_tl, mail_vp2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                if (position == 0) {
-                    tab.setText("信件");
-                } else if (position == 1) {
-                    tab.setText("好友");
-                }
-            }
-        }).attach();
+        mail_rv = view.findViewById(R.id.recyclerView);
+        mail_rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        mail_rv.setAdapter(new MailAdapter(getContext(), new ArrayList<>()));
 
         return view;
     }
@@ -81,11 +58,46 @@ public class MailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MailViewModel.class);
+
+        eventBinding();
+        requestMailsFromServer();
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.mail_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+    private void eventBinding() {
+        mViewModel.mailResponse.observe(getViewLifecycleOwner(), new Observer<MailResponse>() {
+            @Override
+            public void onChanged(MailResponse mailResponse) {
+                ((MailAdapter)mail_rv.getAdapter()).appendMails(mailResponse.getMailList());
+            }
+        });
+    }
+
+    private void requestMailsFromServer() {
+        MobileService mobileService = ServiceCreator.create(MobileService.class);
+        Map<String, String> form = new HashMap<>();
+//        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
+        form.put("list", "1");
+        form.put("boxname", "inbox");
+        mobileService.request("mail", form).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                try {
+                    if (response.body() != null) {
+                        String text = response.body().string();
+                        MailResponse mailResponse = XMLParser.parseMails(text);
+                        if (mailResponse.isSuccessful()) {
+                            mViewModel.mailResponse.postValue(mailResponse);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+
+            }
+        });
     }
 }

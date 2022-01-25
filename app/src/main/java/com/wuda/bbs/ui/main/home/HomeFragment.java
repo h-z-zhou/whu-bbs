@@ -1,7 +1,5 @@
 package com.wuda.bbs.ui.main.home;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,8 +15,6 @@ import android.view.ViewGroup;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
-import com.wuda.bbs.ui.main.mail.ContactFragment;
-import com.wuda.bbs.ui.main.mail.LetterFragment;
 
 public class HomeFragment extends Fragment {
 

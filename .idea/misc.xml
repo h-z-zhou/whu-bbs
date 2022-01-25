@@ -23,9 +23,13 @@
         <entry key="app/src/main/res/drawable/side_nav_bar.xml" value="0.18611111111111112" />
         <entry key="app/src/main/res/layout/activity_app.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_article_detail.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/activity_fav_article.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_favor_board_manager.xml" value="0.31666666666666665" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/activity_mail_content.xml" value="0.37135416666666665" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/activity_treasure_box.xml" value="0.31927083333333334" />
+        <entry key="app/src/main/res/layout/activity_user_info.xml" value="0.37135416666666665" />
         <entry key="app/src/main/res/layout/app_bar_main.xml" value="0.26222826086956524" />
         <entry key="app/src/main/res/layout/article_container_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/article_detail_content_item.xml" value="0.3359375" />
@@ -42,11 +46,14 @@
         <entry key="app/src/main/res/layout/favorBoard_fragment.xml" value="0.1015625" />
         <entry key="app/src/main/res/layout/favor_board_fragment.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/fragment_contact.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/friend_fragment.xml" value="0.31927083333333334" />
+        <entry key="app/src/main/res/layout/friend_item.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/home_fragment.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/hot_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/letter_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/login_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/mail_fragment.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/mail_item.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/main_login_fragment.xml" value="0.21467391304347827" />
         <entry key="app/src/main/res/layout/news_today_fragment.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/recommend_fragment.xml" value="0.3359375" />

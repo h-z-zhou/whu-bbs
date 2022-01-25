@@ -93,7 +93,7 @@ public class LoginFragment extends Fragment {
             }
         }
 
-        username_et.setText(mViewModel.currentUser.getName());
+        username_et.setText(mViewModel.currentUser.getId());
         passwd_et.setText(mViewModel.currentUser.getPasswd());
     }
 
@@ -198,7 +198,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mViewModel.currentUser.setName(username_et.getText().toString());
+        mViewModel.currentUser.setId(username_et.getText().toString());
         mViewModel.currentUser.setPasswd(username_et.getText().toString());
     }
 

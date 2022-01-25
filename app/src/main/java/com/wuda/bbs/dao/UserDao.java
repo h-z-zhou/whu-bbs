@@ -23,6 +23,6 @@ public interface UserDao {
     @Query("select * from User")
     List<User> loadAllUsers();
 
-    @Query(("delete from User where name = :name"))
+    @Query(("delete from User where id = :name"))
     int deleteUserByName(String name);
 }

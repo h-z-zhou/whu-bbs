@@ -74,8 +74,12 @@ public class BriefArticleRecyclerAdapter extends RecyclerView.Adapter<BriefArtic
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BriefArticle article = mBriefArticleList.get(position);
                 Intent intent = new Intent(mContext, DetailArticleActivity.class);
-                intent.putExtra("article", mBriefArticleList.get(position));
+//                intent.putExtra("article", mBriefArticleList.get(position));
+                intent.putExtra("boardId", article.getBoardID());
+                intent.putExtra("groupId", article.getGID());
+                intent.putExtra("title", article.getTitle());
                 mContext.startActivity(intent);
             }
         });

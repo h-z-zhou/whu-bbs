@@ -14,6 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BBS">
         <activity
+            android:name=".ui.drawer.FavArticleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.drawer.TreasureBoxActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.main.mail.MailContentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.user.UserInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.main.board.FavorBoardManagerActivity"
             android:exported="false" />
         <activity

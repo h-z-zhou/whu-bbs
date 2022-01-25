@@ -3,6 +3,11 @@ package com.wuda.bbs.utils.xmlHandler;
 import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.bean.DetailArticleResponse;
+import com.wuda.bbs.bean.FriendResponse;
+import com.wuda.bbs.bean.MailContentResponse;
+import com.wuda.bbs.bean.MailResponse;
+import com.wuda.bbs.bean.UserInfo;
+import com.wuda.bbs.bean.UserInfoResponse;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -101,5 +106,81 @@ public class XMLParser {
         }
 
         return detailArticleHandler.getDetailArticleResponse();
+    }
+
+    public static UserInfoResponse parseUserInfo(String xmlData) {
+
+        UserInfoResponse response = new UserInfoResponse();
+
+        UserInfoHandler userInfoHandler = new UserInfoHandler();
+        xmlReader.setContentHandler(userInfoHandler);
+
+        try {
+            xmlReader.parse(new InputSource(new StringReader(xmlData)));
+            response.setUserInfo(userInfoHandler.getUserInfo());
+        } catch (IOException | SAXException e) {
+            e.printStackTrace();
+            response.setSuccessful(false);
+            response.setMsg(e.getMessage());
+        }
+
+        return response;
+    }
+
+    public static FriendResponse parseFriends(String xmlData) {
+        FriendResponse response = new FriendResponse();
+
+        FriendHandler friendHandler = new FriendHandler();
+        xmlReader.setContentHandler(friendHandler);
+
+        try {
+            xmlReader.parse(new InputSource(new StringReader(xmlData)));
+            response.setFriendList(friendHandler.getFriendList());
+        } catch (IOException | SAXException e) {
+            e.printStackTrace();
+            response.setSuccessful(false);
+            response.setMsg(e.getMessage());
+        }
+
+        return response;
+    }
+
+    public static MailResponse parseMails(String xmlData) {
+        MailResponse mailResponse;
+
+        MailHandler mailHandler = new MailHandler();
+        xmlReader.setContentHandler(mailHandler);
+
+        try {
+            xmlReader.parse(new InputSource(new StringReader(xmlData)));
+            mailResponse = mailHandler.getMailResponse();
+        } catch (IOException | SAXException e) {
+            e.printStackTrace();
+            mailResponse = new MailResponse();
+            mailResponse.setSuccessful(false);
+            mailResponse.setMsg(e.getMessage());
+        }
+
+        return  mailResponse;
+    }
+
+    public static MailContentResponse parseMailContent(String xmlData) {
+
+        MailContentResponse mailContentResponse;
+
+        MailContentHandler mailContentHandler = new MailContentHandler();
+        xmlReader.setContentHandler(mailContentHandler);
+
+        try {
+            xmlReader.parse(new InputSource(new StringReader(xmlData)));
+            mailContentResponse = mailContentHandler.getMailContentResponse();
+        } catch (IOException | SAXException e) {
+            e.printStackTrace();
+            mailContentResponse = new MailContentResponse();
+            mailContentResponse.setSuccessful(false);
+            mailContentResponse.setMsg(e.getMessage());
+        }
+
+        return mailContentResponse;
     }
 }

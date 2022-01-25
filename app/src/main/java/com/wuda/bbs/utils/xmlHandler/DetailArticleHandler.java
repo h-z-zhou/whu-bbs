@@ -98,6 +98,7 @@ public class DetailArticleHandler extends DefaultHandler {
                 detailArticle.setContent(ArticleContentRegex.getContent(rawContent));
                 detailArticle.setReply2username(ArticleContentRegex.getReply2username(rawContent));
                 detailArticle.setReply2content(ArticleContentRegex.getReply2content(rawContent));
+                detailArticle.setAttachmentList(ArticleContentRegex.getAttachments(rawContent));
         }
 
     }

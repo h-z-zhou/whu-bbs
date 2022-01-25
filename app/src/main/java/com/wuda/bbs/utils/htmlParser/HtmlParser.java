@@ -1,14 +1,11 @@
 package com.wuda.bbs.utils.htmlParser;
 
-import android.util.Log;
-
 import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.bean.BriefArticleResponse;
-import com.wuda.bbs.bean.DetailBoard;
+import com.wuda.bbs.bean.Treasure;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -76,17 +73,33 @@ public class HtmlParser {
         return briefArticleResponse;
     }
 
-    public static List<DetailBoard> parseFavouriteBoard(String htmlData) {
-
-        List<DetailBoard> favDetailBoardList = new ArrayList<>();
+    public static <T> List<Treasure> parseTreasures(Class<T> treasureClz,String htmlData) {
+        List<Treasure> treasureList = new ArrayList<>();
 
         Document doc = Jsoup.parse(htmlData);
+        Elements trs = doc.getElementsByTag("tr");
 
-        for (Element js: doc.getElementsByTag("javascript")) {
-            Log.d("js", js.text());
+        int idx_tr = 3;
+
+        for (; idx_tr<trs.size(); idx_tr++) {
+            Elements links = trs.get(idx_tr).getElementsByTag("a");
+            if (links.size() != 3)
+                continue;
+
+            Treasure treasure = null;
+            try {
+                treasure = (Treasure) treasureClz.newInstance();
+                treasure.setName(links.get(0).text());
+                treasure.setSrcUrl(links.get(0).attr("href"));
+                treasure.setDelUrl(links.get(2).attr("href"));
+
+                treasureList.add(treasure);
+
+            } catch (IllegalAccessException | InstantiationException e) {
+                e.printStackTrace();
+            }
         }
 
-        return favDetailBoardList;
+        return treasureList;
     }
-
 }

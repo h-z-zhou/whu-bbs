@@ -1,5 +1,7 @@
 package com.wuda.bbs.bean;
 
+import java.util.List;
+
 public class DetailArticle {
     String floor;
     String id;
@@ -9,6 +11,7 @@ public class DetailArticle {
     String time;
     String reply2username;
     String reply2content;
+    List<Attachment> attachmentList;
 
     public String getFloor() {
         return floor;
@@ -72,5 +75,13 @@ public class DetailArticle {
 
     public void setReply2content(String reply2content) {
         this.reply2content = reply2content;
+    }
+
+    public List<Attachment> getAttachmentList() {
+        return attachmentList;
+    }
+
+    public void setAttachmentList(List<Attachment> attachmentList) {
+        this.attachmentList = attachmentList;
     }
 }
