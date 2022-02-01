@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
-import com.wuda.bbs.utils.htmlParser.HtmlParser;
+import com.wuda.bbs.utils.parser.HtmlParser;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.network.WebService;
 

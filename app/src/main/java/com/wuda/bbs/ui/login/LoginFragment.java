@@ -1,12 +1,11 @@
 package com.wuda.bbs.ui.login;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -14,6 +13,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -24,7 +24,6 @@ import com.wuda.bbs.bean.User;
 import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.UserDao;
 import com.wuda.bbs.utils.network.LoginService;
-import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.ServiceCreator;
 
 import java.util.HashMap;
@@ -40,13 +39,15 @@ public class LoginFragment extends Fragment {
 
     private LoginViewModel mViewModel;
 
-    private TextInputLayout username_tl;
-    private EditText username_et;
+    private TextInputLayout userId_tl;
+    private EditText userId_et;
     private TextInputLayout passwd_tl;
     private EditText passwd_et;
     private Button login_btn;
-    private Button find_passwd_btn;
+    private Button forgot_passwd_btn;
     private Button register_btn;
+
+    private boolean userId_tl_isDropDown = false;
 
     UserDao userDao;
 
@@ -65,12 +66,12 @@ public class LoginFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-        username_tl = view.findViewById(R.id.login_username_textInputLayout);
-        username_et = view.findViewById(R.id.login_username_editText);
+        userId_tl = view.findViewById(R.id.login_userId_textInputLayout);
+        userId_et = view.findViewById(R.id.login_userId_editText);
         passwd_tl = view.findViewById(R.id.login_passwd_textInputLayout);
         passwd_et = view.findViewById(R.id.login_passwd_editText);
         login_btn = view.findViewById(R.id.login_login_button);
-        find_passwd_btn = view.findViewById(R.id.login_find_passwd_button);
+        forgot_passwd_btn = view.findViewById(R.id.login_forgot_passwd_button);
         register_btn = view.findViewById(R.id.login_register_button);
 
         eventBinding();
@@ -93,19 +94,61 @@ public class LoginFragment extends Fragment {
             }
         }
 
-        username_et.setText(mViewModel.currentUser.getId());
+        userId_et.setText(mViewModel.currentUser.getId());
         passwd_et.setText(mViewModel.currentUser.getPasswd());
     }
 
     private void eventBinding() {
+
+        userId_tl.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userId_tl_isDropDown = !userId_tl_isDropDown;
+                if (userId_tl_isDropDown) {
+                    userId_tl.setEndIconDrawable(R.drawable.ic_arrow_drop_up);
+                    PopupMenu userIdMenu = new PopupMenu(requireContext(), userId_tl);
+                    for (int i=0; i<mViewModel.historyUserList.size(); i++) {
+                        User user = mViewModel.historyUserList.get(i);
+                        userIdMenu.getMenu().add(0, Menu.NONE, i, user.getId());
+                    }
+                    userIdMenu.show();
+
+                    userIdMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            User user = mViewModel.historyUserList.get(item.getOrder());
+                            userId_et.setText(user.getId());
+                            passwd_et.setText(user.getPasswd());
+
+                            userId_tl_isDropDown = false;
+                            userId_tl.setEndIconDrawable(R.drawable.ic_arrow_drop_down);
+
+                            return true;
+                        }
+                    });
+
+                    userIdMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                        @Override
+                        public void onDismiss(PopupMenu menu) {
+                            userId_tl_isDropDown = false;
+                            userId_tl.setEndIconDrawable(R.drawable.ic_arrow_drop_down);
+                        }
+                    });
+
+                } else {
+                    userId_tl.setEndIconDrawable(R.drawable.ic_arrow_drop_down);
+                }
+            }
+        });
+
         login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String username = username_et.getText().toString();
+                String username = userId_et.getText().toString();
                 String passwd = passwd_et.getText().toString();
 
                 if (username.isEmpty()) {
-                    username_tl.setError("用户名不可为空");
+                    userId_tl.setError("用户名不可为空");
                     return;
                 }
 
@@ -160,7 +203,6 @@ public class LoginFragment extends Fragment {
 
                         BBSApplication.setUserInfo(username, passwd);
 
-//                        getActivity().finish();
                         if (getActivity() != null) {
                             getActivity().onBackPressed();
                         }
@@ -176,30 +218,33 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        forgot_passwd_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginActivity loginActivity = (LoginActivity) getActivity();
+                if (loginActivity != null) {
+                    loginActivity.navigationTo(new ForgotPasswordFragment(), true);
+                }
+            }
+        });
+
         register_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AlertDialog.Builder(getContext())
-                        .setTitle("用户注册")
-                        .setMessage("该功能未实现，请前往网页完成注册！")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(Uri.parse(NetConst.BASE));
-                                startActivity(intent);
-                            }
-                        })
-                        .show();
+                LoginActivity loginActivity = (LoginActivity) getActivity();
+                if (loginActivity != null) {
+                    loginActivity.navigationTo(new RegisterFragment(), true);
+                }
             }
+
         });
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mViewModel.currentUser.setId(username_et.getText().toString());
-        mViewModel.currentUser.setPasswd(username_et.getText().toString());
+        mViewModel.currentUser.setId(userId_et.getText().toString());
+        mViewModel.currentUser.setPasswd(userId_et.getText().toString());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.wuda.bbs.utils.htmlParser;
+package com.wuda.bbs.utils.parser;
 
 import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.bean.BriefArticleResponse;

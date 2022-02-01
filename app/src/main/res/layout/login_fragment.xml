@@ -18,18 +18,20 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_username_textInputLayout"
+        android:id="@+id/login_userId_textInputLayout"
         style="@style/Widget.BBS.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
+        app:endIconDrawable="@drawable/ic_arrow_drop_down"
+        app:endIconMode="custom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:startIconDrawable="@drawable/ic_account">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_username_editText"
+            android:id="@+id/login_userId_editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="用户名"
@@ -46,7 +48,7 @@
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_username_textInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/login_userId_textInputLayout"
         app:startIconDrawable="@drawable/ic_short_text">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -72,7 +74,7 @@
         app:layout_constraintTop_toBottomOf="@+id/login_passwd_textInputLayout" />
 
     <Button
-        android:id="@+id/login_find_passwd_button"
+        android:id="@+id/login_forgot_passwd_button"
         style="@style/Widget.BBS.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,7 +95,7 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/login_find_passwd_button" />
+        app:layout_constraintStart_toEndOf="@+id/login_forgot_passwd_button" />
 
     <TextView
         android:id="@+id/textView"

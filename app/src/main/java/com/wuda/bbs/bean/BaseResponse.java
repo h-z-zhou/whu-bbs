@@ -2,7 +2,7 @@ package com.wuda.bbs.bean;
 
 public class BaseResponse {
     boolean successful = true;
-    String msg;
+    String massage;
 
     public boolean isSuccessful() {
         return successful;
@@ -12,11 +12,11 @@ public class BaseResponse {
         this.successful = successful;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getMassage() {
+        return massage;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMassage(String massage) {
+        this.massage = massage;
     }
 }

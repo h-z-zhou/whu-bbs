@@ -7,18 +7,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.bean.DetailBoard;
 import com.wuda.bbs.bean.FavArticle;
 import com.wuda.bbs.bean.Treasure;
 import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.DetailBoardDao;
 import com.wuda.bbs.ui.adapter.FavArticleAdapter;
-import com.wuda.bbs.utils.htmlParser.HtmlParser;
+import com.wuda.bbs.utils.parser.HtmlParser;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 
@@ -27,7 +25,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

@@ -6,7 +6,6 @@ import com.wuda.bbs.bean.DetailArticleResponse;
 import com.wuda.bbs.bean.FriendResponse;
 import com.wuda.bbs.bean.MailContentResponse;
 import com.wuda.bbs.bean.MailResponse;
-import com.wuda.bbs.bean.UserInfo;
 import com.wuda.bbs.bean.UserInfoResponse;
 
 import org.xml.sax.InputSource;
@@ -121,7 +120,7 @@ public class XMLParser {
         } catch (IOException | SAXException e) {
             e.printStackTrace();
             response.setSuccessful(false);
-            response.setMsg(e.getMessage());
+            response.setMassage(e.getMessage());
         }
 
         return response;
@@ -139,7 +138,7 @@ public class XMLParser {
         } catch (IOException | SAXException e) {
             e.printStackTrace();
             response.setSuccessful(false);
-            response.setMsg(e.getMessage());
+            response.setMassage(e.getMessage());
         }
 
         return response;
@@ -158,7 +157,7 @@ public class XMLParser {
             e.printStackTrace();
             mailResponse = new MailResponse();
             mailResponse.setSuccessful(false);
-            mailResponse.setMsg(e.getMessage());
+            mailResponse.setMassage(e.getMessage());
         }
 
         return  mailResponse;
@@ -178,7 +177,7 @@ public class XMLParser {
             e.printStackTrace();
             mailContentResponse = new MailContentResponse();
             mailContentResponse.setSuccessful(false);
-            mailContentResponse.setMsg(e.getMessage());
+            mailContentResponse.setMassage(e.getMessage());
         }
 
         return mailContentResponse;

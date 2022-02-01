@@ -4,6 +4,9 @@ public class NetConst {
     public static final String BASE = "http://bbs.whu.edu.cn/";
     public static final String BASE_HOST = "bbs.whu.edu.cn";
     public static final String LOGIN = "http://bbs.whu.edu.cn/mobile.php";
+    // post
+    public static final String FIND_PASSWORD = "http://bbs.whu.edu.cn/r/doreset.php";
+    public static final String REGISTER = "http://bbs.whu.edu.cn/bbsreg.php";
 
     public static final String FAVOR_BOARD_ERROR = "同学???榭?詹丶?????要??录?模?";
 }
