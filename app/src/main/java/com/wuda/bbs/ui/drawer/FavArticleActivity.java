@@ -61,7 +61,7 @@ public class FavArticleActivity extends AppCompatActivity {
         RootService rootService = ServiceCreator.create(RootService.class);
         Map<String, String> form = new HashMap<>();
         form.put("pid", "2");
-        rootService.request("bbssfav.php", form).enqueue(new Callback<ResponseBody>() {
+        rootService.get("bbssfav.php", form).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {

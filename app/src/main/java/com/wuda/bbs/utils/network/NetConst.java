@@ -3,10 +3,20 @@ package com.wuda.bbs.utils.network;
 public class NetConst {
     public static final String BASE = "http://bbs.whu.edu.cn/";
     public static final String BASE_HOST = "bbs.whu.edu.cn";
-    public static final String LOGIN = "http://bbs.whu.edu.cn/mobile.php";
+    public static final String MOBILE = "http://bbs.whu.edu.cn/mobile.php";
     // post
+    // 忘记密码
     public static final String FIND_PASSWORD = "http://bbs.whu.edu.cn/r/doreset.php";
+    // 注册
     public static final String REGISTER = "http://bbs.whu.edu.cn/bbsreg.php";
+    // 修改密码 post: pw1=&pw2=&pw3=
+    public static final String SET_PASSWORD = "http://bbs.whu.edu.cn/bbspwd.php?do";
+    // 昵称 post: nick=
+    public static final String NICKNAME = "http://bbs.whu.edu.cn/wForum/dochangepasswd.php";
+    // 签名 post: text=
+    public static final String SET_SIGNATURE = "http://bbs.whu.edu.cn/wForum/bbssavesig.php";
+    // 用户参数
+    public static final String USER_PARAM = "http://bbs.whu.edu.cn/wForum/userparam.php";
 
     public static final String FAVOR_BOARD_ERROR = "同学???榭?詹丶?????要??录?模?";
 }

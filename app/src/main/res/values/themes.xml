@@ -31,6 +31,7 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">16sp</item>
     </style>
+
     <style name="Theme.BBS.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -46,4 +47,8 @@
             @style/ShapeAppearance.BBS.SmallComponent
         </item>
     </style>
+
+    <style name="Theme.BBS.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.BBS.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

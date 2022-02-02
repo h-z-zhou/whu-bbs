@@ -46,7 +46,7 @@ public class CookieStore implements CookieJar {
 
     @Override
     public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
-        if (url.toString().equals(NetConst.LOGIN)) {
+        if (url.toString().equals(NetConst.MOBILE)) {
             Map<String, Cookie> filter = new HashMap<>();
             for (Cookie cookie: cookies) {
                 filter.put(cookie.name(), cookie);

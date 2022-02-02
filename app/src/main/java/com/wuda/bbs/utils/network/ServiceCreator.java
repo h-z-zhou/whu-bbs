@@ -2,6 +2,8 @@ package com.wuda.bbs.utils.network;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -15,7 +17,7 @@ public class ServiceCreator {
                     .cookieJar(CookieStore.newInstance())
                     .addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                         @Override
-                        public void log(String message) {
+                        public void log(@NonNull String message) {
                             //打印retrofit日志
                             Log.i("RetrofitLog", message);
                         }

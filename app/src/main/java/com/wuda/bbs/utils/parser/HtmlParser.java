@@ -1,11 +1,14 @@
 package com.wuda.bbs.utils.parser;
 
+import com.wuda.bbs.bean.BaseResponse;
 import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.bean.Treasure;
+import com.wuda.bbs.bean.UserParamResponse;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
@@ -101,5 +104,91 @@ public class HtmlParser {
         }
 
         return treasureList;
+    }
+
+    public static BaseResponse parseRegisterResponse(String htmlData) {
+
+        BaseResponse response = new BaseResponse();
+
+        Document doc = Jsoup.parse(htmlData);
+        Elements infoTable = doc.getElementsByTag("table");
+        if (infoTable.size() != 1) {
+            response.setSuccessful(false);
+            response.setMassage("未知错误");
+        } else {
+            response.setMassage(infoTable.get(0).text());
+        }
+
+        return response;
+
+        /*
+<table cellspacing="0" cellpadding="10" border="0" class="t1">
+<tr><td class="t3">
+<font style="color: #FF0000"><b>发生错误</b></font>
+</td></tr>
+<tr><td class="t4">
+该用户名已经被使用!</td></tr>
+</table><br /><br />
+         */
+    }
+
+    public static BaseResponse parseSetPasswordResponse(String htmlData) {
+        BaseResponse response = new BaseResponse();
+
+        Document doc = Jsoup.parse(htmlData);
+        Elements infoTable = doc.getElementsByTag("table");
+        if (infoTable.size() != 1) {
+            response.setMassage(doc.text());
+        } else {
+            response.setMassage(infoTable.get(0).text());
+        }
+
+        return response;
+/*
+<table class="error">
+<tr><th>发生错误</th></tr>
+<tr><td>密码不正确</td></tr>
+</table>
+ */
+    }
+
+    public static UserParamResponse parseUserParamResponse(String htmlData) {
+        UserParamResponse response = new UserParamResponse();
+
+        Document doc = Jsoup.parse(htmlData);
+        Elements paramTable = doc.getElementsByTag("form");
+        if (paramTable.isEmpty()) {
+            response.setSuccessful(false);
+            response.setMassage("未定义错误");
+        } else {
+            Elements trs = paramTable.get(0).getElementsByTag("tr");
+            if (trs.size() != 11) {
+                response.setSuccessful(false);
+                response.setMassage("未定义错误");
+            } else {
+                List<Boolean> paramValues = new ArrayList<>();
+                for (int i=1; i<10; i++) {
+                    Elements tds = trs.get(i).getElementsByTag("td");
+                    if (tds.size()!=2) {
+                        response.setSuccessful(false);
+                        response.setMassage("未定义错误");
+                    }
+                    Elements radios = tds.get(1).getElementsByTag("input");
+                    for (Element radio: radios) {
+                        if (radio.attr("value").equals("1")) {
+                            paramValues.add(radio.hasAttr("checked"));
+                        }
+                    }
+                }
+                if (paramValues.size() != 9) {
+                    response.setSuccessful(false);
+                    response.setMassage("未定义错误");
+                } else {
+                    response.setParamValues(paramValues);
+                }
+            }
+        }
+
+        return response;
     }
 }

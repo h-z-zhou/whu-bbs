@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.setting.SetParamFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/param_friendCall_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_call"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/DaLiShiHui"
+                android:text="让好友呼叫\n当呼叫器关闭时是否允许好友呼叫"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/param_receiveAllMsg_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawableStart="@drawable/ic_message"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/DanQingZi"
+                android:text="接受所有人的讯息\n是否允许所有人给您发短消息"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/param_receiveFriendMsg_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawableLeft="@drawable/ic_tag_faces"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/GuDingHui"
+                android:text="接受好友的讯息\n是否好友给您发短消息"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/param_sound_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawableStart="@drawable/ic_volume_down"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/JingLan"
+                android:text="收到讯息发出声音\n收到短信后是否以声音提醒您"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/param_detailInfo_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawableStart="@drawable/ic_info"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/LangHuaLv"
+                android:text="显示详细用户信息\n是否允许他人看到您的性别、生日、联系方式等资料"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/param_realInfo_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawableStart="@drawable/ic_warning_amber"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/QingHaKeZi"
+                android:text="显示真实用户信息\n是否允许他人看到您的真实姓名、地址等资料"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/param_hideIP_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawableStart="@drawable/ic_my_location"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/MeiHong"
+                android:text="隐藏 IP\n是否发文和被查询的时候隐藏自己的 IP 信息"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/param_toSendBox_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawableStart="@drawable/ic_inbox"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/TengLuoZi"
+                android:text="发信时保存信件到发件箱\n是否发信时自动选择保存到发件箱"
+                android:textSize="16sp" />
+
+            <Switch
+                android:id="@+id/param_toDustbin_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:drawableStart="@drawable/ic_delete"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/WaSongLv"
+                android:text="删除信件时不保存到垃圾箱\n是否删除信件时不保存到垃圾箱"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

@@ -278,7 +278,7 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
         }
         form.put("select", "0");
         RootService rootService = ServiceCreator.create(RootService.class);
-        rootService.request("bbsfav.php", form).enqueue(new Callback<ResponseBody>() {
+        rootService.get("bbsfav.php", form).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {

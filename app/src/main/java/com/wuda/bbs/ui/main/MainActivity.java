@@ -19,6 +19,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.ui.drawer.FavArticleActivity;
 import com.wuda.bbs.ui.login.LoginActivity;
+import com.wuda.bbs.ui.setting.SettingActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
                 if (item.getItemId() == R.id.drawer_nav_fav_article) {
                     Intent intent = new Intent(MainActivity.this, FavArticleActivity.class);
+                    startActivity(intent);
+                } else if (item.getItemId() == R.id.drawer_nav_setting) {
+                    Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                     startActivity(intent);
                 }
 
