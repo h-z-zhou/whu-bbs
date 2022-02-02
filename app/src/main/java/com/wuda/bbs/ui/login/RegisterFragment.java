@@ -1,9 +1,12 @@
 package com.wuda.bbs.ui.login;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,6 +30,7 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BaseResponse;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.utils.parser.HtmlParser;
 import com.wuda.bbs.utils.parser.JsonParser;
 import com.wuda.bbs.utils.validator.TextValidator;
 
@@ -42,6 +46,7 @@ import retrofit2.Response;
 
 public class RegisterFragment extends Fragment {
 
+    Toolbar toolbar;
     private TextInputEditText uid_et;
     private TextInputLayout uid_tl;
     private TextInputEditText password_et;
@@ -77,6 +82,7 @@ public class RegisterFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.register_fragment, container, false);
 
+        toolbar = view.findViewById(R.id.register_toolbar);
         uid_et = view.findViewById(R.id.register_uid_inputTextEdit);
         uid_tl = view.findViewById(R.id.register_uid_textInputLayout);
         password_et = view.findViewById(R.id.register_password_inputTextEdit);
@@ -113,6 +119,18 @@ public class RegisterFragment extends Fragment {
     }
 
     private void eventBinding() {
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null) {
+            activity.setSupportActionBar(toolbar);
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.onBackPressed();
+                }
+            });
+        }
+
         uid_et.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -284,7 +302,7 @@ public class RegisterFragment extends Fragment {
                 form.put("pass1", password.toString());
                 form.put("pass2", password2.toString());
                 form.put("username", nickname==null? "": nickname.toString());
-                form.put("realName", realName.toString());
+                form.put("realname", realName.toString());
                 form.put("xh", campusId.toString());
                 form.put("sfzh", idNumber.toString());
                 form.put("gender", gender);
@@ -312,22 +330,20 @@ public class RegisterFragment extends Fragment {
 
                     String text = new String(body.bytes(), "GBK");
 
-                    Log.d("response", text);
+                    BaseResponse baseResponse = HtmlParser.parseRegisterResponse(text);
 
-//                    BaseResponse baseResponse = JsonParser.parseFindPasswordResponse(body.string());
-//
-//                    if (getActivity() != null && getContext() != null) {
-//                        getActivity().runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                new AlertDialog.Builder(getContext())
-//                                        .setMessage(baseResponse.getMassage())
-//                                        .setPositiveButton("确定", null)
-//                                        .create()
-//                                        .show();
-//                            }
-//                        });
-//                    }
+                    if (getActivity() != null && getContext() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                new AlertDialog.Builder(getContext())
+                                        .setMessage(baseResponse.getMassage())
+                                        .setPositiveButton("确定", null)
+                                        .create()
+                                        .show();
+                            }
+                        });
+                    }
 
                 } catch (IOException e) {
                     e.printStackTrace();
