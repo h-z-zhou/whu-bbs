@@ -3,7 +3,9 @@ package com.wuda.bbs.bean;
 import androidx.annotation.NonNull;
 import androidx.room.PrimaryKey;
 
-public class BaseBoard {
+import java.io.Serializable;
+
+public class BaseBoard implements Serializable {
     @NonNull
     @PrimaryKey
     String id;

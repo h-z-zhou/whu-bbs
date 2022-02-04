@@ -1,10 +1,22 @@
 package com.wuda.bbs.ui.main.board;
 
-import androidx.annotation.NonNull;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
+import com.wuda.bbs.ui.main.post.WriteArticleActivity;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
@@ -21,6 +33,32 @@ import retrofit2.Response;
 public class BoardArticleFragment extends ArticleContainerFragment {
 
     BaseBoard baseBoard;
+
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        FloatingActionButton writeArticle_fab = new FloatingActionButton(view.getContext());
+        writeArticle_fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_create));
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.gravity = Gravity.BOTTOM | Gravity.END;
+        params.bottomMargin = 32;
+        params.rightMargin = 32;
+        writeArticle_fab.setLayoutParams(params);
+
+        writeArticle_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), WriteArticleActivity.class);
+                intent.putExtra("board", mViewModel.board.getValue());
+                startActivity(intent);
+            }
+        });
+
+        article_root_fl.addView(writeArticle_fab);
+
+
+        return view;
+    }
 
     @Override
     protected void requestArticleFromServer() {

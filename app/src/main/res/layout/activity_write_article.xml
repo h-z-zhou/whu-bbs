@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.post.WriteArticleActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/writeArticle_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="发布新帖" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <AutoCompleteTextView
+                android:id="@+id/writeArticle_boardName_autoCompleteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:drawableStart="@drawable/ic_menu_dashboard"
+                android:drawableEnd="@drawable/ic_keyboard_arrow_right"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/colorPrimaryLight"
+                android:editable="false"
+                android:hint="板块"
+                android:padding="8dp" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="?android:attr/listDivider" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/writeArticle_title_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:ems="10"
+                android:hint="加个标题"
+                android:padding="8dp" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/writeArticle_content_editText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="说点啥吧"
+                android:padding="8dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

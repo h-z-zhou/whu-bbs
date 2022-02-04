@@ -43,13 +43,15 @@ public class HomeFragment extends Fragment {
                     return new HotFragment();
                 } else if (position == 2) {
                     return new NewsTodayFragment();
+                } else if (position == 3) {
+                    return new BoardEntranceFragment();
                 }
                 return null;
             }
 
             @Override
             public int getItemCount() {
-                return 3;
+                return 4;
             }
         });
 
@@ -62,6 +64,8 @@ public class HomeFragment extends Fragment {
                     tab.setText("十大热点");
                 } else if (position == 2) {
                     tab.setText("今日新帖");
+                } else if (position == 3) {
+                    tab.setText("版块列表");
                 }
             }
         }).attach();

@@ -15,10 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.room.Insert;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
@@ -27,6 +27,7 @@ import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.bean.FavorBoard;
 import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.FavorBoardDao;
+import com.wuda.bbs.ui.main.post.WriteArticleActivity;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -47,6 +48,7 @@ public class FavorBoardFragment extends Fragment {
     private FavorBoardViewModel mViewModel;
     private TabLayout board_tl;
     private ViewPager2 board_vp2;
+//    private FloatingActionButton writeArticle_fab;
 
     // 收藏可能为空，请求一次后不再请求
     private boolean hadRequest = false;
@@ -67,6 +69,7 @@ public class FavorBoardFragment extends Fragment {
         View view = inflater.inflate(R.layout.favor_board_fragment, container, false);
         board_tl = view.findViewById(R.id.favorBoard_tabLayout);
         board_vp2 = view.findViewById(R.id.favorBoard_viewPager2);
+//        writeArticle_fab = view.findViewById(R.id.favorBoard_writeArticle_fab);
         requestFavorBoardsFromServer();
         return view;
     }
@@ -144,6 +147,23 @@ public class FavorBoardFragment extends Fragment {
 
             }
         });
+
+//        writeArticle_fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                BaseBoard board;
+//
+//                if (mViewModel.currentBoardIdx.getValue() == -1) {
+//                    board = null;
+//                } else {
+//                    board = mViewModel.favorBoardList.getValue().get(mViewModel.currentBoardIdx.getValue());
+//                }
+//
+//                Intent intent = new Intent(getContext(), WriteArticleActivity.class);
+//                intent.putExtra("board", board);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     private void queryFavorBoardsFromDB() {

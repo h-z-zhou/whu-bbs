@@ -1,10 +1,12 @@
 package com.wuda.bbs.ui.main.base;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,15 +17,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.ui.adapter.BriefArticleRecyclerAdapter;
+import com.wuda.bbs.ui.main.post.WriteArticleActivity;
 
 public abstract class ArticleContainerFragment extends Fragment {
 
     protected ArticleContainerViewModel mViewModel;
+    protected FrameLayout article_root_fl;
     protected SwipeRefreshLayout article_srl;
     protected RecyclerView article_rv;
+//    protected FloatingActionButton newArticle_fab;
 
 //    public ArticleContainerFragment(){};
 
@@ -38,13 +44,14 @@ public abstract class ArticleContainerFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.article_container_fragment, container, false);
 
-
+        article_root_fl = view.findViewById(R.id.article_container_root_frameLayout);
         article_srl = view.findViewById(R.id.article_swipeRefresh);
         article_rv = view.findViewById(R.id.recyclerView);
         article_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 //        article_rv.setVerticalScrollBarEnabled(true);
 //        article_rv.setScrollBarSize(20);
-//        article_rv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
+//        article_rv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));\
+//        newArticle_fab = view.findViewById(R.id.article_newArticle_fab);
 
         return view;
     }
@@ -104,7 +111,20 @@ public abstract class ArticleContainerFragment extends Fragment {
             }
         });
 
+//        newArticle_fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), WriteArticleActivity.class);
+//                intent.putExtra("board", mViewModel.board.getValue());
+//                startActivity(intent);
+//            }
+//        });
+
     }
+
+//    public void hideFab() {
+//        newArticle_fab.setVisibility(View.GONE);
+//    }
 
     protected abstract void requestArticleFromServer(); //{
 //        WebService webService = ServiceCreator.create(WebService.class);

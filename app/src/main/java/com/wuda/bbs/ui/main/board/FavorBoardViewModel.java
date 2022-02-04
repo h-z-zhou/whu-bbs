@@ -11,11 +11,12 @@ import java.util.List;
 
 public class FavorBoardViewModel extends ViewModel {
     MutableLiveData<List<BaseBoard>> favorBoardList = new MutableLiveData<List<BaseBoard>>();
-    MutableLiveData<Integer> currentBoardIdx = new MutableLiveData<>(-1);
+    MutableLiveData<Integer> currentBoardIdx = new MutableLiveData<>();
 //    MutableLiveData<List<Board>>
     // TODO: Implement the ViewModel
 
     public FavorBoardViewModel() {
         favorBoardList.setValue(new ArrayList<>());
+        currentBoardIdx.setValue(-1);
     }
 }

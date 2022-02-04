@@ -2,12 +2,14 @@ package com.wuda.bbs.ui.setting;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +132,11 @@ public class SetParamFragment extends Fragment {
     }
 
     private void requestChoicesFromServer() {
+
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("请求中");
+        progressDialog.show();
+
         RootService rootService = ServiceCreator.create(RootService.class);
         rootService.get("wForum/userparam.php", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -151,6 +158,7 @@ public class SetParamFragment extends Fragment {
                             });
                         }
                     }
+                    progressDialog.dismiss();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -158,7 +166,14 @@ public class SetParamFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
+                if (getActivity()!=null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
             }
         });
     }
