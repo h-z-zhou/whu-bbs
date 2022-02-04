@@ -65,7 +65,7 @@ public class BoardEntranceListAdapter extends BaseExpandableListAdapter {
         TextView section_tv = new TextView(parent.getContext());
         section_tv.setTextSize(18);
 //        section_tv.setTypeface(null, Typeface.BOLD);
-        section_tv.setPadding(32, 24, 8, 24);
+        section_tv.setPadding(108, 24, 8, 24);
         section_tv.setText(mSectionList.get(groupPosition));
         return section_tv;
     }
@@ -74,7 +74,7 @@ public class BoardEntranceListAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         TextView board_tv =  new TextView(parent.getContext());
         board_tv.setTextSize(16);
-        board_tv.setPadding(128, 16, 0, 16);
+        board_tv.setPadding(160, 16, 0, 16);
         BaseBoard board = mSectionBoardList.get(groupPosition).get(childPosition);
         board_tv.setText(board.getName());
         board_tv.setOnClickListener(new View.OnClickListener() {

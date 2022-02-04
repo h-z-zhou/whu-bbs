@@ -74,6 +74,7 @@
         <entry key="app/src/main/res/layout/find_password_by_auth_info_fragment.xml" value="0.2994791666666667" />
         <entry key="app/src/main/res/layout/find_password_by_email_fragment.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/find_password_by_user_info_fragment.xml" value="0.31927083333333334" />
+        <entry key="app/src/main/res/layout/fragment_board_entrance.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/fragment_board_entry.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/fragment_contact.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/fragment_forgot_password.xml" value="0.31927083333333334" />
