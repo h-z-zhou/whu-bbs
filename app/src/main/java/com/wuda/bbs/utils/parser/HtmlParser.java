@@ -191,4 +191,23 @@ public class HtmlParser {
 
         return response;
     }
+
+    public static BaseResponse parsePostArticleResponse(String htmlData) {
+        BaseResponse response = new BaseResponse();
+
+        Document doc = Jsoup.parse(htmlData);
+        Elements tables = doc.getElementsByClass("TableBody1");
+        if (tables.isEmpty()) {
+            response.setSuccessful(false);
+            response.setMassage("未定义错误");
+        } else {
+            String text = tables.get(0).text();
+            if (text.contains("错误")) {
+                response.setSuccessful(false);
+                response.setMassage(text);
+            }
+        }
+
+        return response;
+    }
 }

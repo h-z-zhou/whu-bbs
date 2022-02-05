@@ -23,7 +23,7 @@ import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.bean.User;
 import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.UserDao;
-import com.wuda.bbs.utils.network.LoginService;
+import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 
 import java.util.HashMap;
@@ -157,9 +157,13 @@ public class LoginFragment extends Fragment {
                     return;
                 }
 
-                LoginService loginCall = ServiceCreator.create(LoginService.class);
+                Map<String, String> form = new HashMap<>();
+                form.put("app", "login");
+                form.put("id", username);
+                form.put("passwd", passwd);
 
-                loginCall.login("login", username, passwd).enqueue(new Callback<ResponseBody>() {
+                MobileService mobileService = ServiceCreator.create(MobileService.class);
+                mobileService.post(form).enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                         List<String> cookies = response.headers().values("Set-Cookie");
@@ -206,15 +210,13 @@ public class LoginFragment extends Fragment {
                         if (getActivity() != null) {
                             getActivity().onBackPressed();
                         }
-
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                        t.printStackTrace();
+
                     }
                 });
-
             }
         });
 

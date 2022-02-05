@@ -1,7 +1,6 @@
 package com.wuda.bbs.ui.main.base;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.ui.adapter.BriefArticleRecyclerAdapter;
-import com.wuda.bbs.ui.main.post.WriteArticleActivity;
 
 public abstract class ArticleContainerFragment extends Fragment {
 

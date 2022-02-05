@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.wuda.bbs.bean.BaseResponse;
-import com.wuda.bbs.utils.network.FindPasswordService;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.parser.JsonParser;

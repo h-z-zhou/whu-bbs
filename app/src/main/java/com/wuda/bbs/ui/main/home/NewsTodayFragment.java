@@ -6,7 +6,7 @@ import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.parser.HtmlParser;
 import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.network.WebService;
+import com.wuda.bbs.utils.network.WebForumService;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,8 +21,8 @@ public class NewsTodayFragment extends ArticleContainerFragment {
     @Override
     protected void requestArticleFromServer() {
 
-        WebService webService = ServiceCreator.create(WebService.class);
-        webService.request("newtopic.php", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
+        WebForumService webForumService = ServiceCreator.create(WebForumService.class);
+        webForumService.request("newtopic.php", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 ResponseBody responseBody = response.body();

@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.post.WriteArticleActivity">
+    tools:context=".ui.main.article.PostArticleActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/writeArticle_toolbar"
+        android:id="@+id/postArticle_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:contentInsetStartWithNavigation="0dp"
+        app:menu="@menu/post_article_menu"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title="发布新帖" />
 
@@ -21,26 +22,25 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
-        android:layout_marginBottom="?attr/actionBarSize"
         android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <AutoCompleteTextView
-                android:id="@+id/writeArticle_boardName_autoCompleteTextView"
+            <TextView
+                android:id="@+id/postArticle_boardName_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
                 android:drawableStart="@drawable/ic_menu_dashboard"
                 android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                 android:drawablePadding="8dp"
                 android:drawableTint="@color/colorPrimaryLight"
-                android:editable="false"
+                android:gravity="center_vertical"
                 android:hint="板块"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:textSize="16sp" />
 
             <View
                 android:id="@+id/divider3"
@@ -49,7 +49,7 @@
                 android:background="?android:attr/listDivider" />
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/writeArticle_title_editText"
+                android:id="@+id/postArticle_title_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -64,7 +64,7 @@
                 android:background="?android:attr/listDivider" />
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/writeArticle_content_editText"
+                android:id="@+id/postArticle_content_editText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
@@ -75,10 +75,4 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

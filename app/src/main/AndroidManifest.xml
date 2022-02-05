@@ -17,7 +17,7 @@
             android:name=".ui.main.board.BoardActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.post.WriteArticleActivity"
+            android:name=".ui.main.article.PostArticleActivity"
             android:exported="false" />
         <activity
             android:name=".ui.setting.SettingActivity"

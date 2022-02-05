@@ -17,6 +17,8 @@ public class NetConst {
     public static final String SET_SIGNATURE = "http://bbs.whu.edu.cn/wForum/bbssavesig.php";
     // 用户参数
     public static final String USER_PARAM = "http://bbs.whu.edu.cn/wForum/userparam.php";
+    // 发布新话题 post board=&relID=0&font=&subject=&Content=&signature=
+    public static final String POST_ARTICLE = "http://bbs.whu.edu.cn/wForum/dopostarticle.php";
 
     public static final String FAVOR_BOARD_ERROR = "同学???榭?詹丶?????要??录?模?";
 }

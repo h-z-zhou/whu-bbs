@@ -16,7 +16,7 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BriefArticleResponse;
 import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
-import com.wuda.bbs.ui.main.post.WriteArticleActivity;
+import com.wuda.bbs.ui.main.article.PostArticleActivity;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
@@ -32,7 +32,7 @@ import retrofit2.Response;
 
 public class BoardArticleFragment extends ArticleContainerFragment {
 
-    BaseBoard baseBoard;
+    BaseBoard board;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -48,21 +48,20 @@ public class BoardArticleFragment extends ArticleContainerFragment {
         writeArticle_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), WriteArticleActivity.class);
-                intent.putExtra("board", mViewModel.board.getValue());
+                Intent intent = new Intent(getContext(), PostArticleActivity.class);
+                intent.putExtra("board", board);
                 startActivity(intent);
             }
         });
 
         article_root_fl.addView(writeArticle_fab);
 
-
         return view;
     }
 
     @Override
     protected void requestArticleFromServer() {
-        if (baseBoard == null) {
+        if (board == null) {
             article_srl.setRefreshing(false);
             return;
         }
@@ -70,7 +69,7 @@ public class BoardArticleFragment extends ArticleContainerFragment {
         Map<String, String> form = new HashMap<>();
         int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("page", Integer.toString(requestPage));
-        form.put("board", baseBoard.getId());
+        form.put("board", board.getId());
         mobileService.request("topics", form).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -95,6 +94,6 @@ public class BoardArticleFragment extends ArticleContainerFragment {
 
     public void setBoard(BaseBoard baseBoard) {
         // 放到 mViewModel ???
-        this.baseBoard = baseBoard;
+        this.board = baseBoard;
     }
 }

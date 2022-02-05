@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
@@ -27,7 +26,6 @@ import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.bean.FavorBoard;
 import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.FavorBoardDao;
-import com.wuda.bbs.ui.main.post.WriteArticleActivity;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.ServiceCreator;
