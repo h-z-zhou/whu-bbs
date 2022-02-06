@@ -1,4 +1,4 @@
-package com.wuda.bbs.bean;
+package com.wuda.bbs.bean.response;
 
 public class MailContentResponse extends BaseResponse {
     String mailContent = "";

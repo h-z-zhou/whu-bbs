@@ -6,7 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,11 +25,10 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.BaseResponse;
+import com.wuda.bbs.bean.response.BaseResponse;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.parser.HtmlParser;
-import com.wuda.bbs.utils.parser.JsonParser;
 import com.wuda.bbs.utils.validator.TextValidator;
 
 import java.io.IOException;

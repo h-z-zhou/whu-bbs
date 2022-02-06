@@ -26,6 +26,7 @@ import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.bean.FavorBoard;
 import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.FavorBoardDao;
+import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -191,6 +192,40 @@ public class FavorBoardFragment extends Fragment {
 
     private void requestFavorBoardsFromServer() {
         MobileService mobileService = ServiceCreator.create(MobileService.class);
+
+        mobileService.request("favor", new HashMap<>()).enqueue(new BBSCallback<ResponseBody>(getContext()) {
+            @Override
+            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                try {
+
+                    String text = "";
+                    if (response.body() != null) {
+                        text = response.body().string();
+                    }
+
+                    hadRequest = true;
+
+                    List<BaseBoard> favorBoardList = XMLParser.parseFavorBoard(text);
+                    if (getContext() == null)
+                        return;
+                    FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
+                    favorBoardDao.clearAll();
+                    // cast => save to database
+                    List<FavorBoard> castFavorBoardList = new ArrayList<>();
+                    for (int i=0; i<favorBoardList.size(); ++i) {
+                        castFavorBoardList.add((FavorBoard) favorBoardList.get(i));
+                    }
+                    favorBoardDao.insert(castFavorBoardList);
+
+                    queryFavorBoardsFromDB();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        /*
         mobileService.request("favor", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -237,5 +272,7 @@ public class FavorBoardFragment extends Fragment {
                 t.printStackTrace();
             }
         });
+
+         */
     }
 }

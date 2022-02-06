@@ -1,10 +1,11 @@
-package com.wuda.bbs.bean;
+package com.wuda.bbs.bean.response;
+
+import com.wuda.bbs.bean.BriefArticle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BriefArticleResponse {
-    boolean success;
+public class BriefArticleResponse extends BaseResponse {
     Integer currentPage;
     Integer totalPage;
     List<BriefArticle> briefArticleList;
@@ -13,14 +14,6 @@ public class BriefArticleResponse {
         currentPage = 0;
         totalPage = 1;
         briefArticleList = new ArrayList<>();
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
     }
 
     public Integer getCurrentPage() {

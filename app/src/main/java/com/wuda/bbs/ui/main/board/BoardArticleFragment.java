@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.BriefArticleResponse;
+import com.wuda.bbs.bean.response.BriefArticleResponse;
 import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.ui.main.article.PostArticleActivity;

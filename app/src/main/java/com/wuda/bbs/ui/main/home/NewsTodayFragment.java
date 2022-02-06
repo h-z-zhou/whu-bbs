@@ -2,7 +2,7 @@ package com.wuda.bbs.ui.main.home;
 
 import androidx.annotation.NonNull;
 
-import com.wuda.bbs.bean.BriefArticleResponse;
+import com.wuda.bbs.bean.response.BriefArticleResponse;
 import com.wuda.bbs.ui.main.base.ArticleContainerFragment;
 import com.wuda.bbs.utils.parser.HtmlParser;
 import com.wuda.bbs.utils.network.ServiceCreator;

@@ -13,8 +13,7 @@ import android.widget.Toast;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.Mail;
-import com.wuda.bbs.bean.MailContentResponse;
-import com.wuda.bbs.bean.MailResponse;
+import com.wuda.bbs.bean.response.MailContentResponse;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;

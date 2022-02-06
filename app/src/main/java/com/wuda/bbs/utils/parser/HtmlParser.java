@@ -1,10 +1,10 @@
 package com.wuda.bbs.utils.parser;
 
-import com.wuda.bbs.bean.BaseResponse;
+import com.wuda.bbs.bean.response.BaseResponse;
 import com.wuda.bbs.bean.BriefArticle;
-import com.wuda.bbs.bean.BriefArticleResponse;
+import com.wuda.bbs.bean.response.BriefArticleResponse;
 import com.wuda.bbs.bean.Treasure;
-import com.wuda.bbs.bean.UserParamResponse;
+import com.wuda.bbs.bean.response.UserParamResponse;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -24,7 +24,8 @@ public class HtmlParser {
         Document doc = Jsoup.parse(htmlData);
         Elements tables = doc.getElementsByTag("table");
         if (tables.size() != 2) {
-            briefArticleResponse.setSuccess(false);
+            briefArticleResponse.setSuccessful(false);
+            briefArticleResponse.setMassage("未定义错误");
         } else {
             try {
                 Elements trs = tables.get(1).getElementsByTag("tr");
@@ -47,7 +48,8 @@ public class HtmlParser {
                     briefArticleResponse.addArticle(briefArticle);
                 }
             } catch (Exception e) {
-                briefArticleResponse.setSuccess(false);
+                briefArticleResponse.setSuccessful(false);
+                briefArticleResponse.setMassage(e.getMessage());
             }
 
             /*

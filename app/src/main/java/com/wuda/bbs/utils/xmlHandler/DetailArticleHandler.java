@@ -1,9 +1,7 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import android.util.Log;
-
 import com.wuda.bbs.bean.DetailArticle;
-import com.wuda.bbs.bean.DetailArticleResponse;
+import com.wuda.bbs.bean.response.DetailArticleResponse;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

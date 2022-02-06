@@ -1,14 +1,16 @@
-package com.wuda.bbs.bean;
+package com.wuda.bbs.bean.response;
+
+import com.wuda.bbs.bean.DetailArticle;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailArticleResponse {
+public class DetailArticleResponse extends BaseResponse {
     String GID;
     Integer currentPage;
     Integer totalPage;
     Integer replyNum;
-    String Flag;
+    String flag;
 
     List<DetailArticle> detailArticleList;
 
@@ -51,11 +53,11 @@ public class DetailArticleResponse {
     }
 
     public String getFlag() {
-        return Flag;
+        return flag;
     }
 
     public void setFlag(String flag) {
-        Flag = flag;
+        this.flag = flag;
     }
 
     public List<DetailArticle> getDetailArticleList() {

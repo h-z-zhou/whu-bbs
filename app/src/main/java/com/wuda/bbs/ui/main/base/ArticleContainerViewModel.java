@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.bean.BriefArticle;
-import com.wuda.bbs.bean.BriefArticleResponse;
+import com.wuda.bbs.bean.response.BriefArticleResponse;
 import com.wuda.bbs.bean.BaseBoard;
 
 import java.util.ArrayList;

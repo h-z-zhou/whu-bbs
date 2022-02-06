@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.setting;
+package com.wuda.bbs.ui.setting.account;
 
 import androidx.lifecycle.ViewModel;
 

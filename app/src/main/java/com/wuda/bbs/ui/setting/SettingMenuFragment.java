@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.ui.setting.account.SetParamFragment;
+import com.wuda.bbs.ui.setting.account.SetPasswordFragment;
+import com.wuda.bbs.ui.setting.account.UserManagerFragment;
 
 public class SettingMenuFragment extends Fragment {
 
@@ -51,6 +54,14 @@ public class SettingMenuFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 settingActivity.navigationTo(new SetPasswordFragment(), true);
+            }
+        });
+
+        Button accountManager_btn = view.findViewById(R.id.settingMenu_accountManager_button);
+        accountManager_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                settingActivity.navigationTo(new UserManagerFragment(), true);
             }
         });
 

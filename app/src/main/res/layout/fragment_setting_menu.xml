@@ -9,13 +9,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView2"
+            style="@style/TextAppearance.MaterialComponents.Headline1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="控制面板" />
+            android:text="控制面板"
+            android:textSize="18dp" />
 
         <Button
             android:id="@+id/settingMenu_personalParam_button"
@@ -32,5 +35,13 @@
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
             android:text="修改密码" />
+
+        <Button
+            android:id="@+id/settingMenu_accountManager_button"
+            style="@style/Widget.BBS.Button.TextButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:text="帐号管理" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

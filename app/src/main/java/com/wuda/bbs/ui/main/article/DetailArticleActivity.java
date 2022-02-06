@@ -3,7 +3,6 @@ package com.wuda.bbs.ui.main.article;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,17 +10,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.BriefArticle;
-import com.wuda.bbs.bean.DetailArticleResponse;
+import com.wuda.bbs.bean.response.DetailArticleResponse;
 import com.wuda.bbs.ui.adapter.DetailArticleRecyclerAdapter;
 import com.wuda.bbs.ui.widget.TopicDecoration;
+import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
-
-import org.xmlpull.v1.XmlPullParser;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -85,9 +81,10 @@ public class DetailArticleActivity extends AppCompatActivity {
         form.put("board", boardId);
         form.put("page", "1");
         Log.d("article", form.toString());
-        mobileService.request("read", form).enqueue(new Callback<ResponseBody>() {
+
+        mobileService.request("read", form).enqueue(new BBSCallback<ResponseBody>(DetailArticleActivity.this) {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     if (response.body() != null) {
                         String text = response.body().string();
@@ -97,11 +94,6 @@ public class DetailArticleActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
             }
         });
     }

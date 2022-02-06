@@ -16,9 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.FriendResponse;
-import com.wuda.bbs.bean.MailResponse;
+import com.wuda.bbs.bean.response.MailResponse;
 import com.wuda.bbs.ui.adapter.MailAdapter;
+import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
@@ -78,9 +78,11 @@ public class MailFragment extends Fragment {
 //        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("list", "1");
         form.put("boxname", "inbox");
-        mobileService.request("mail", form).enqueue(new Callback<ResponseBody>() {
+
+
+        mobileService.request("mail", form).enqueue(new BBSCallback<ResponseBody>(getContext()) {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     if (response.body() != null) {
                         String text = response.body().string();
@@ -92,11 +94,6 @@ public class MailFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
             }
         });
     }

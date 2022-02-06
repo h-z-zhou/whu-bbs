@@ -3,10 +3,7 @@ package com.wuda.bbs.ui.main.mail;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.wuda.bbs.bean.Mail;
-import com.wuda.bbs.bean.MailResponse;
-
-import java.util.List;
+import com.wuda.bbs.bean.response.MailResponse;
 
 public class MailViewModel extends ViewModel {
     MutableLiveData<MailResponse> mailResponse;

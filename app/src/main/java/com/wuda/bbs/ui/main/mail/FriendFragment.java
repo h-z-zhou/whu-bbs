@@ -1,10 +1,8 @@
 package com.wuda.bbs.ui.main.mail;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,11 +17,9 @@ import android.view.ViewGroup;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.Friend;
-import com.wuda.bbs.bean.FriendResponse;
-import com.wuda.bbs.bean.UserInfo;
-import com.wuda.bbs.bean.UserInfoResponse;
+import com.wuda.bbs.bean.response.FriendResponse;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
-import com.wuda.bbs.ui.user.UserInfoActivity;
+import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
@@ -83,9 +79,10 @@ public class FriendFragment extends Fragment {
         Map<String, String> form = new HashMap<>();
 //        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("list", "all");
-        mobileService.request("friend", form).enqueue(new Callback<ResponseBody>() {
+
+        mobileService.request("friend", form).enqueue(new BBSCallback<ResponseBody>(getContext()) {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     if (response.body() != null) {
                         String text = response.body().string();
@@ -98,11 +95,6 @@ public class FriendFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
             }
         });
     }

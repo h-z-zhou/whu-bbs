@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.setting;
+package com.wuda.bbs.ui.setting.account;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
@@ -8,10 +8,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.room.PrimaryKey;
 
 import android.text.Editable;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,8 @@ import android.widget.Button;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.BaseResponse;
+import com.wuda.bbs.bean.response.BaseResponse;
+import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.parser.HtmlParser;
@@ -147,9 +146,9 @@ public class SetPasswordFragment extends Fragment {
         queryMap.put("do", "");
 
         RootService rootService = ServiceCreator.create(RootService.class);
-        rootService.post("bbspwd.php", queryMap, form).enqueue(new Callback<ResponseBody>() {
+        rootService.post("bbspwd.php", queryMap, form).enqueue(new BBSCallback<ResponseBody>(getContext()) {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     String text = new String(response.body().bytes(), "GBK");
                     BaseResponse baseResponse = HtmlParser.parseSetPasswordResponse(text);
@@ -168,11 +167,6 @@ public class SetPasswordFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
             }
         });
     }

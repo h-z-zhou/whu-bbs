@@ -14,6 +14,10 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 public interface RootService {
+
+    @GET("{page}")
+    public Call<ResponseBody> get(@Path("page") String page);
+
     @GET("{page}")
     public Call<ResponseBody> get(@Path("page") String page, @QueryMap Map<String, String> map);
 

@@ -1,6 +1,6 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.BriefArticleResponse;
+import com.wuda.bbs.bean.response.BriefArticleResponse;
 
 import org.xml.sax.helpers.DefaultHandler;
 

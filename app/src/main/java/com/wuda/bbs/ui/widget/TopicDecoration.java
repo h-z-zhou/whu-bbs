@@ -22,9 +22,9 @@ public class TopicDecoration extends RecyclerView.ItemDecoration {
     public TopicDecoration(Context mContext) {
 
         contentPaint = new Paint();
-        contentPaint.setColor(Color.GRAY);
+        contentPaint.setColor(Color.LTGRAY);
         replyPaint = new Paint();
-        replyPaint.setColor(Color.GRAY);
+        replyPaint.setColor(Color.LTGRAY);
 
         contentHeight = mContext.getResources().getDimensionPixelSize(R.dimen.topic_decoration_height_content);
         replyHeight = mContext.getResources().getDimensionPixelSize(R.dimen.topic_decoration_height_reply);

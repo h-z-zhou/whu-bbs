@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.setting;
+package com.wuda.bbs.ui.setting.account;
 
 import androidx.lifecycle.ViewModelProvider;
 
@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.UserParamResponse;
+import com.wuda.bbs.bean.response.UserParamResponse;
+import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.parser.HtmlParser;
@@ -132,15 +132,15 @@ public class SetParamFragment extends Fragment {
     }
 
     private void requestChoicesFromServer() {
-
+        // bug: 不能检测到登出
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("请求中");
         progressDialog.show();
 
         RootService rootService = ServiceCreator.create(RootService.class);
-        rootService.get("wForum/userparam.php", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
+        rootService.get("wForum/userparam.php").enqueue(new BBSCallback<ResponseBody>(getContext()) {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
                     String text = new String(response.body().bytes(), "GBK");
                     UserParamResponse userParamResponse = HtmlParser.parseUserParamResponse(text);
@@ -163,18 +163,7 @@ public class SetParamFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                if (getActivity()!=null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressDialog.dismiss();
-                        }
-                    });
-                }
-            }
         });
+
     }
 }

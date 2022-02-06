@@ -1,4 +1,6 @@
-package com.wuda.bbs.bean;
+package com.wuda.bbs.bean.response;
+
+import com.wuda.bbs.bean.UserInfo;
 
 public class UserInfoResponse extends BaseResponse{
     UserInfo userInfo;

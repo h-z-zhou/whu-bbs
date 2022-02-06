@@ -11,8 +11,6 @@ import com.wuda.bbs.ui.main.base.NavigationHost;
 
 public class LoginActivity extends AppCompatActivity implements NavigationHost {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

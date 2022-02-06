@@ -1,4 +1,6 @@
-package com.wuda.bbs.bean;
+package com.wuda.bbs.bean.response;
+
+import com.wuda.bbs.bean.Mail;
 
 import java.util.ArrayList;
 import java.util.List;
