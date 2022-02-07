@@ -48,6 +48,7 @@ public class DetailArticleHandler extends DefaultHandler {
         switch (nodeName) {
             case "floor":
                 floor.append(ch, start, length);
+                break;
             case "id":
                 id.append(ch, start, length);
                 break;
@@ -74,9 +75,11 @@ public class DetailArticleHandler extends DefaultHandler {
         switch (localName) {
             case "article":
                 detailArticleResponse.addDetailArticle(detailArticle);
+                break;
             case "floor":
                 detailArticle.setFloor(floor.toString());
                 floor.setLength(0);
+                break;
             case "id":
                 detailArticle.setId(id.toString());
                 id.setLength(0);
