@@ -77,9 +77,10 @@ public class BriefArticleRecyclerAdapter extends RecyclerView.Adapter<BriefArtic
                 BriefArticle article = mBriefArticleList.get(position);
                 Intent intent = new Intent(mContext, DetailArticleActivity.class);
 //                intent.putExtra("article", mBriefArticleList.get(position));
-                intent.putExtra("boardId", article.getBoardID());
-                intent.putExtra("groupId", article.getGID());
-                intent.putExtra("title", article.getTitle());
+//                intent.putExtra("boardId", article.getBoardID());
+//                intent.putExtra("groupId", article.getGID());
+//                intent.putExtra("title", article.getTitle());
+                intent.putExtra("briefArticle", article);
                 mContext.startActivity(intent);
             }
         });

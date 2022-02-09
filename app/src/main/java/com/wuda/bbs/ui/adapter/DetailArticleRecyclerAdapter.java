@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.DetailArticle;
+import com.wuda.bbs.ui.main.article.ReplyActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
+import com.wuda.bbs.ui.main.article.ReplyDialog;
 import com.wuda.bbs.utils.network.NetConst;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +31,14 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     Context mContext;
     List<DetailArticle> mDetailArticleList;
     Intent userInfoIntent;
+    String mBoardId;
 
     private final int TYPE_CONTENT = 0;
     private final int TYPE_REPLY = 1;
 
-    public DetailArticleRecyclerAdapter(Context context) {
+    public DetailArticleRecyclerAdapter(Context context, String boardId) {
         mContext = context;
+        mBoardId = boardId;
         mDetailArticleList = new ArrayList<>();
         userInfoIntent = new Intent(mContext, UserInfoActivity.class);
         userInfoIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -74,6 +76,17 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 public void onClick(View v) {
                     userInfoIntent.putExtra("userId", article.getAuthor());
                     mContext.startActivity(userInfoIntent);
+                }
+            });
+            ((ReplyViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    ReplyDialog replyDialog = new ReplyDialog(mContext);
+//                    replyDialog.show();
+                    Intent intent = new Intent(mContext, ReplyActivity.class);
+                    intent.putExtra("article", article);
+                    intent.putExtra("boardId", mBoardId);
+                    mContext.startActivity(intent);
                 }
             });
         } else if (holder instanceof ContentViewHolder) {
@@ -155,5 +168,9 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             replyTime_tv = itemView.findViewById(R.id.postTime_textView);
             replyContent_tv = itemView.findViewById(R.id.postContent_textView);
         }
+    }
+
+    public interface OnItemClickListener {
+        public void onItemClicked(DetailArticle detailArticle);
     }
 }

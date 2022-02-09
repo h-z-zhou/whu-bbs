@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.bean.FavArticle;
 import com.wuda.bbs.bean.Treasure;
 import com.wuda.bbs.ui.main.article.DetailArticleActivity;
@@ -47,9 +48,11 @@ public class FavArticleAdapter extends RecyclerView.Adapter<FavArticleAdapter.Vi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailArticleActivity.class);
-                intent.putExtra("boardId", favArticle.getBoardId());
-                intent.putExtra("groupId", favArticle.getGroupId());
-                intent.putExtra("title", favArticle.getName());
+                BriefArticle briefArticle = new BriefArticle();
+                briefArticle.setBoardID(favArticle.getBoardId());
+                briefArticle.setGID(favArticle.getGroupId());
+                briefArticle.setTitle(favArticle.getName());
+                intent.putExtra("briefArticle", briefArticle);
                 mContext.startActivity(intent);
             }
         });

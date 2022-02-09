@@ -1,8 +1,9 @@
 package com.wuda.bbs.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class DetailArticle {
+public class DetailArticle implements Serializable {
     String floor;
     String id;
     String author;

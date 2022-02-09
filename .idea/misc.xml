@@ -51,6 +51,8 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_my_info.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_post_article.xml" value="0.28379629629629627" />
+        <entry key="app/src/main/res/layout/activity_reply.xml" value="0.2994791666666667" />
+        <entry key="app/src/main/res/layout/activity_reply2.xml" value="0.18070652173913043" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_treasure_box.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_user_info.xml" value="0.37135416666666665" />
@@ -68,6 +70,7 @@
         <entry key="app/src/main/res/layout/contact_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.20380434782608695" />
         <entry key="app/src/main/res/layout/content_setting.xml" value="0.27239583333333334" />
+        <entry key="app/src/main/res/layout/dialog_reply.xml" value="0.30185185185185187" />
         <entry key="app/src/main/res/layout/drawer_nav_header_main.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/favorBoard_fragment.xml" value="0.1015625" />
         <entry key="app/src/main/res/layout/favor_board_fragment.xml" value="0.329417773237998" />

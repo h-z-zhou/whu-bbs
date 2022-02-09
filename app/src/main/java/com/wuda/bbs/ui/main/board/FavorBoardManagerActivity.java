@@ -218,7 +218,7 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
 
     private void requestFavorBoardsFromServer() {
         MobileService mobileService = ServiceCreator.create(MobileService.class);
-        mobileService.request("favor", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
+        mobileService.request("favor").enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {

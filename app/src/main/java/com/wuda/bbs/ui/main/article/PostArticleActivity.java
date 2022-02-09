@@ -19,6 +19,7 @@ import com.wuda.bbs.bean.BaseBoard;
 import com.wuda.bbs.bean.response.BaseResponse;
 import com.wuda.bbs.bean.DetailBoard;
 import com.wuda.bbs.dao.AppDatabase;
+import com.wuda.bbs.utils.network.NetTool;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.network.WebForumService;
 import com.wuda.bbs.utils.parser.HtmlParser;
@@ -141,8 +142,10 @@ public class PostArticleActivity extends AppCompatActivity {
         form.put("Content", content.toString());
         form.put("signature", "");
 
+        Map<String, String> encodedForm = NetTool.encodeUrlFormWithGBK(form);
+
         WebForumService webForumService = ServiceCreator.create(WebForumService.class);
-        webForumService.post("dopostarticle.php", form).enqueue(new Callback<ResponseBody>() {
+        webForumService.postWithEncoded("dopostarticle.php", encodedForm).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {

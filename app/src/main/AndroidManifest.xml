@@ -6,13 +6,16 @@
 
     <application
         android:name=".application.BBSApplication"
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BBS">
+        <activity
+            android:name=".ui.main.article.ReplyActivity"
+            android:theme="@style/Theme.BBS.ReplyDialog"
+            android:exported="false" />
         <activity
             android:name=".ui.main.board.BoardActivity"
             android:exported="false" />

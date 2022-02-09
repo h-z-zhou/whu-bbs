@@ -22,7 +22,7 @@ public class NewsTodayFragment extends ArticleContainerFragment {
     protected void requestArticleFromServer() {
 
         WebForumService webForumService = ServiceCreator.create(WebForumService.class);
-        webForumService.request("newtopic.php", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
+        webForumService.get("newtopic.php", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 ResponseBody responseBody = response.body();

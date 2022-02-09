@@ -6,7 +6,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_nav_fav_article"
-            android:icon="@drawable/ic_menu_favorite"
+            android:icon="@drawable/ic_favor"
             android:title="@string/drawer_menu_fav_article" />
         <item
             android:id="@+id/drawer_nav_history"

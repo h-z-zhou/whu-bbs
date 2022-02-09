@@ -94,16 +94,26 @@ public class FavArticleActivity extends AppCompatActivity {
             num2id.put(board.getNumber(), board.getId());
         }
 
+        // url => bbscon.php?bid=102&id=1105517542
+        // url => wForum/disparticle.php?boardName=Advice&ID=1105517558&pos=1
+
         for (int i=0; i<treasureList.size(); i++) {
             FavArticle favArticle = ((FavArticle) treasureList.get(i));
             String params = favArticle.getSrcUrl().split("\\?")[1];
             String[] param_arr = params.split("&");
-            if (param_arr.length != 2)
+            String bid, gid;
+            if (param_arr.length == 2) {
+                bid = param_arr[0].split("=")[1];
+                bid = num2id.get(bid);
+                gid = param_arr[1].split("=")[1];
+            } else if (param_arr.length == 3) {
+                bid = param_arr[0].split("=")[1];
+                gid = param_arr[1].split("=")[1];
+            } else {
                 continue;
-            String bid = param_arr[0].split("=")[1];
-            String gid = param_arr[1].split("=")[1];
+            }
 
-            favArticle.setBoardId(num2id.get(bid));
+            favArticle.setBoardId(bid);
             favArticle.setGroupId(gid);
 
             favArticleList.add(favArticle);
