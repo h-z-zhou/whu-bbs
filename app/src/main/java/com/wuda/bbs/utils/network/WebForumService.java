@@ -14,9 +14,13 @@ import retrofit2.http.QueryMap;
 public interface WebForumService {
     // http://bbs.whu.edu.cn/wForum/favboard.php?bname=Test&select=0
     @GET("wForum/{page}")
-    public Call<ResponseBody> request(@Path("page") String page, @QueryMap Map<String, String> map);
+    public Call<ResponseBody> get(@Path("page") String page, @QueryMap Map<String, String> map);
 
     @FormUrlEncoded
     @POST("wForum/{page}")
     public Call<ResponseBody> post(@Path("page") String page, @FieldMap Map<String, String> formData);
+
+    @FormUrlEncoded
+    @POST("wForum/{page}")
+    public Call<ResponseBody> postWithEncoded(@Path("page") String page, @FieldMap(encoded = true) Map<String, String> formData);
 }

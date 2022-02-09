@@ -19,6 +19,9 @@ public interface MobileService {
     @GET("mobile.php")
     public Call<ResponseBody> request(@Query("app") String app, @QueryMap Map<String, String> formData);
 
+    @GET("mobile.php")
+    public Call<ResponseBody> request(@Query("app") String app);
+
     @FormUrlEncoded
     @POST("mobile.php")
     public Call<ResponseBody> post(@FieldMap Map<String, String> formData);
