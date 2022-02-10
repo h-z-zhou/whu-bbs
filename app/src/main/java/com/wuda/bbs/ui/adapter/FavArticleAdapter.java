@@ -33,7 +33,7 @@ public class FavArticleAdapter extends RecyclerView.Adapter<FavArticleAdapter.Vi
 
         TextView name_tv = new TextView(parent.getContext());
         name_tv.setTextSize(18);
-        name_tv.setPadding(16, 16, 16, 16);
+        name_tv.setPadding(16, 32, 16, 32);
         name_tv.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         return new ViewHolder(name_tv);
@@ -67,6 +67,17 @@ public class FavArticleAdapter extends RecyclerView.Adapter<FavArticleAdapter.Vi
     public void updateFavArticles(List<FavArticle> favArticleList) {
         this.mFavArticleList = favArticleList;
         this.notifyDataSetChanged();
+    }
+
+    public FavArticle removeItem(int position) {
+        if (position >= mFavArticleList.size()) {
+            return new FavArticle();
+        } else {
+            FavArticle favArticle = mFavArticleList.get(position);
+            mFavArticleList.remove(position);
+            this.notifyItemRemoved(position);
+            return favArticle;
+        }
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder{

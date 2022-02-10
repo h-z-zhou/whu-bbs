@@ -20,4 +20,19 @@ public class NetTool {
 
         return encodedForm;
     }
+
+    public static Map<String, String> extractUrlParam(String url) {
+        Map<String, String> paramaters = new HashMap<>();
+
+        String params = url.split("\\?")[1];
+        String[] param_arr = params.split("&");
+        for (String param: param_arr) {
+            String[] pair = param.split("=");
+            if (pair.length == 2) {
+                paramaters.put(pair[0], pair[1]);
+            }
+        }
+
+        return paramaters;
+    }
 }

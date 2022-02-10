@@ -7,6 +7,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
@@ -34,18 +35,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         toolbar = findViewById(R.id.detailArticle_toolbar);
+//        toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
-        if(getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-        }
+//        if(getSupportActionBar() != null) {
+//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+//        }
 
         drawer = findViewById(R.id.drawer_layout);
         drawer_nav = findViewById(R.id.drawer_nav_view);
 
         bottom_nav = findViewById(R.id.bottom_nav_view);
 //        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.bottom_nav_article, R.id.bottom_nav_mail)
+//                R.id.bottom_nav_home, R.id.bottom_nav_board, R.id.bottom_nav_mail)
 //                .build();
         NavController navController = Navigation.findNavController(this, R.id.bottom_nav_host_fragment_activity_main);
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
