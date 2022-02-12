@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.main.mail;
+package com.wuda.bbs.ui.drawer;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

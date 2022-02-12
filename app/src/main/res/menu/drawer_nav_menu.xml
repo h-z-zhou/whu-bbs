@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_menu_history"
             android:title="@string/drawer_menu_history" />
         <item
+            android:id="@+id/drawer_nav_friend"
+            android:icon="@drawable/ic_people"
+            android:title="@string/drawer_menu_friend" />
+        <item
             android:id="@+id/drawer_nav_setting"
             android:icon="@drawable/ic_menu_settings"
             android:title="@string/drawer_menu_setting" />

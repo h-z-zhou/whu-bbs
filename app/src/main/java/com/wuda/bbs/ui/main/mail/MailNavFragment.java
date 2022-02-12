@@ -52,14 +52,14 @@ public class MailNavFragment extends Fragment {
                 if (position == 0) {
                     return MailFragment.newInstance();
                 } else if (position == 1) {
-                    return FriendFragment.newInstance();
+//                    return FriendFragment.newInstance();
                 }
                 return null;
             }
 
             @Override
             public int getItemCount() {
-                return 2;
+                return 1;
             }
         });
 
@@ -83,9 +83,9 @@ public class MailNavFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(MailNavViewModel.class);
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.mail_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+//        inflater.inflate(R.menu.friend_menu, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 }
