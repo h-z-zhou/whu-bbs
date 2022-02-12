@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.Friend;
 import com.wuda.bbs.bean.response.FriendResponse;
+import com.wuda.bbs.dao.AppDatabase;
+import com.wuda.bbs.dao.FriendDao;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
 import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
@@ -32,7 +34,6 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FriendFragment extends Fragment {
@@ -70,6 +71,9 @@ public class FriendFragment extends Fragment {
             @Override
             public void onChanged(List<Friend> friends) {
                 ((FriendAdapter) friend_rv.getAdapter()).updateFriendList(friends);
+                if (getContext() == null) return;
+                FriendDao friendDao = AppDatabase.getDatabase(getContext()).getFriendDao();
+                friendDao.insertFriends(friends);
             }
         });
     }
@@ -80,7 +84,7 @@ public class FriendFragment extends Fragment {
 //        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("list", "all");
 
-        mobileService.request("friend", form).enqueue(new BBSCallback<ResponseBody>(getContext()) {
+        mobileService.get("friend", form).enqueue(new BBSCallback<ResponseBody>(getContext()) {
             @Override
             public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {

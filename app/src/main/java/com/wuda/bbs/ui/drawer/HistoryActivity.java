@@ -23,6 +23,7 @@ import java.util.List;
 public class HistoryActivity extends AppCompatActivity {
 
     RecyclerView history_rv;
+    HistoryRecyclerAdapter history_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,8 @@ public class HistoryActivity extends AppCompatActivity {
 
         history_rv = findViewById(R.id.recyclerView);
         history_rv.setLayoutManager(new LinearLayoutManager(HistoryActivity.this));
-        history_rv.setAdapter(new HistoryRecyclerAdapter(HistoryActivity.this, new ArrayList<>()));
+        history_adapter = new HistoryRecyclerAdapter(HistoryActivity.this, new ArrayList<>());
+        history_rv.setAdapter(history_adapter);
         history_rv.addItemDecoration(new DividerItemDecoration(HistoryActivity.this, DividerItemDecoration.VERTICAL));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
@@ -59,7 +61,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                History history = ((HistoryRecyclerAdapter) history_rv.getAdapter()).removeItem(viewHolder.getAdapterPosition());
+                History history = history_adapter.removeItem(viewHolder.getAdapterPosition());
                 removeHistory(history);
             }
         });
@@ -71,7 +73,7 @@ public class HistoryActivity extends AppCompatActivity {
     private void loadHistory() {
         HistoryDao historyDao = AppDatabase.getDatabase(HistoryActivity.this).getHistoryDao();
         List<History> historyList = historyDao.loadAllHistories();
-        ((HistoryRecyclerAdapter) history_rv.getAdapter()).addHistories(historyList);
+        history_adapter.addHistories(historyList);
     }
 
     private void removeHistory(History history) {

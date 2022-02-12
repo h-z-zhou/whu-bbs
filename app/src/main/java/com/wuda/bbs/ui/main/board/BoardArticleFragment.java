@@ -70,7 +70,7 @@ public class BoardArticleFragment extends ArticleContainerFragment {
         int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("page", Integer.toString(requestPage));
         form.put("board", board.getId());
-        mobileService.request("topics", form).enqueue(new Callback<ResponseBody>() {
+        mobileService.get("topics", form).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 article_srl.setRefreshing(false);

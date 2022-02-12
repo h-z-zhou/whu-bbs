@@ -28,7 +28,6 @@ import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.FavorBoardDao;
 import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
-import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
@@ -39,7 +38,6 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FavorBoardFragment extends Fragment {
@@ -193,7 +191,7 @@ public class FavorBoardFragment extends Fragment {
     private void requestFavorBoardsFromServer() {
         MobileService mobileService = ServiceCreator.create(MobileService.class);
 
-        mobileService.request("favor", new HashMap<>()).enqueue(new BBSCallback<ResponseBody>(getContext()) {
+        mobileService.get("favor", new HashMap<>()).enqueue(new BBSCallback<ResponseBody>(getContext()) {
             @Override
             public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {

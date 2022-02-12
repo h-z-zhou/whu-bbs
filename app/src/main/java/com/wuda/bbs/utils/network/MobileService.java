@@ -17,10 +17,13 @@ import retrofit2.http.QueryMap;
 public interface MobileService {
     // app => poster recomm hot boards
     @GET("mobile.php")
-    public Call<ResponseBody> request(@Query("app") String app, @QueryMap Map<String, String> formData);
+    public Call<ResponseBody> get(@Query("app") String app, @QueryMap Map<String, String> formData);
 
     @GET("mobile.php")
-    public Call<ResponseBody> request(@Query("app") String app);
+    public Call<ResponseBody> get(@Query("app") String app);
+
+    @GET("mobile.php")
+    public Call<ResponseBody> get(@QueryMap Map<String, String> formData);
 
     @FormUrlEncoded
     @POST("mobile.php")

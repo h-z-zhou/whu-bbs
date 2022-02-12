@@ -1,6 +1,13 @@
 package com.wuda.bbs.bean;
 
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity
 public class Friend {
+    @PrimaryKey
+    @NonNull
     String id;
     String avatar;
 

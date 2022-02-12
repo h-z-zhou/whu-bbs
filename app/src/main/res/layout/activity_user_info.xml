@@ -2,8 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/userInfo_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="visible"
     tools:context=".ui.user.UserInfoActivity">
 
     <ImageView
@@ -99,7 +101,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <Button
-        android:id="@+id/userInfo_add2friend_button"
+        android:id="@+id/userInfo_friend_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -116,5 +118,5 @@
         android:text="信件聊天"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/userInfo_add2friend_button" />
+        app:layout_constraintStart_toEndOf="@+id/userInfo_friend_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

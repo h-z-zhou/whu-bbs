@@ -21,7 +21,7 @@ public class RecommendFragment extends ArticleContainerFragment {
     @Override
     protected void requestArticleFromServer() {
         MobileService mobileService = ServiceCreator.create(MobileService.class);
-        mobileService.request("recomm", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
+        mobileService.get("recomm", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {

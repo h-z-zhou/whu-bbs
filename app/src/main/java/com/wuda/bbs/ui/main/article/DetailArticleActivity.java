@@ -153,7 +153,7 @@ public class DetailArticleActivity extends AppCompatActivity {
         form.put("page", "1");
         Log.d("article", form.toString());
 
-        mobileService.request("read", form).enqueue(new BBSCallback<ResponseBody>(DetailArticleActivity.this) {
+        mobileService.get("read", form).enqueue(new BBSCallback<ResponseBody>(DetailArticleActivity.this) {
             @Override
             public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {

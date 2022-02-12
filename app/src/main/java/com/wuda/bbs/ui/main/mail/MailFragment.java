@@ -30,7 +30,6 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MailFragment extends Fragment {
@@ -80,7 +79,7 @@ public class MailFragment extends Fragment {
         form.put("boxname", "inbox");
 
 
-        mobileService.request("mail", form).enqueue(new BBSCallback<ResponseBody>(getContext()) {
+        mobileService.get("mail", form).enqueue(new BBSCallback<ResponseBody>(getContext()) {
             @Override
             public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 try {
