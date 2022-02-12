@@ -49,7 +49,7 @@ public class PostArticleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_article);
 
-        toolbar = findViewById(R.id.postArticle_toolbar);
+        toolbar = findViewById(R.id.back_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

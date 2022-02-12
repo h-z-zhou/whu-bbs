@@ -20,7 +20,6 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.bean.DetailArticle;
 import com.wuda.bbs.ui.main.article.ReplyActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
-import com.wuda.bbs.ui.main.article.ReplyDialog;
 import com.wuda.bbs.utils.network.NetConst;
 
 import java.util.ArrayList;

@@ -13,9 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BBS">
         <activity
-            android:name=".ui.main.article.ReplyActivity"
-            android:theme="@style/Theme.BBS.ReplyDialog"
+            android:name=".ui.drawer.HistoryActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.main.article.ReplyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BBS.ReplyDialog" />
         <activity
             android:name=".ui.main.board.BoardActivity"
             android:exported="false" />

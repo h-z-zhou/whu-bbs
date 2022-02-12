@@ -49,14 +49,6 @@
             android:gravity="center_vertical"
             android:text="说点什么吧" />
 
-        <ImageView
-            android:id="@+id/detailArticle_favor_imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            app:srcCompat="@drawable/ic_favor" />
-
     </LinearLayout>
 
 

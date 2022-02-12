@@ -7,17 +7,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.bean.DetailArticle;
+import com.wuda.bbs.bean.History;
 import com.wuda.bbs.bean.response.DetailArticleResponse;
+import com.wuda.bbs.dao.AppDatabase;
+import com.wuda.bbs.dao.HistoryDao;
 import com.wuda.bbs.ui.adapter.DetailArticleRecyclerAdapter;
 import com.wuda.bbs.ui.widget.TopicDecoration;
 import com.wuda.bbs.utils.network.BBSCallback;
@@ -28,14 +32,12 @@ import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DetailArticleActivity extends AppCompatActivity {
@@ -50,7 +52,7 @@ public class DetailArticleActivity extends AppCompatActivity {
     RecyclerView article_rv;
 
     TextView reply_tv;
-    ImageView favor_iv;
+//    ImageView favor_iv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,12 +86,27 @@ public class DetailArticleActivity extends AppCompatActivity {
         });
 
         reply_tv = findViewById(R.id.detailArticle_reply_textView);
-        favor_iv = findViewById(R.id.detailArticle_favor_imageView);
+//        favor_iv = findViewById(R.id.detailArticle_favor_imageView);
 
         eventBinding();
 
         requestContentFromServer();
 
+        add2history();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.detail_article_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_favor) {
+            add2Favor();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void eventBinding() {
@@ -108,20 +125,21 @@ public class DetailArticleActivity extends AppCompatActivity {
             }
         });
 
-        favor_iv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isFavor = !isFavor;
-                if (isFavor) {
-                    favor_iv.setImageDrawable(getDrawable(R.drawable.ic_favor_filled));
-                    favor_iv.setColorFilter(Color.RED);
-                    addFavor();
-                } else {
-                    favor_iv.setImageDrawable(getDrawable(R.drawable.ic_favor));
-                    favor_iv.setColorFilter(null);
-                }
-            }
-        });
+        // 取消收藏无法绑定
+//        favor_iv.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                isFavor = !isFavor;
+//                if (isFavor) {
+//                    favor_iv.setImageDrawable(getDrawable(R.drawable.ic_favor_filled));
+//                    favor_iv.setColorFilter(Color.RED);
+//                    addFavor();
+//                } else {
+//                    favor_iv.setImageDrawable(getDrawable(R.drawable.ic_favor));
+//                    favor_iv.setColorFilter(null);
+//                }
+//            }
+//        });
 
     }
 
@@ -151,7 +169,7 @@ public class DetailArticleActivity extends AppCompatActivity {
         });
     }
 
-    private void addFavor() {
+    private void add2Favor() {
         RootService rootService = ServiceCreator.create(RootService.class);
         Map<String, String> form = new HashMap<>();
         // act=add&title=&type=0&pid=2&url=
@@ -168,12 +186,21 @@ public class DetailArticleActivity extends AppCompatActivity {
         rootService.getWithEncoded("bbssfav.php", encodedForm).enqueue(new BBSCallback<ResponseBody>(DetailArticleActivity.this) {
             @Override
             public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-
+                Toast.makeText(DetailArticleActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void removeFavor() {
-
+    private void add2history() {
+        HistoryDao historyDao = AppDatabase.getDatabase(DetailArticleActivity.this).getHistoryDao();
+        historyDao.insertHistory(
+                new History(
+                        mBriefArticle.getTitle(),
+                        mBriefArticle.getBoardID(),
+                        mBriefArticle.getGID(),
+                        Calendar.getInstance().getTimeInMillis()
+                )
+        );
     }
+
 }

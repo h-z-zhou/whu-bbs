@@ -1,6 +1,5 @@
 package com.wuda.bbs.ui.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -12,24 +11,24 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.bean.BriefArticle;
 import com.wuda.bbs.bean.FavArticle;
+import com.wuda.bbs.bean.History;
 import com.wuda.bbs.ui.main.article.DetailArticleActivity;
 
 import java.util.List;
 
-public class FavArticleAdapter extends RecyclerView.Adapter<FavArticleAdapter.ViewHolder> {
+public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecyclerAdapter.ViewHolder> {
 
     Context mContext;
-    List<FavArticle> mFavArticleList;
+    List<History> mHistoryList;
 
-    public FavArticleAdapter(Context mContext, List<FavArticle> mFavArticleList) {
+    public HistoryRecyclerAdapter(Context mContext, List<History> mHistoryList) {
         this.mContext = mContext;
-        this.mFavArticleList = mFavArticleList;
+        this.mHistoryList = mHistoryList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         TextView name_tv = new TextView(parent.getContext());
         name_tv.setTextSize(18);
         name_tv.setPadding(16, 32, 16, 32);
@@ -40,17 +39,16 @@ public class FavArticleAdapter extends RecyclerView.Adapter<FavArticleAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FavArticle favArticle = mFavArticleList.get(position);
-        holder.title_tv.setText(favArticle.getName());
-
+        History history = mHistoryList.get(position);
+        holder.title_tv.setText(history.getTitle());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailArticleActivity.class);
                 BriefArticle briefArticle = new BriefArticle();
-                briefArticle.setBoardID(favArticle.getBoardId());
-                briefArticle.setGID(favArticle.getGroupId());
-                briefArticle.setTitle(favArticle.getName());
+                briefArticle.setBoardID(history.getBoardID());
+                briefArticle.setGID(history.getGID());
+                briefArticle.setTitle(history.getTitle());
                 intent.putExtra("briefArticle", briefArticle);
                 mContext.startActivity(intent);
             }
@@ -59,28 +57,26 @@ public class FavArticleAdapter extends RecyclerView.Adapter<FavArticleAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return mFavArticleList.size();
+        return mHistoryList.size();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void updateFavArticles(List<FavArticle> favArticleList) {
-        this.mFavArticleList = favArticleList;
-        this.notifyDataSetChanged();
+    public void addHistories(List<History> historyList) {
+        mHistoryList.addAll(historyList);
+        this.notifyItemRangeInserted(mHistoryList.size()-historyList.size(), mHistoryList.size());
     }
 
-    public FavArticle removeItem(int position) {
-        if (position >= mFavArticleList.size()) {
-            return new FavArticle();
+    public History removeItem(int position) {
+        if (position >= mHistoryList.size()) {
+            return new History();
         } else {
-            FavArticle favArticle = mFavArticleList.get(position);
-            mFavArticleList.remove(position);
+            History history = mHistoryList.get(position);
+            mHistoryList.remove(position);
             this.notifyItemRemoved(position);
-            return favArticle;
+            return history;
         }
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
-
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title_tv;
 
         public ViewHolder(@NonNull View itemView) {
