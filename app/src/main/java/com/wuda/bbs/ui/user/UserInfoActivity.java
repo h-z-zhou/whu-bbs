@@ -50,7 +50,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private Button chat_btn;
 
     private UserInfoViewModel mViewModel;
-    private String userId;
+//    private String userId;
 //    private UserInfo userInfo;
     private boolean isFriend;
     FriendDao friendDao;
