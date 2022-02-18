@@ -6,10 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.home.BoardEntranceFragment">
 
-    <ExpandableListView
-        android:id="@+id/boardEntrance_expandableListView"
+    <pokercc.android.expandablerecyclerview.ExpandableRecyclerView
+        android:id="@+id/boardEntrance_expandableRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.main.home.BoardEntranceFragment" />
+        android:layout_height="match_parent" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

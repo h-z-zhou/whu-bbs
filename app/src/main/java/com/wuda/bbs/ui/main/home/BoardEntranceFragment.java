@@ -1,15 +1,16 @@
 package com.wuda.bbs.ui.main.home;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
@@ -19,7 +20,7 @@ import com.wuda.bbs.bean.FavorBoard;
 import com.wuda.bbs.dao.AppDatabase;
 import com.wuda.bbs.dao.DetailBoardDao;
 import com.wuda.bbs.dao.FavorBoardDao;
-import com.wuda.bbs.ui.adapter.BoardEntranceListAdapter;
+import com.wuda.bbs.ui.adapter.BoardEntranceAdapter;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -32,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import okhttp3.ResponseBody;
+import pokercc.android.expandablerecyclerview.ExpandableRecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +41,7 @@ import retrofit2.Response;
 public class BoardEntranceFragment extends Fragment {
 
     SwipeRefreshLayout entrance_srl;
-    ExpandableListView entrance_elv;
+    ExpandableRecyclerView entrance_erv;
     boolean isFavorBoardRequested = false;
 
     public BoardEntranceFragment() {
@@ -71,7 +73,8 @@ public class BoardEntranceFragment extends Fragment {
                 requestDetailBoardsFromServer();
             }
         });
-        entrance_elv = view.findViewById(R.id.boardEntrance_expandableListView);
+        entrance_erv = view.findViewById(R.id.boardEntrance_expandableRecyclerView);
+        entrance_erv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         queryAllBoardFromDB();
 
@@ -117,7 +120,7 @@ public class BoardEntranceFragment extends Fragment {
         List<List<BaseBoard>> allBoardGroupList = new ArrayList<>();
         allBoardGroupList.addAll(allBoardGroupMap.values());
 
-        entrance_elv.setAdapter(new BoardEntranceListAdapter(getContext(), sectionList, allBoardGroupList));
+        entrance_erv.setAdapter(new BoardEntranceAdapter(getContext(), sectionList, allBoardGroupList));
 
     }
 
@@ -147,7 +150,7 @@ public class BoardEntranceFragment extends Fragment {
                     FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
 
                     // 清空，与云端保持同步
-                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getUsername());
+                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getUserId());
 
                     // cast => save to database
                     List<FavorBoard> castFavorBoardList = new ArrayList<>();
