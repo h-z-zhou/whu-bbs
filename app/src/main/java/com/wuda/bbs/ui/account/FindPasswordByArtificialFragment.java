@@ -1,18 +1,16 @@
-package com.wuda.bbs.ui.login;
-
-import androidx.lifecycle.ViewModelProvider;
+package com.wuda.bbs.ui.account;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.text.Editable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -22,37 +20,45 @@ import com.wuda.bbs.utils.validator.TextValidator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
-
-    private FindPasswordByAuthInfoViewModel mViewModel;
+public class FindPasswordByArtificialFragment extends FindPasswordFragment {
 
     private TextInputEditText uid_et;
     private TextInputLayout uid_tl;
+    private TextInputEditText name_et;
+    private TextInputLayout name_tl;
     private TextInputEditText idNumber_et;
     private TextInputLayout idNumber_tl;
     private TextInputEditText studentNumber_et;
     private TextInputLayout studentNumber_tl;
     private TextInputEditText email_et;
     private TextInputLayout email_tl;
+    private TextInputEditText comment_et;
+    private TextInputLayout comment_tl;
     Button submit_btn;
 
-    public static FindPasswordByAuthInfoFragment newInstance() {
-        return new FindPasswordByAuthInfoFragment();
+    private FindPasswordByArtificialViewModel mViewModel;
+
+    public static FindPasswordByArtificialFragment newInstance() {
+        return new FindPasswordByArtificialFragment();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.find_password_by_auth_info_fragment, container, false);
+        View view = inflater.inflate(R.layout.find_password_by_artificial_fragment, container, false);
 
-        uid_et = view.findViewById(R.id.findPasswordByAuthInfo_uid_inputEditText);
-        uid_tl = view.findViewById(R.id.findPasswordByAuthInfo_uid_textInputLayout);
-        idNumber_et = view.findViewById(R.id.findPasswordByAuthInfo_idNumber_inputEditText);
-        idNumber_tl = view.findViewById(R.id.findPasswordByAuthInfo_idNumber_textInputLayout);
-        studentNumber_et = view.findViewById(R.id.findPasswordByAuthInfo_studentNumber_inputEditText);
-        studentNumber_tl = view.findViewById(R.id.findPasswordByAuthInfo_studentNumber_textInputLayout);
-        email_et = view.findViewById(R.id.findPasswordByAuthInfo_email_inputEditText);
-        email_tl = view.findViewById(R.id.findPasswordByAuthInfo_email_textInputLayout);
+        uid_et = view.findViewById(R.id.findPasswordByArtificial_uid_inputEditText);
+        uid_tl = view.findViewById(R.id.findPasswordByArtificial_uid_textInputLayout);
+        name_et = view.findViewById(R.id.findPasswordByAuthInfo_uid_inputEditText);
+        name_tl = view.findViewById(R.id.findPasswordByArtificial_name_textInputLayout);
+        idNumber_et = view.findViewById(R.id.findPasswordByArtificial_idNumber_inputEditText);
+        idNumber_tl = view.findViewById(R.id.findPasswordByArtificial_idNumber_textInputLayout);
+        studentNumber_et = view.findViewById(R.id.findPasswordByArtificial_studentNumber_inputEditText);
+        studentNumber_tl = view.findViewById(R.id.findPasswordByArtificial_studentNumber_textInputLayout);
+        email_et = view.findViewById(R.id.findPasswordByArtificial_email_inputEditText);
+        email_tl = view.findViewById(R.id.findPasswordByArtificial_email_textInputLayout);
+        comment_et = view.findViewById(R.id.findPasswordByArtificial_comment_inputEditText);
+        comment_tl = view.findViewById(R.id.findPasswordByArtificial_comment_textInputLayout);
         submit_btn = view.findViewById(R.id.findPasswdByArtificial_submit_button);
 
         eventBinding();
@@ -63,7 +69,9 @@ public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(FindPasswordByAuthInfoViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(FindPasswordByArtificialViewModel.class);
+
+        showActionBar("通过人工找回密码");
     }
 
     private void eventBinding() {
@@ -96,7 +104,7 @@ public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
                 return false;
             }
         });
-
+        // tgt=reqpwd&uid=abc&name=&sfzh=&xh=&email=abc%40abc.abc&bz=
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,17 +114,9 @@ public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
                     return;
                 }
 
+                Editable name = name_et.getText();
                 Editable idNumber = idNumber_et.getText();
-                if (idNumber==null || !TextValidator.isIdNumberValid(idNumber.toString())) {
-                    idNumber_tl.setError("请填写有效的身份证号");
-                    return;
-                }
-
                 Editable studentNumber = studentNumber_et.getText();
-                if (studentNumber==null || studentNumber.length()!=13) {
-                    studentNumber_tl.setError("请填写有效的学号");
-                    return;
-                }
 
                 Editable email = email_et.getText();
                 if (email==null || !TextValidator.isEmailValid(email.toString())) {
@@ -124,19 +124,21 @@ public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
                     return;
                 }
 
-                // tgt=authpwd&uid=abc&name=&sfzh=123456789009876543&xh=123456789012&email=abc@abc.abc
+                Editable comment = comment_et.getText();
+
+                // tgt=reqpwd&uid=abc&name=&sfzh=&xh=&email=abc%40abc.abc&bz=
                 Map<String, String> form = new HashMap<>();
 
-                form.put("tgt", "authpwd");
+                form.put("tgt", "reqpwd");
                 form.put("uid", uid.toString());
-                form.put("name", "");
-                form.put("sfzh", idNumber.toString());
-                form.put("xh", studentNumber.toString());
+                form.put("name", name==null? "": name.toString());
+                form.put("sfzh", idNumber==null? "": idNumber.toString());
+                form.put("xh", studentNumber==null? "": studentNumber.toString());
                 form.put("email", email.toString());
+                form.put("bz", comment==null? "": comment.toString());
 
                 submit(form);
             }
         });
     }
-
 }

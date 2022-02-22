@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.login;
+package com.wuda.bbs.ui.account;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -53,6 +53,8 @@ public class FindPasswordByEmailFragment extends FindPasswordFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(FindPasswordByEmailViewModel.class);
+
+        showActionBar("通过邮箱找回密码");
     }
 
     private void eventBinding() {

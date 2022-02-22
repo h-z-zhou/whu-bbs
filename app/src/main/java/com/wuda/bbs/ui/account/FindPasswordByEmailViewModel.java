@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.login;
+package com.wuda.bbs.ui.account;
 
 import androidx.lifecycle.ViewModel;
 

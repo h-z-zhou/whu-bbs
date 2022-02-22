@@ -1,10 +1,11 @@
-package com.wuda.bbs.ui.login;
+package com.wuda.bbs.ui.account;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import com.wuda.bbs.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.parser.JsonParser;
@@ -17,7 +18,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FindPasswordFragment extends Fragment {
+public class FindPasswordFragment extends BaseFragment {
 
     protected void submit(Map<String, String> form) {
 
