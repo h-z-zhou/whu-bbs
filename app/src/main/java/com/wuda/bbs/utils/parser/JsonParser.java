@@ -1,6 +1,6 @@
 package com.wuda.bbs.utils.parser;
 
-import com.wuda.bbs.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;

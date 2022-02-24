@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.response.BriefArticleResponse;
+import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
 import com.wuda.bbs.ui.adapter.BriefArticleRecyclerAdapter;
 
 public abstract class ArticleContainerFragment extends Fragment {

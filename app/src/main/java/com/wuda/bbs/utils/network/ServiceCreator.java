@@ -15,7 +15,6 @@ import retrofit2.Retrofit;
 
 public class ServiceCreator {
 
-
     private static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(NetConst.BASE)
             .client(new OkHttpClient.Builder()

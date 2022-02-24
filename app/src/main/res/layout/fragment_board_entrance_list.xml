@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/boardEntrance_swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.home.BoardEntranceListFragment">
+
+    <ExpandableListView
+        android:id="@+id/boardEntrance_expandableListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.main.home.BoardEntranceListFragment" />
+
+<!--    <pokercc.android.expandablerecyclerview.ExpandableRecyclerView-->
+<!--        android:id="@+id/boardEntrance_expandableRecyclerView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

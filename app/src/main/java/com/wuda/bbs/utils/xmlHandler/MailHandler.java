@@ -1,7 +1,7 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.Mail;
-import com.wuda.bbs.bean.response.MailResponse;
+import com.wuda.bbs.logic.bean.Mail;
+import com.wuda.bbs.logic.bean.response.MailResponse;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

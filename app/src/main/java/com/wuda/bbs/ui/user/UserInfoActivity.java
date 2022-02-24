@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -17,11 +18,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.Friend;
-import com.wuda.bbs.bean.UserInfo;
-import com.wuda.bbs.bean.response.UserInfoResponse;
-import com.wuda.bbs.dao.AppDatabase;
-import com.wuda.bbs.dao.FriendDao;
+import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.UserInfo;
+import com.wuda.bbs.logic.bean.response.UserInfoResponse;
+import com.wuda.bbs.logic.dao.AppDatabase;
+import com.wuda.bbs.logic.dao.FriendDao;
+import com.wuda.bbs.ui.main.mail.NewMailActivity;
 import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
@@ -105,6 +107,15 @@ public class UserInfoActivity extends AppCompatActivity {
                 operateFriend();
             }
         });
+
+        chat_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserInfoActivity.this, NewMailActivity.class);
+                intent.putExtra("userId", mViewModel.userId);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -167,7 +178,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         isFriend = !isFriend;
-                        Friend friend = new Friend(mViewModel.userInfo.getValue().getId(), mViewModel.userInfo.getValue().getAvatar());
+                        Friend friend = new Friend(mViewModel.userInfo.getValue().getId(), "", mViewModel.userInfo.getValue().getAvatar());
                         if (isFriend) {
                             friendDao.insertFriend(friend);
                         } else {

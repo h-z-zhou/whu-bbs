@@ -19,8 +19,8 @@
 
     <fragment
         android:id="@+id/bottom_nav_mail"
-        android:name="com.wuda.bbs.ui.main.mail.MailNavFragment"
+        android:name="com.wuda.bbs.ui.main.mail.MailFragment"
         android:label="信件"
-        tools:layout="@layout/mail_nav_fragment"/>
+        tools:layout="@layout/mail_fragment"/>
 
 </navigation>

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,10 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Account;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
 import com.wuda.bbs.ui.adapter.AccountRecyclerAdapter;
 import com.wuda.bbs.ui.base.BaseFragment;
-import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,14 +59,8 @@ public class AccountSwitchFragment extends BaseFragment {
         adapter.setAccountHelper(new AccountRecyclerAdapter.AccountHelper() {
             @Override
             public void onLogin(Account account) {
-                mSharedViewModel.login(account, new SimpleResponseHandler() {
-                    @Override
-                    public void onResponseHandled(BaseResponse baseResponse) {
-                        if (!baseResponse.isSuccessful()) {
-                            Toast.makeText(getContext(), baseResponse.getMassage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                mSharedViewModel.login(account);
+
             }
 
             @Override

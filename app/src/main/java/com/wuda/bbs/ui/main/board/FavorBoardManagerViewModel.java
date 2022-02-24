@@ -4,8 +4,8 @@ package com.wuda.bbs.ui.main.board;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.DetailBoard;
 
 import java.util.ArrayList;
 import java.util.List;

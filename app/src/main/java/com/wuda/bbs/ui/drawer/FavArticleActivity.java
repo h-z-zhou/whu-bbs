@@ -13,14 +13,13 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.DetailBoard;
-import com.wuda.bbs.bean.FavArticle;
-import com.wuda.bbs.bean.Treasure;
-import com.wuda.bbs.dao.AppDatabase;
-import com.wuda.bbs.dao.DetailBoardDao;
+import com.wuda.bbs.logic.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.FavArticle;
+import com.wuda.bbs.logic.bean.Treasure;
+import com.wuda.bbs.logic.dao.AppDatabase;
+import com.wuda.bbs.logic.dao.DetailBoardDao;
 import com.wuda.bbs.ui.adapter.FavArticleAdapter;
 import com.wuda.bbs.utils.network.BBSCallback;
-import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.NetTool;
 import com.wuda.bbs.utils.parser.HtmlParser;
 import com.wuda.bbs.utils.network.RootService;
@@ -34,7 +33,6 @@ import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class FavArticleActivity extends AppCompatActivity {

@@ -1,6 +1,6 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.Friend;
+import com.wuda.bbs.logic.bean.Friend;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -21,8 +21,9 @@ public class FriendHandler extends DefaultHandler {
         super.startElement(uri, localName, qName, attributes);
         if (localName.equals("Friend")) {
             String id = attributes.getValue("ID");
+            String alias = attributes.getValue("experience");
             String avatar = attributes.getValue("userface_img");
-            friendList.add(new Friend(id, avatar));
+            friendList.add(new Friend(id, alias, avatar));
         }
     }
 

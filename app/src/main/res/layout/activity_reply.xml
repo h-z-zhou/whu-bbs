@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:background="@color/white"
-    tools:context=".ui.main.article.ReplyActivity">
+    tools:context=".ui.article.ReplyActivity">
 
     <ImageButton
         android:id="@+id/reply_close_imageButton"

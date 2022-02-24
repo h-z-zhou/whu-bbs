@@ -1,8 +1,6 @@
 package com.wuda.bbs.ui.account;
 
-import android.app.AlertDialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,34 +13,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
-import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.bean.Account;
-import com.wuda.bbs.logic.bean.UserInfo;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
-import com.wuda.bbs.logic.bean.response.UserInfoResponse;
-import com.wuda.bbs.logic.dao.AppDatabase;
-import com.wuda.bbs.logic.dao.AccountDao;
+import com.wuda.bbs.logic.bean.response.AccountResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
-import com.wuda.bbs.utils.network.MobileService;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
-import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginFragment extends BaseFragment {
 
@@ -119,6 +99,20 @@ public class LoginFragment extends BaseFragment {
                 if (userId_et.getText().length() == 0) {
                     userId_et.setText(account.getId());
                     passwd_et.setText(account.getPasswd());
+                }
+            }
+        });
+
+        mViewModel.getAccountResponseLiveData().observe(getViewLifecycleOwner(), new Observer<AccountResponse>() {
+            @Override
+            public void onChanged(AccountResponse accountResponse) {
+                if (accountResponse.isSuccessful()) {
+                    mSharedViewModel.updateCurrentAccount(accountResponse.getAccount());
+                    if (getActivity() != null) {
+                        getActivity().onBackPressed();
+                    }
+                } else {
+                    Toast.makeText(getContext(), accountResponse.getMassage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -216,18 +210,7 @@ public class LoginFragment extends BaseFragment {
             return;
         }
 
-        mSharedViewModel.login(new Account(username, passwd), new SimpleResponseHandler() {
-            @Override
-            public void onResponseHandled(BaseResponse baseResponse) {
-                if (!baseResponse.isSuccessful()) {
-                    Toast.makeText(getContext(), baseResponse.getMassage(), Toast.LENGTH_SHORT).show();
-                } else {
-                    if (getActivity() != null) {
-                        getActivity().onBackPressed();
-                    }
-                }
-            }
-        });
+        mViewModel.login(new Account(username, passwd));
 
     }
 }

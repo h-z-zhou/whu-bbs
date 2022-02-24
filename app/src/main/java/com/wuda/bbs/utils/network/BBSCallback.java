@@ -7,7 +7,7 @@ import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
-import com.wuda.bbs.ui.login.LoginActivity;
+import com.wuda.bbs.ui.account.AccountActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,7 +29,8 @@ public abstract class BBSCallback<T> implements Callback<T> {
                         .setPositiveButton("去登录", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(mContext, LoginActivity.class);
+                                Intent intent = new Intent(mContext, AccountActivity.class);
+                                intent.putExtra("isLogin", true);
                                 mContext.startActivity(intent);
                             }
                         })

@@ -35,6 +35,7 @@ public class AccountActivity extends AppCompatActivity implements NavigationHost
 
         if (savedInstanceState!=null && savedInstanceState.containsKey("isLogin")) {
             isLogin = savedInstanceState.getBoolean("isLogin");
+            return;
         } else {
             isLogin = getIntent().getBooleanExtra("isLogin", true);
         }

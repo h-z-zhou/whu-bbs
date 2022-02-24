@@ -14,12 +14,12 @@ import android.widget.Toast;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.DetailBoard;
-import com.wuda.bbs.bean.FavorBoard;
-import com.wuda.bbs.dao.AppDatabase;
-import com.wuda.bbs.dao.DetailBoardDao;
-import com.wuda.bbs.dao.FavorBoardDao;
+import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.dao.AppDatabase;
+import com.wuda.bbs.logic.dao.DetailBoardDao;
+import com.wuda.bbs.logic.dao.FavorBoardDao;
 import com.wuda.bbs.ui.adapter.BoardEntranceAdapter;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
@@ -150,7 +150,7 @@ public class BoardEntranceFragment extends Fragment {
                     FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
 
                     // 清空，与云端保持同步
-                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getUserId());
+                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
 
                     // cast => save to database
                     List<FavorBoard> castFavorBoardList = new ArrayList<>();

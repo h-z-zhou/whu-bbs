@@ -4,38 +4,47 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.wuda.bbs.logic.bean.Account;
+
 public class BBSApplication extends Application {
     private static Context appContext;
-    private static String username;
+    private static Account account;
 
     @Override
     public void onCreate() {
         super.onCreate();
         appContext = getBaseContext();
         SharedPreferences sp = appContext.getSharedPreferences("user", MODE_PRIVATE);
-        username = sp.getString("name", "guest");
+        String id = sp.getString("id", "guest");
+        String avatar = sp.getString("avatar", "");
+        String passwd = sp.getString("passwd", "");
+        account = new Account(id, passwd, avatar, Account.FLAG_CURRENT);
+    }
+
+    public static void setAccount(Account account) {
+        if (!account.getId().equals(BBSApplication.account.getId())) {
+            BBSApplication.account = account;
+            SharedPreferences.Editor editor = appContext.getSharedPreferences("user", MODE_PRIVATE).edit();
+            editor.putString("id", account.getId());
+            editor.putString("passwd", account.getPasswd());
+            editor.putString("avatar", account.getAvatar());
+            editor.apply();
+        }
     }
 
     public static Context getAppContext() {
         return appContext;
     }
 
-    public static String getUsername() {
-        return username;
+    public static String getAccountId() {
+        return account.getId();
     }
 
-    public static void setUserInfo(String username, String passwd) {
-        SharedPreferences.Editor editor = appContext.getSharedPreferences("user", MODE_PRIVATE).edit();
-
-        if (!BBSApplication.username.equals(username)) {
-            BBSApplication.username = username;
-            editor.putString("name", username);
-        }
-
-        editor.apply();
+    public static String getAccountAvatar() {
+        return account.getAvatar();
     }
 
     public static boolean isLogin() {
-        return !username.equals("guest");
+        return !account.getId().equals("guest");
     }
 }

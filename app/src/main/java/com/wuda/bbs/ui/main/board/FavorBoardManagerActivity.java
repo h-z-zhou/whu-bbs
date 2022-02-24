@@ -21,12 +21,12 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textview.MaterialTextView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.DetailBoard;
-import com.wuda.bbs.bean.FavorBoard;
-import com.wuda.bbs.dao.AppDatabase;
-import com.wuda.bbs.dao.DetailBoardDao;
-import com.wuda.bbs.dao.FavorBoardDao;
+import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.dao.AppDatabase;
+import com.wuda.bbs.logic.dao.DetailBoardDao;
+import com.wuda.bbs.logic.dao.FavorBoardDao;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.RootService;
@@ -208,10 +208,10 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
 
     private void queryFavorBoardsFromDB() {
         FavorBoardDao favorBoardDao = AppDatabase.getDatabase(this).getFavorBoardDao();
-        if (BBSApplication.getUsername().equals(""))
+        if (BBSApplication.getAccountId().equals(""))
             return;
 
-        List<BaseBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getUsername());
+        List<BaseBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getAccountId());
 
         mViewModel.favorBoards.setValue(favorBoardList);
     }
@@ -242,7 +242,7 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
                     FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getApplicationContext()).getFavorBoardDao();
 
                     // 清空，与云端保持同步
-                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getUsername());
+                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
 
                     // cast => save to database
                     List<FavorBoard> castFavorBoardList = new ArrayList<>();
@@ -270,7 +270,7 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
         FavorBoardDao favorBoardDao = AppDatabase.getDatabase(this).getFavorBoardDao();
         if (isAdd) {
             form.put("bname", board.getId());
-            favorBoardDao.insert(new FavorBoard(board.getId(), board.getName(), BBSApplication.getUsername()));
+            favorBoardDao.insert(new FavorBoard(board.getId(), board.getName(), BBSApplication.getAccountId()));
         } else {
             // 编号减一
             form.put("delete", Integer.valueOf(Integer.parseInt(board.getNumber()) - 1).toString());

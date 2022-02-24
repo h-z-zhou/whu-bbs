@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.DetailBoard;
 
 import java.util.List;
 

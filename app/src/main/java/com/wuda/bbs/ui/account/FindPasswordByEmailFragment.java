@@ -1,5 +1,7 @@
 package com.wuda.bbs.ui.account;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.KeyEvent;
@@ -10,17 +12,20 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.utils.validator.TextValidator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FindPasswordByEmailFragment extends FindPasswordFragment {
+public class FindPasswordByEmailFragment extends BaseFragment {
 
     private FindPasswordByEmailViewModel mViewModel;
     private TextInputLayout uid_tl;
@@ -44,7 +49,6 @@ public class FindPasswordByEmailFragment extends FindPasswordFragment {
         email_et = view.findViewById(R.id.findPasswdByEmail_email_textInputEditText);
         submit_btn = view.findViewById(R.id.findPasswdByArtificial_submit_button);
 
-        eventBinding();
 
         return view;
     }
@@ -54,10 +58,31 @@ public class FindPasswordByEmailFragment extends FindPasswordFragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(FindPasswordByEmailViewModel.class);
 
+        eventBinding();
+
         showActionBar("通过邮箱找回密码");
     }
 
     private void eventBinding() {
+
+        mViewModel.getBaseResponseLiveData().observe(getViewLifecycleOwner(), new Observer<BaseResponse>() {
+            @Override
+            public void onChanged(BaseResponse baseResponse) {
+                new AlertDialog.Builder(getContext())
+                        .setMessage(baseResponse.getMassage())
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (baseResponse.isSuccessful()) {
+                                    if (getActivity() != null)
+                                        getActivity().onBackPressed();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
 
         uid_et.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -102,7 +127,7 @@ public class FindPasswordByEmailFragment extends FindPasswordFragment {
                 form.put("uid", uid_et.getText().toString());
                 form.put("email", email_et.getText().toString());
 
-                submit(form);
+                mViewModel.findPassword(form);
             }
         });
     }

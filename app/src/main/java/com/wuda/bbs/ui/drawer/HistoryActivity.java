@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.History;
-import com.wuda.bbs.dao.AppDatabase;
-import com.wuda.bbs.dao.HistoryDao;
+import com.wuda.bbs.logic.bean.History;
+import com.wuda.bbs.logic.dao.AppDatabase;
+import com.wuda.bbs.logic.dao.HistoryDao;
 import com.wuda.bbs.ui.adapter.HistoryRecyclerAdapter;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.List;
 public class HistoryActivity extends AppCompatActivity {
 
     RecyclerView history_rv;
-    HistoryRecyclerAdapter history_adapter;
+    HistoryRecyclerAdapter historyAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +45,8 @@ public class HistoryActivity extends AppCompatActivity {
 
         history_rv = findViewById(R.id.recyclerView);
         history_rv.setLayoutManager(new LinearLayoutManager(HistoryActivity.this));
-        history_adapter = new HistoryRecyclerAdapter(HistoryActivity.this, new ArrayList<>());
-        history_rv.setAdapter(history_adapter);
+        historyAdapter = new HistoryRecyclerAdapter(HistoryActivity.this, new ArrayList<>());
+        history_rv.setAdapter(historyAdapter);
         history_rv.addItemDecoration(new DividerItemDecoration(HistoryActivity.this, DividerItemDecoration.VERTICAL));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
@@ -61,7 +63,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                History history = history_adapter.removeItem(viewHolder.getAdapterPosition());
+                History history = historyAdapter.removeItem(viewHolder.getAdapterPosition());
                 removeHistory(history);
             }
         });
@@ -70,14 +72,34 @@ public class HistoryActivity extends AppCompatActivity {
         loadHistory();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.history_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_history_clear) {
+            clearHistory();
+            historyAdapter.clearHistory();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void loadHistory() {
         HistoryDao historyDao = AppDatabase.getDatabase(HistoryActivity.this).getHistoryDao();
         List<History> historyList = historyDao.loadAllHistories();
-        history_adapter.addHistories(historyList);
+        historyAdapter.addHistories(historyList);
     }
 
     private void removeHistory(History history) {
         HistoryDao historyDao = AppDatabase.getDatabase(HistoryActivity.this).getHistoryDao();
         historyDao.deleteHistory(history.id);
+    }
+
+    private void clearHistory() {
+        HistoryDao historyDao = AppDatabase.getDatabase(HistoryActivity.this).getHistoryDao();
+        historyDao.clearHistory();
     }
 }

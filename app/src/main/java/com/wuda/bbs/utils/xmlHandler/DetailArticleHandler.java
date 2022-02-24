@@ -1,7 +1,7 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.DetailArticle;
-import com.wuda.bbs.bean.response.DetailArticleResponse;
+import com.wuda.bbs.logic.bean.DetailArticle;
+import com.wuda.bbs.logic.bean.response.DetailArticleResponse;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

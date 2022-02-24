@@ -9,10 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wuda.bbs.bean.BriefArticle;
-import com.wuda.bbs.bean.FavArticle;
-import com.wuda.bbs.bean.History;
-import com.wuda.bbs.ui.main.article.DetailArticleActivity;
+import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.History;
+import com.wuda.bbs.ui.article.DetailArticleActivity;
 
 import java.util.List;
 
@@ -74,6 +73,12 @@ public class HistoryRecyclerAdapter extends RecyclerView.Adapter<HistoryRecycler
             this.notifyItemRemoved(position);
             return history;
         }
+    }
+
+    public void clearHistory() {
+        int cnt = mHistoryList.size();
+        mHistoryList.clear();
+        this.notifyItemRangeRemoved(0, cnt);
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {

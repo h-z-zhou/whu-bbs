@@ -1,5 +1,7 @@
 package com.wuda.bbs.ui.account;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.KeyEvent;
@@ -10,17 +12,20 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.utils.validator.TextValidator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FindPasswordByArtificialFragment extends FindPasswordFragment {
+public class FindPasswordByArtificialFragment extends BaseFragment {
 
     private TextInputEditText uid_et;
     private TextInputLayout uid_tl;
@@ -61,8 +66,6 @@ public class FindPasswordByArtificialFragment extends FindPasswordFragment {
         comment_tl = view.findViewById(R.id.findPasswordByArtificial_comment_textInputLayout);
         submit_btn = view.findViewById(R.id.findPasswdByArtificial_submit_button);
 
-        eventBinding();
-
         return view;
     }
 
@@ -72,9 +75,38 @@ public class FindPasswordByArtificialFragment extends FindPasswordFragment {
         mViewModel = new ViewModelProvider(this).get(FindPasswordByArtificialViewModel.class);
 
         showActionBar("通过人工找回密码");
+
+        eventBinding();
     }
 
     private void eventBinding() {
+
+        mViewModel.getBaseResponseLiveData().observe(getViewLifecycleOwner(), new Observer<BaseResponse>() {
+            @Override
+            public void onChanged(BaseResponse baseResponse) {
+                new AlertDialog.Builder(getContext())
+                        .setMessage(baseResponse.getMassage())
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (baseResponse.isSuccessful()) {
+                                    if (getActivity() != null)
+                                        getActivity().onBackPressed();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
+
+        mViewModel.getBaseResponseLiveData().observe(getViewLifecycleOwner(), new Observer<BaseResponse>() {
+            @Override
+            public void onChanged(BaseResponse baseResponse) {
+                new AlertDialog.Builder(getContext()).setMessage(baseResponse.getMassage()).create().show();
+            }
+        });
+
         uid_et.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -137,7 +169,8 @@ public class FindPasswordByArtificialFragment extends FindPasswordFragment {
                 form.put("email", email.toString());
                 form.put("bz", comment==null? "": comment.toString());
 
-                submit(form);
+//                submit(form);
+                mViewModel.findPassword(form);
             }
         });
     }

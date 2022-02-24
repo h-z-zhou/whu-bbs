@@ -13,12 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.DetailArticle;
-import com.wuda.bbs.ui.main.article.ReplyActivity;
+import com.wuda.bbs.logic.bean.DetailArticle;
+import com.wuda.bbs.ui.article.ReplyActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.utils.network.NetConst;
 
@@ -105,6 +107,22 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                     mContext.startActivity(userInfoIntent);
                 }
             });
+
+            if (!article.getAttachmentList().isEmpty()) {
+//                Toast.makeText(mContext, "附件", Toast.LENGTH_SHORT).show();
+                RecyclerView recyclerView = new RecyclerView(((ContentViewHolder) holder).root_cl.getContext());
+                recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+//                recyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL));
+//                recyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+                recyclerView.setAdapter(new AttachmentAdapter(mContext, mBoardId, article.getId(), article.getAttachmentList()));
+                ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.startToStart = 0;
+                params.endToEnd = 0;
+                params.topToBottom = ((ContentViewHolder) holder).postContent_tv.getId();
+                params.bottomToBottom = 0;
+                recyclerView.setLayoutParams(params);
+                ((ContentViewHolder) holder).root_cl.addView(recyclerView);
+            }
         }
     }
 
@@ -137,6 +155,7 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     }
 
     static class ContentViewHolder extends RecyclerView.ViewHolder {
+        ConstraintLayout root_cl;
         ImageView authorAvatar_iv;
         TextView authorUsername_tv;
         TextView postTime_tv;
@@ -145,6 +164,7 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
         public ContentViewHolder(@NonNull View itemView) {
             super(itemView);
+            root_cl = itemView.findViewById(R.id.root_contraintLayout);
             authorAvatar_iv = itemView.findViewById(R.id.author_avatar_imageView);
             authorUsername_tv = itemView.findViewById(R.id.authorUsername_textView);
             postTime_tv = itemView.findViewById(R.id.postTime_textView);

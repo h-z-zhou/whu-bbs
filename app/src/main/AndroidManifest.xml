@@ -13,26 +13,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BBS">
         <activity
+            android:name=".ui.account.AccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.article.AttachmentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.main.mail.NewMailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.drawer.FriendActivity"
             android:exported="false" />
         <activity
             android:name=".ui.drawer.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.article.ReplyActivity"
+            android:name=".ui.article.ReplyActivity"
             android:exported="false"
             android:theme="@style/Theme.BBS.ReplyDialog" />
         <activity
             android:name=".ui.main.board.BoardActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.article.PostArticleActivity"
+            android:name=".ui.article.PostArticleActivity"
             android:exported="false" />
         <activity
             android:name=".ui.setting.SettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.user.MyInfoActivity"
             android:exported="false" />
         <activity
             android:name=".ui.drawer.FavArticleActivity"
@@ -50,7 +56,7 @@
             android:name=".ui.main.board.FavorBoardManagerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.article.DetailArticleActivity"
+            android:name=".ui.article.DetailArticleActivity"
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"
@@ -61,10 +67,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.login.LoginActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

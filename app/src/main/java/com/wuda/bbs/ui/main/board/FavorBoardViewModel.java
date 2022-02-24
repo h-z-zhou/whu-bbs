@@ -3,8 +3,7 @@ package com.wuda.bbs.ui.main.board;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.FavorBoard;
+import com.wuda.bbs.logic.bean.BaseBoard;
 
 import java.util.ArrayList;
 import java.util.List;

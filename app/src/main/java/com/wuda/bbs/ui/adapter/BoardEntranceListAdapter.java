@@ -2,13 +2,12 @@ package com.wuda.bbs.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-import com.wuda.bbs.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.ui.main.board.BoardActivity;
 
 import java.util.List;

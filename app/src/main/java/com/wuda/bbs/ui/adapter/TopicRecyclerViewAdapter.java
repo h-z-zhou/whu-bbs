@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.DetailArticle;
+import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.utils.network.NetConst;
 

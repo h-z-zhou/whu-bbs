@@ -3,7 +3,7 @@ package com.wuda.bbs.ui.drawer;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.wuda.bbs.bean.Friend;
+import com.wuda.bbs.logic.bean.Friend;
 
 import java.util.ArrayList;
 import java.util.List;

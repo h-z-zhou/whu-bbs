@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_mailbox_inbox"
+        android:icon="@drawable/ic_move_to_inbox"
+        android:title="收信箱"
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/menu_mailbox_send_box"
+        android:icon="@drawable/ic_outbox"
+        android:title="发信箱" />
+    <item
+        android:id="@+id/menu_mailbox_delete_box"
+        android:icon="@drawable/ic_delete"
+        android:title="废信箱" />
+</menu>

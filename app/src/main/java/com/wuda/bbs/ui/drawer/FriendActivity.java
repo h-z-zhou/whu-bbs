@@ -16,14 +16,13 @@ import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.Friend;
-import com.wuda.bbs.bean.response.FriendResponse;
-import com.wuda.bbs.dao.AppDatabase;
-import com.wuda.bbs.dao.FriendDao;
+import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.response.FriendResponse;
+import com.wuda.bbs.logic.dao.AppDatabase;
+import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
 import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.utils.network.BBSCallback;

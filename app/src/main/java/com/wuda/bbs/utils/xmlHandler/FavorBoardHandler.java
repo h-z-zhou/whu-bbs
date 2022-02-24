@@ -1,8 +1,8 @@
 package com.wuda.bbs.utils.xmlHandler;
 
 import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.FavorBoard;
+import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.FavorBoard;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -23,7 +23,7 @@ public class FavorBoardHandler extends DefaultHandler {
             String boardID = attributes.getValue("name");
             String boardName = attributes.getValue("desc");
 
-            favorBoards.add(new FavorBoard(boardID, boardName, BBSApplication.getUsername()));
+            favorBoards.add(new FavorBoard(boardID, boardName, BBSApplication.getAccountId()));
         }
     }
 

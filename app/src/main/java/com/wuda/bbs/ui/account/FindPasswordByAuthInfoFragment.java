@@ -1,7 +1,10 @@
 package com.wuda.bbs.ui.account;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,12 +20,14 @@ import android.widget.Button;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.utils.validator.TextValidator;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
+public class FindPasswordByAuthInfoFragment extends BaseFragment {
 
     private FindPasswordByAuthInfoViewModel mViewModel;
 
@@ -55,7 +60,6 @@ public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
         email_tl = view.findViewById(R.id.findPasswordByAuthInfo_email_textInputLayout);
         submit_btn = view.findViewById(R.id.findPasswdByArtificial_submit_button);
 
-        eventBinding();
 
         return view;
     }
@@ -66,9 +70,31 @@ public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
         mViewModel = new ViewModelProvider(this).get(FindPasswordByAuthInfoViewModel.class);
 
         showActionBar("通过认证信息找回密码");
+
+        eventBinding();
     }
 
     private void eventBinding() {
+
+        mViewModel.getBaseResponseLiveData().observe(getViewLifecycleOwner(), new Observer<BaseResponse>() {
+            @Override
+            public void onChanged(BaseResponse baseResponse) {
+                new AlertDialog.Builder(getContext())
+                        .setMessage(baseResponse.getMassage())
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (baseResponse.isSuccessful()) {
+                                    if (getActivity() != null)
+                                        getActivity().onBackPressed();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
+
         uid_et.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -136,7 +162,8 @@ public class FindPasswordByAuthInfoFragment extends FindPasswordFragment {
                 form.put("xh", studentNumber.toString());
                 form.put("email", email.toString());
 
-                submit(form);
+//                submit(form);
+                mViewModel.findPassword(form);
             }
         });
     }

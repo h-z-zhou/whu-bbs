@@ -1,8 +1,14 @@
 package com.wuda.bbs.ui.main.mail;
 
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,19 +17,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.response.MailResponse;
+import com.wuda.bbs.logic.bean.response.MailResponse;
 import com.wuda.bbs.ui.adapter.MailAdapter;
+import com.wuda.bbs.ui.main.MainActivity;
 import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +48,10 @@ import retrofit2.Response;
 public class MailFragment extends Fragment {
 
     private MailViewModel mViewModel;
+
+    private TextView toolbar_tv;
     RecyclerView mail_rv;
+    MailAdapter mailAdapter;
 
     public static MailFragment newInstance() {
         return new MailFragment();
@@ -46,9 +62,25 @@ public class MailFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.mail_fragment, container, false);
 
+        setHasOptionsMenu(true);
+
         mail_rv = view.findViewById(R.id.recyclerView);
         mail_rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        mail_rv.setAdapter(new MailAdapter(getContext(), new ArrayList<>()));
+
+
+        if (getActivity() != null) {
+            Toolbar toolbar = ((MainActivity) getActivity()).getToolbar();
+            for (int i=0; i<toolbar.getChildCount(); i++) {
+                View childView = toolbar.getChildAt(i);
+                if (childView instanceof TextView) {
+                    toolbar_tv = (TextView) childView;
+                    Drawable arrow = getContext().getDrawable(R.drawable.ic_arrow_drop_down);
+                    arrow.setBounds(0, 0, arrow.getMinimumWidth(), arrow.getMinimumHeight());
+                    toolbar_tv.setCompoundDrawables(null, null, arrow, null);
+                    break;
+                }
+            }
+        }
 
         return view;
     }
@@ -57,18 +89,88 @@ public class MailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MailViewModel.class);
+        mailAdapter = new MailAdapter(getContext(), new ArrayList<>(), mViewModel.box.getValue().first);
+        mail_rv.setAdapter(mailAdapter);
 
         eventBinding();
-        requestMailsFromServer();
+//        requestMailsFromServer();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        toolbar_tv.setCompoundDrawables(null, null, null, null);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.mail_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_mail_new) {
+            Intent intent = new Intent(getContext(), NewMailActivity.class);
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void eventBinding() {
         mViewModel.mailResponse.observe(getViewLifecycleOwner(), new Observer<MailResponse>() {
             @Override
             public void onChanged(MailResponse mailResponse) {
-                ((MailAdapter)mail_rv.getAdapter()).appendMails(mailResponse.getMailList());
+                mailAdapter.appendMails(mailResponse.getMailList());
             }
         });
+
+        if (toolbar_tv != null) {
+            toolbar_tv.setOnClickListener(new View.OnClickListener() {
+                @SuppressLint("RestrictedApi")
+                @Override
+                public void onClick(View v) {
+                    if (getContext() == null) return;
+
+                    PopupMenu popupMenu = new PopupMenu(getContext(), toolbar_tv);
+                    popupMenu.getMenuInflater().inflate(R.menu.mailbox_menu, popupMenu.getMenu());
+                    try {
+                        Field field = popupMenu.getClass().getDeclaredField("mPopup");
+                        field.setAccessible(true);
+                        MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
+                        mHelper.setForceShowIcon(true);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.menu_mailbox_inbox) {
+                                mViewModel.box.setValue(new Pair<>("inbox", "收信箱"));
+                            } else if (item.getItemId() == R.id.menu_mailbox_send_box) {
+                                mViewModel.box.setValue(new Pair<>("sendbox", "发信箱"));
+                            } else if (item.getItemId() == R.id.menu_mailbox_delete_box) {
+                                mViewModel.box.setValue(new Pair<>("deleted", "废信箱"));
+                            }
+                            return false;
+                        }
+                    });
+
+                    popupMenu.show();
+                }
+            });
+
+            mViewModel.box.observe(getViewLifecycleOwner(), new Observer<Pair<String, String>>() {
+                @Override
+                public void onChanged(Pair<String, String> box) {
+                    toolbar_tv.setText(box.second);
+                    mailAdapter.changeBox(box.first);
+                    requestMailsFromServer();
+
+                }
+            });
+        }
     }
 
     private void requestMailsFromServer() {
@@ -76,7 +178,7 @@ public class MailFragment extends Fragment {
         Map<String, String> form = new HashMap<>();
 //        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("list", "1");
-        form.put("boxname", "inbox");
+        form.put("boxname", mViewModel.box.getValue().first);
 
 
         mobileService.get("mail", form).enqueue(new BBSCallback<ResponseBody>(getContext()) {

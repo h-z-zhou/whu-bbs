@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.Mail;
+import com.wuda.bbs.logic.bean.Mail;
 import com.wuda.bbs.ui.main.mail.MailContentActivity;
 
 import java.util.List;
@@ -21,11 +21,13 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
 
     Context mContext;
     List<Mail> mMailList;
+    String mBoxName;
     Intent mailContentIntent;
 
-    public MailAdapter(Context mContext, List<Mail> mMailList) {
+    public MailAdapter(Context mContext, List<Mail> mMailList, String mBoxName) {
         this.mContext = mContext;
         this.mMailList = mMailList;
+        this.mBoxName = mBoxName;
         mailContentIntent = new Intent(this.mContext, MailContentActivity.class);
         mailContentIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
@@ -48,6 +50,7 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 mailContentIntent.putExtra("mail", mail);
+                mailContentIntent.putExtra("boxName", mBoxName);
                 mContext.startActivity(mailContentIntent);
             }
         });
@@ -61,6 +64,22 @@ public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
     public void appendMails(List<Mail> mails) {
         mMailList.addAll(mails);
         this.notifyItemRangeInserted(mMailList.size()-mails.size()-1, mMailList.size());
+    }
+
+    public void changeBox(String boxName) {
+        this.mBoxName = boxName;
+        removeAllMails();
+    }
+
+    public void setBoxName(String boxName) {
+        this.mBoxName = boxName;
+    }
+
+    public void removeAllMails() {
+        // box change
+        int count = mMailList.size();
+        mMailList.clear();
+        this.notifyItemRangeRemoved(0, count);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

@@ -6,96 +6,106 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
-    tools:context=".ui.user.UserInfoActivity">
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/drawer_nav_bar" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/userInfo_avatar_imageView"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_face" />
-
-    <TextView
-        android:id="@+id/userInfo_name_textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="zhuzi( 柱子 )"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/userInfo_avatar_imageView"
-        app:layout_constraintStart_toEndOf="@+id/userInfo_avatar_imageView"
-        app:layout_constraintTop_toTopOf="@+id/userInfo_avatar_imageView" />
+    tools:context=".ui.account.UserInfoActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="vertical"
-            android:paddingBottom="64dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/userInfo_level_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:drawableLeft="@drawable/ic_class"
-                android:drawablePadding="8dp"
-                android:drawableTint="#3F51B5"
-                android:text="等级："
-                android:textSize="18sp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/userInfo_exp_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:drawableLeft="@drawable/ic_up"
-                android:drawablePadding="8dp"
-                android:drawableTint="#FFC107"
-                android:text="经验："
-                android:textSize="18sp" />
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/drawer_nav_bar" />
 
-            <TextView
-                android:id="@+id/userInfo_postNum_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:drawableLeft="@drawable/ic_chart"
-                android:drawablePadding="8dp"
-                android:drawableTint="#8BC34A"
-                android:text="帖子数："
-                android:textSize="18sp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userInfo_avatar_imageView"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/ic_face" />
 
-            <TextView
-                android:id="@+id/userInfo_signature_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:drawablePadding="8dp"
-                android:drawableTint="#03A9F4"
-                android:text="个性签名："
-                android:textSize="18sp"
-                app:drawableStartCompat="@drawable/ic_text_snippet" />
+                <TextView
+                    android:id="@+id/userInfo_name_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="zhuzi( 柱子 )"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView"
+                    app:layout_constraintStart_toEndOf="@+id/userInfo_avatar_imageView" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical"
+                android:paddingBottom="64dp">
+
+                <TextView
+                    android:id="@+id/userInfo_level_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:drawableLeft="@drawable/ic_class"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="#3F51B5"
+                    android:text="等级："
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/userInfo_exp_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:drawableLeft="@drawable/ic_up"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="#FFC107"
+                    android:text="经验："
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/userInfo_postNum_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:drawableLeft="@drawable/ic_chart"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="#8BC34A"
+                    android:text="帖子数："
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/userInfo_signature_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="#03A9F4"
+                    android:text="个性签名："
+                    android:textSize="18sp"
+                    app:drawableStartCompat="@drawable/ic_text_snippet" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

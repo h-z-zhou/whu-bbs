@@ -1,12 +1,12 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.response.BriefArticleResponse;
-import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.response.DetailArticleResponse;
-import com.wuda.bbs.bean.response.FriendResponse;
-import com.wuda.bbs.bean.response.MailContentResponse;
-import com.wuda.bbs.bean.response.MailResponse;
-import com.wuda.bbs.bean.response.UserInfoResponse;
+import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
+import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.response.DetailArticleResponse;
+import com.wuda.bbs.logic.bean.response.FriendResponse;
+import com.wuda.bbs.logic.bean.response.MailContentResponse;
+import com.wuda.bbs.logic.bean.response.MailResponse;
+import com.wuda.bbs.logic.bean.response.UserInfoResponse;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

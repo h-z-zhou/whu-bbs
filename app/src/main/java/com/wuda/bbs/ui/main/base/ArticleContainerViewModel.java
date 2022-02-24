@@ -3,9 +3,9 @@ package com.wuda.bbs.ui.main.base;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.wuda.bbs.bean.BriefArticle;
-import com.wuda.bbs.bean.response.BriefArticleResponse;
-import com.wuda.bbs.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
+import com.wuda.bbs.logic.bean.BaseBoard;
 
 import java.util.ArrayList;
 import java.util.List;

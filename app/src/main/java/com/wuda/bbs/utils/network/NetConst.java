@@ -22,5 +22,8 @@ public class NetConst {
     // 收藏文章
     public static final String FAVOR = "http://bbs.whu.edu.cn/bbssfav.php";
 
+    // 图片
+    public static final String ATTACHMENT = "http://bbs.whu.edu.cn/wForum/bbscon.php";
+
     public static final String FAVOR_BOARD_ERROR = "同学???榭?詹丶?????要??录?模?";
 }

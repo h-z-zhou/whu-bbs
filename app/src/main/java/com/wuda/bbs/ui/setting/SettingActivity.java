@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.ui.main.base.NavigationHost;
+import com.wuda.bbs.ui.base.NavigationHost;
 
 public class SettingActivity extends AppCompatActivity implements NavigationHost {
 

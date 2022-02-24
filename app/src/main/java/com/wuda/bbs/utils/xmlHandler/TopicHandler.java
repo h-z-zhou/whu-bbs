@@ -1,11 +1,9 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.BriefArticle;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
-import java.util.StringTokenizer;
 
 public class TopicHandler extends BaseBriefArticleHandler {
 

@@ -22,10 +22,11 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.bean.BaseBoard;
-import com.wuda.bbs.bean.FavorBoard;
-import com.wuda.bbs.dao.AppDatabase;
-import com.wuda.bbs.dao.FavorBoardDao;
+import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.dao.AppDatabase;
+import com.wuda.bbs.logic.dao.FavorBoardDao;
+import com.wuda.bbs.ui.main.MainActivity;
 import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
@@ -68,6 +69,11 @@ public class FavorBoardFragment extends Fragment {
         board_vp2 = view.findViewById(R.id.favorBoard_viewPager2);
 //        writeArticle_fab = view.findViewById(R.id.favorBoard_writeArticle_fab);
         requestFavorBoardsFromServer();
+
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).getToolbar().setTitle("收藏版块");
+        }
+
         return view;
     }
 
@@ -167,10 +173,10 @@ public class FavorBoardFragment extends Fragment {
         if (getContext() == null)
             return;
         FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
-        if (BBSApplication.getUsername().equals(""))
+        if (BBSApplication.getAccountId().equals(""))
             return;
 
-        List<BaseBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getUsername());
+        List<BaseBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getAccountId());
 
         if (favorBoardList.isEmpty()) {
             if (!hadRequest) {

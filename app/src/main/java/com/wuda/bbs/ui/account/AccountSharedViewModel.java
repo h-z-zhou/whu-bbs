@@ -5,8 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.application.BBSApplication;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.logic.bean.UserInfo;
+import com.wuda.bbs.logic.bean.response.AccountResponse;
 import com.wuda.bbs.logic.bean.response.BaseResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.logic.bean.response.UserInfoResponse;
@@ -16,6 +18,7 @@ import com.wuda.bbs.utils.network.BBSCallback2;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.BaseResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
@@ -94,40 +97,54 @@ public class AccountSharedViewModel extends ViewModel {
         currentAccount.postValue(account);
 
         AccountDao accountDao = AppDatabase.getDatabase(BBSApplication.getAppContext()).getAccountDao();
+        BBSApplication.setAccount(account);
 
         accountDao.insertAccount(accountList);
     }
 
-    public void login(Account account, BaseResponseHandler responseHandler) {
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
-
-        Map<String, String> form = new HashMap<>();
-        form.put("userId", account.getId());
-        // the first time login: use BBSCallBack will cause ResultCode.LOGIN_ERR
-        mobileService.get("userInfo", form).enqueue(new Callback<ResponseBody>() {
+    public void login(Account account) {
+        NetworkEntry.login(account, new AccountResponseHandler() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    ResponseBody body = response.body();
-                    if (body != null) {
-                        UserInfoResponse userInfoResponse = XMLParser.parseUserInfo(body.string());
-                        account.setAvatar(userInfoResponse.getUserInfo().getAvatar());
-                        _login(account, responseHandler);
+            public void onResponseHandled(BaseResponse baseResponse) {
+                if (baseResponse.isSuccessful()) {
+                    if (baseResponse instanceof AccountResponse) {
+                        updateCurrentAccount(((AccountResponse) baseResponse).getAccount());
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    BaseResponse baseResponse = new BaseResponse(ResultCode.ERROR, e.getMessage());
-                    responseHandler.onResponseHandled(baseResponse);
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                BaseResponse baseResponse = new BaseResponse(ResultCode.CONNECT_ERR, t.getMessage());
-                responseHandler.onResponseHandled(baseResponse);
             }
         });
     }
+
+//    public void login(Account account, BaseResponseHandler responseHandler) {
+//        MobileService mobileService = ServiceCreator.create(MobileService.class);
+//
+//        Map<String, String> form = new HashMap<>();
+//        form.put("userId", account.getId());
+//        // the first time login: use BBSCallBack will cause ResultCode.LOGIN_ERR
+//        mobileService.get("userInfo", form).enqueue(new Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+//                try {
+//                    ResponseBody body = response.body();
+//                    if (body != null) {
+//                        UserInfoResponse userInfoResponse = XMLParser.parseUserInfo(body.string());
+//                        account.setAvatar(userInfoResponse.getUserInfo().getAvatar());
+//                        _login(account, responseHandler);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                    BaseResponse baseResponse = new BaseResponse(ResultCode.ERROR, e.getMessage());
+//                    responseHandler.onResponseHandled(baseResponse);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+//                BaseResponse baseResponse = new BaseResponse(ResultCode.CONNECT_ERR, t.getMessage());
+//                responseHandler.onResponseHandled(baseResponse);
+//            }
+//        });
+//    }
 
     private void _login(Account account, BaseResponseHandler responseHandler) {
 

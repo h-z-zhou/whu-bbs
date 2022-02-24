@@ -10,9 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wuda.bbs.bean.BriefArticle;
-import com.wuda.bbs.bean.FavArticle;
-import com.wuda.bbs.ui.main.article.DetailArticleActivity;
+import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.FavArticle;
+import com.wuda.bbs.ui.article.DetailArticleActivity;
 
 import java.util.List;
 

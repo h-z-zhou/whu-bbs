@@ -2,18 +2,19 @@ package com.wuda.bbs.ui.main.mail;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.bean.Mail;
-import com.wuda.bbs.bean.response.MailContentResponse;
+import com.wuda.bbs.logic.bean.Mail;
+import com.wuda.bbs.logic.bean.response.MailContentResponse;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
@@ -32,6 +33,7 @@ public class MailContentActivity extends AppCompatActivity {
     MailContentViewModel mViewModel;
 
     Mail mail;
+    String boxName;
 
     TextView subject_tv;
     TextView sender_tv;
@@ -44,6 +46,17 @@ public class MailContentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mail_content);
+
+        Toolbar toolbar = findViewById(R.id.back_toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         subject_tv = findViewById(R.id.mailContent_subject_textView);
         sender_tv = findViewById(R.id.mailContent_sender_textView);
         time_tv = findViewById(R.id.mailContent_time_textView);
@@ -54,6 +67,7 @@ public class MailContentActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(MailContentViewModel.class);
 
         mail = (Mail) getIntent().getSerializableExtra("mail");
+        boxName = getIntent().getStringExtra("boxName");
 
         eventBinding();
 
@@ -74,7 +88,10 @@ public class MailContentActivity extends AppCompatActivity {
         reply_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MailContentActivity.this, "reply", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MailContentActivity.this, NewMailActivity.class);
+                intent.putExtra("userId", mail.getSender());
+                intent.putExtra("title", "Re: " + mail.getSubject());
+                startActivity(intent);
             }
         });
     }
@@ -83,7 +100,7 @@ public class MailContentActivity extends AppCompatActivity {
         MobileService mobileService = ServiceCreator.create(MobileService.class);
         Map<String, String> form = new HashMap<>();
         form.put("read", mail.getNum());
-        form.put("boxname", "inbox");
+        form.put("boxname", boxName);
         mobileService.get("mail", form).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
