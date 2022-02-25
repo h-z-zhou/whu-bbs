@@ -18,7 +18,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
-import com.wuda.bbs.ui.adapter.BriefArticleRecyclerAdapter;
+import com.wuda.bbs.ui.adapter.BriefArticleAdapter;
+
+import java.util.ArrayList;
 
 public abstract class ArticleContainerFragment extends Fragment {
 
@@ -26,15 +28,7 @@ public abstract class ArticleContainerFragment extends Fragment {
     protected FrameLayout article_root_fl;
     protected SwipeRefreshLayout article_srl;
     protected RecyclerView article_rv;
-//    protected FloatingActionButton newArticle_fab;
-
-//    public ArticleContainerFragment(){};
-
-//    public ArticleContainerFragment(Board board){
-//        mViewModel = new ViewModelProvider(this, new ArticleContainerViewModelFactory(board))
-//                .get(ArticleContainerViewModel.class);
-//        mViewModel.board.setValue(board);
-//    }
+    protected BriefArticleAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -44,11 +38,9 @@ public abstract class ArticleContainerFragment extends Fragment {
         article_root_fl = view.findViewById(R.id.article_container_root_frameLayout);
         article_srl = view.findViewById(R.id.article_swipeRefresh);
         article_rv = view.findViewById(R.id.recyclerView);
-        article_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 //        article_rv.setVerticalScrollBarEnabled(true);
 //        article_rv.setScrollBarSize(20);
 //        article_rv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));\
-//        newArticle_fab = view.findViewById(R.id.article_newArticle_fab);
 
         return view;
     }
@@ -57,7 +49,9 @@ public abstract class ArticleContainerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ArticleContainerViewModel.class);
-        article_rv.setAdapter(new BriefArticleRecyclerAdapter(getContext(), mViewModel.articleResponse.getValue().getBriefArticleList()));
+        article_rv.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new BriefArticleAdapter(getContext(), mViewModel.articleResponse.getValue().getBriefArticleList());
+        article_rv.setAdapter(adapter);
         eventBinding();
 
         article_srl.setRefreshing(true);
@@ -70,20 +64,26 @@ public abstract class ArticleContainerFragment extends Fragment {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onChanged(BriefArticleResponse briefArticleResponse) {
-                if (article_rv.getAdapter() != null) {
-                    BriefArticleRecyclerAdapter adapter = (BriefArticleRecyclerAdapter) article_rv.getAdapter();
-//                    adapter.updateArticleList(articleResponse.getArticleList());
-//                    adapter.notifyDataSetChanged();
-                    adapter.appendArticles(briefArticleResponse.getBriefArticleList());
+                int currentPage = briefArticleResponse.getCurrentPage();
+                int totalPage = briefArticleResponse.getTotalPage();
+                if (currentPage != 0 && currentPage==totalPage) {
+                    adapter.setMore(false);
                 }
-
+//                if (briefArticleResponse.getCurrentPage() == briefArticleResponse.getTotalPage()-1) {
+//                    adapter.setMore(false);
+//                }
+                if (currentPage == 1) {
+                    adapter.setContents(briefArticleResponse.getBriefArticleList());
+                } else {
+                    adapter.appendContents(briefArticleResponse.getBriefArticleList());
+                }
             }
         });
 
         article_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                ((BriefArticleRecyclerAdapter) article_rv.getAdapter()).removeAll();
+                adapter.setContents(new ArrayList<>());
                 mViewModel.articleResponse.getValue().setCurrentPage(-1);
                 requestArticleFromServer();
             }
@@ -107,21 +107,7 @@ public abstract class ArticleContainerFragment extends Fragment {
                 }
             }
         });
-
-//        newArticle_fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), WriteArticleActivity.class);
-//                intent.putExtra("board", mViewModel.board.getValue());
-//                startActivity(intent);
-//            }
-//        });
-
     }
-
-//    public void hideFab() {
-//        newArticle_fab.setVisibility(View.GONE);
-//    }
 
     protected abstract void requestArticleFromServer(); //{
 //        WebService webService = ServiceCreator.create(WebService.class);

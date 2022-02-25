@@ -51,7 +51,7 @@ public class MailFragment extends Fragment {
 
     private TextView toolbar_tv;
     RecyclerView mail_rv;
-    MailAdapter mailAdapter;
+    MailAdapter adapter;
 
     public static MailFragment newInstance() {
         return new MailFragment();
@@ -65,7 +65,6 @@ public class MailFragment extends Fragment {
         setHasOptionsMenu(true);
 
         mail_rv = view.findViewById(R.id.recyclerView);
-        mail_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
         if (getActivity() != null) {
@@ -89,8 +88,9 @@ public class MailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MailViewModel.class);
-        mailAdapter = new MailAdapter(getContext(), new ArrayList<>(), mViewModel.box.getValue().first);
-        mail_rv.setAdapter(mailAdapter);
+        adapter = new MailAdapter(getContext(), new ArrayList<>(), mViewModel.box.getValue().first);
+        mail_rv.setAdapter(adapter);
+        mail_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         eventBinding();
 //        requestMailsFromServer();
@@ -121,7 +121,20 @@ public class MailFragment extends Fragment {
         mViewModel.mailResponse.observe(getViewLifecycleOwner(), new Observer<MailResponse>() {
             @Override
             public void onChanged(MailResponse mailResponse) {
-                mailAdapter.appendMails(mailResponse.getMailList());
+                int currentPage = mailResponse.getCurrentPage();
+                int totalPage = mailResponse.getTotalPage();
+                if (currentPage != 0 && currentPage==totalPage) {
+                    adapter.setMore(false);
+                }
+//                if (briefArticleResponse.getCurrentPage() == briefArticleResponse.getTotalPage()-1) {
+//                    adapter.setMore(false);
+//                }
+                if (currentPage == 1) {
+                    adapter.setContents(mailResponse.getMailList());
+                } else {
+                    adapter.appendContents(mailResponse.getMailList());
+                }
+//                adapter.appendContents(mailResponse.getMailList());
             }
         });
 
@@ -165,7 +178,7 @@ public class MailFragment extends Fragment {
                 @Override
                 public void onChanged(Pair<String, String> box) {
                     toolbar_tv.setText(box.second);
-                    mailAdapter.changeBox(box.first);
+                    adapter.changeBox(box.first);
                     requestMailsFromServer();
 
                 }
@@ -176,7 +189,6 @@ public class MailFragment extends Fragment {
     private void requestMailsFromServer() {
         MobileService mobileService = ServiceCreator.create(MobileService.class);
         Map<String, String> form = new HashMap<>();
-//        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("list", "1");
         form.put("boxname", mViewModel.box.getValue().first);
 

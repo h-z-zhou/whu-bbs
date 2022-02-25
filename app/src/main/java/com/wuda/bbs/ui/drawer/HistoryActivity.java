@@ -3,8 +3,6 @@ package com.wuda.bbs.ui.drawer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +15,7 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.History;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.HistoryDao;
-import com.wuda.bbs.ui.adapter.HistoryRecyclerAdapter;
+import com.wuda.bbs.ui.adapter.HistoryAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.List;
 public class HistoryActivity extends AppCompatActivity {
 
     RecyclerView history_rv;
-    HistoryRecyclerAdapter historyAdapter;
+    HistoryAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,29 +43,34 @@ public class HistoryActivity extends AppCompatActivity {
 
         history_rv = findViewById(R.id.recyclerView);
         history_rv.setLayoutManager(new LinearLayoutManager(HistoryActivity.this));
-        historyAdapter = new HistoryRecyclerAdapter(HistoryActivity.this, new ArrayList<>());
-        history_rv.setAdapter(historyAdapter);
-        history_rv.addItemDecoration(new DividerItemDecoration(HistoryActivity.this, DividerItemDecoration.VERTICAL));
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-            @Override
-            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-                final int dragFlags = ItemTouchHelper.ACTION_STATE_IDLE;
-                final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-                return makeMovementFlags(dragFlags, swipeFlags);
-            }
 
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
+        adapter = new HistoryAdapter(HistoryActivity.this, new ArrayList<>());
+        adapter.setMore(false);
+        history_rv.setAdapter(adapter);
 
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                History history = historyAdapter.removeItem(viewHolder.getAdapterPosition());
-                removeHistory(history);
-            }
-        });
-        itemTouchHelper.attachToRecyclerView(history_rv);
+//        historyAdapter = new HistoryRecyclerAdapter(HistoryActivity.this, new ArrayList<>());
+//        history_rv.setAdapter(historyAdapter);
+//        history_rv.addItemDecoration(new DividerItemDecoration(HistoryActivity.this, DividerItemDecoration.VERTICAL));
+//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+//            @Override
+//            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+//                final int dragFlags = ItemTouchHelper.ACTION_STATE_IDLE;
+//                final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+//                return makeMovementFlags(dragFlags, swipeFlags);
+//            }
+//
+//            @Override
+//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//                History history = historyAdapter.removeItem(viewHolder.getAdapterPosition());
+//                removeHistory(history);
+//            }
+//        });
+//        itemTouchHelper.attachToRecyclerView(history_rv);
 
         loadHistory();
     }
@@ -82,7 +85,7 @@ public class HistoryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_history_clear) {
             clearHistory();
-            historyAdapter.clearHistory();
+            adapter.setContents(new ArrayList<>());
         }
         return super.onOptionsItemSelected(item);
     }
@@ -90,7 +93,7 @@ public class HistoryActivity extends AppCompatActivity {
     private void loadHistory() {
         HistoryDao historyDao = AppDatabase.getDatabase(HistoryActivity.this).getHistoryDao();
         List<History> historyList = historyDao.loadAllHistories();
-        historyAdapter.addHistories(historyList);
+        adapter.setContents(historyList);
     }
 
     private void removeHistory(History history) {

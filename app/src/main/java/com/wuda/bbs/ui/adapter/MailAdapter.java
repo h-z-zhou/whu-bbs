@@ -15,79 +15,64 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Mail;
 import com.wuda.bbs.ui.main.mail.MailContentActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class MailAdapter extends RecyclerView.Adapter<MailAdapter.ViewHolder> {
+public class MailAdapter extends FooterAdapter<Mail> {
 
-    Context mContext;
-    List<Mail> mMailList;
     String mBoxName;
-    Intent mailContentIntent;
 
-    public MailAdapter(Context mContext, List<Mail> mMailList, String mBoxName) {
-        this.mContext = mContext;
-        this.mMailList = mMailList;
+    public MailAdapter(Context mContext, List<Mail> mContents, String mBoxName) {
+        super(mContext, mContents);
         this.mBoxName = mBoxName;
-        mailContentIntent = new Intent(this.mContext, MailContentActivity.class);
-        mailContentIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    protected ContentViewHolder onCreateContentViewHolder(@NonNull ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.mail_item, parent, false);
-        return new ViewHolder(view);
-    }
 
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Mail mail = mMailList.get(position);
-        holder.subject_tv.setText(mail.getSubject());
-        holder.info_tv.setText(mail.getSender() + " | " + mail.getTime());
+        MailViewHolder holder = new MailViewHolder(view);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mailContentIntent.putExtra("mail", mail);
-                mailContentIntent.putExtra("boxName", mBoxName);
-                mContext.startActivity(mailContentIntent);
+                Mail mail = mContents.get(holder.getAdapterPosition());
+
+                Intent intent = new Intent(mContext, MailContentActivity.class);
+                intent.putExtra("mail", mail);
+                intent.putExtra("boxName", mBoxName);
+                mContext.startActivity(intent);
             }
         });
+
+        return holder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public int getItemCount() {
-        return mMailList.size();
-    }
-
-    public void appendMails(List<Mail> mails) {
-        mMailList.addAll(mails);
-        this.notifyItemRangeInserted(mMailList.size()-mails.size()-1, mMailList.size());
+    protected void onBindContentViewHolder(ContentViewHolder contentHolder, Mail content) {
+        if (contentHolder instanceof MailViewHolder) {
+            MailViewHolder holder = (MailViewHolder) contentHolder;
+            holder.subject_tv.setText(content.getSubject());
+            holder.info_tv.setText(content.getSender() + " | " + content.getTime());
+        }
     }
 
     public void changeBox(String boxName) {
         this.mBoxName = boxName;
-        removeAllMails();
+        setContents(new ArrayList<>());
     }
 
     public void setBoxName(String boxName) {
         this.mBoxName = boxName;
     }
 
-    public void removeAllMails() {
-        // box change
-        int count = mMailList.size();
-        mMailList.clear();
-        this.notifyItemRangeRemoved(0, count);
-    }
-
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class MailViewHolder extends ContentViewHolder {
 
         TextView subject_tv;
         TextView info_tv;
 
-        public ViewHolder(@NonNull View itemView) {
+        public MailViewHolder(@NonNull View itemView) {
             super(itemView);
             subject_tv = itemView.findViewById(R.id.mail_subject_textView);
             info_tv = itemView.findViewById(R.id.mail_info_textView);

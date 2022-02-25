@@ -38,6 +38,7 @@ import retrofit2.Response;
 public class FavArticleActivity extends AppCompatActivity {
 
     RecyclerView favArticle_rv;
+    FavArticleAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,11 @@ public class FavArticleActivity extends AppCompatActivity {
 
         favArticle_rv = findViewById(R.id.recyclerView);
         favArticle_rv.setLayoutManager(new LinearLayoutManager(FavArticleActivity.this));
-        favArticle_rv.setAdapter(new FavArticleAdapter(FavArticleActivity.this, new ArrayList<>()));
+
+        adapter = new FavArticleAdapter(FavArticleActivity.this, new ArrayList<>());
+        favArticle_rv.setAdapter(adapter);
+
+//        favArticle_rv.setAdapter(new FavArticleAdapter(FavArticleActivity.this, new ArrayList<>()));
         favArticle_rv.addItemDecoration(new DividerItemDecoration(FavArticleActivity.this, DividerItemDecoration.VERTICAL));
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
@@ -74,11 +79,13 @@ public class FavArticleActivity extends AppCompatActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                FavArticleAdapter adapter = (FavArticleAdapter) favArticle_rv.getAdapter();
-                if (adapter == null)
-                    return;
+//                FavArticleAdapter adapter = (FavArticleAdapter) favArticle_rv.getAdapter();
+//                if (adapter == null)
+//                    return;
                 FavArticle favArticle = adapter.removeItem(position);
-                removeFavArticle(favArticle);
+                if (favArticle != null) {
+                    removeFavArticle(favArticle);
+                }
             }
         });
         mItemTouchHelper.attachToRecyclerView(favArticle_rv);
@@ -103,7 +110,8 @@ public class FavArticleActivity extends AppCompatActivity {
                     String text = new String(response.body().bytes(), "GBK");
                     List<Treasure> treasureList = HtmlParser.parseTreasures(FavArticle.class, text);
                     List<FavArticle> favArticleList = parseSrcUrl(treasureList);
-                    ((FavArticleAdapter) favArticle_rv.getAdapter()).updateFavArticles(favArticleList);
+//                    ((FavArticleAdapter) favArticle_rv.getAdapter()).updateFavArticles(favArticleList);
+                    adapter.setContents(favArticleList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -168,7 +176,8 @@ public class FavArticleActivity extends AppCompatActivity {
                     String text = new String(response.body().bytes(), "GBK");
                     List<Treasure> treasureList = HtmlParser.parseTreasures(FavArticle.class, text);
                     List<FavArticle> favArticleList = parseSrcUrl(treasureList);
-                    ((FavArticleAdapter) favArticle_rv.getAdapter()).updateFavArticles(favArticleList);
+//                    ((FavArticleAdapter) favArticle_rv.getAdapter()).updateFavArticles(favArticleList);
+                    adapter.setContents(favArticleList);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

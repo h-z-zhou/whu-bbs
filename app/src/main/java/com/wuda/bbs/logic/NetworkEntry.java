@@ -16,6 +16,7 @@ import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.BaseResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FindPasswordResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.FriendResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.RegisterResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SetPasswordResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
@@ -127,6 +128,14 @@ public class NetworkEntry {
         form.put("userId", userId);
 
         mMobileService.get("userInfo", form).enqueue(new BBSCallback3(responseHandler));
+    }
+
+
+    public static void requestFriendFromServer(FriendResponseHandler responseHandler) {
+        Map<String, String> form = new HashMap<>();
+        form.put("list", "all");
+
+        mMobileService.get("friend", form).enqueue(new BBSCallback2(responseHandler));
     }
 
 }

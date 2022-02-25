@@ -19,32 +19,25 @@ import android.view.View;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
 import com.wuda.bbs.logic.bean.response.FriendResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
 import com.wuda.bbs.ui.user.UserInfoActivity;
-import com.wuda.bbs.utils.network.BBSCallback;
-import com.wuda.bbs.utils.network.MobileService;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.xmlHandler.XMLParser;
+import com.wuda.bbs.utils.networkResponseHandler.FriendResponseHandler;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class FriendActivity extends AppCompatActivity {
 
     FriendViewModel mViewModel;
 
     RecyclerView friend_rv;
+    FriendAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +59,10 @@ public class FriendActivity extends AppCompatActivity {
 
         friend_rv = findViewById(R.id.recyclerView);
         friend_rv.setLayoutManager(new LinearLayoutManager(FriendActivity.this));
-        friend_rv.setAdapter(new FriendAdapter(FriendActivity.this, new ArrayList<>()));
+
+        adapter = new FriendAdapter(FriendActivity.this, new ArrayList<>());
+        friend_rv.setAdapter(adapter);
+
 
         eventBinding();
         requestAllFriendsFromServer();
@@ -108,7 +104,7 @@ public class FriendActivity extends AppCompatActivity {
         mViewModel.friendList.observe(this, new Observer<List<Friend>>() {
             @Override
             public void onChanged(List<Friend> friends) {
-                ((FriendAdapter) friend_rv.getAdapter()).updateFriendList(friends);
+                adapter.setContents(friends);
                 FriendDao friendDao = AppDatabase.getDatabase(FriendActivity.this).getFriendDao();
                 friendDao.insertFriends(friends);
             }
@@ -117,27 +113,16 @@ public class FriendActivity extends AppCompatActivity {
 
 
     private void requestAllFriendsFromServer() {
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
-        Map<String, String> form = new HashMap<>();
-//        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
-        form.put("list", "all");
-
-        mobileService.get("friend", form).enqueue(new BBSCallback<ResponseBody>(FriendActivity.this) {
+        FriendResponseHandler responseHandler = new FriendResponseHandler() {
             @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    if (response.body() != null) {
-                        String text = response.body().string();
-                        FriendResponse friendResponse = XMLParser.parseFriends(text);
-                        if (friendResponse.isSuccessful()) {
-                            mViewModel.friendList.postValue(friendResponse.getFriendList());
-                        }
-
+            public void onResponseHandled(BaseResponse baseResponse) {
+                if (baseResponse.isSuccessful()) {
+                    if (baseResponse instanceof FriendResponse) {
+                        mViewModel.friendList.postValue(((FriendResponse)baseResponse).getFriendList());
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
-        });
+        };
+        NetworkEntry.requestFriendFromServer(responseHandler);
     }
 }

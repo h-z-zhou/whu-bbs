@@ -16,8 +16,8 @@ public class BBSApplication extends Application {
         appContext = getBaseContext();
         SharedPreferences sp = appContext.getSharedPreferences("user", MODE_PRIVATE);
         String id = sp.getString("id", "guest");
-        String avatar = sp.getString("avatar", "");
         String passwd = sp.getString("passwd", "");
+        String avatar = sp.getString("avatar", "");
         account = new Account(id, passwd, avatar, Account.FLAG_CURRENT);
     }
 
