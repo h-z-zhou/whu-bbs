@@ -23,7 +23,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.bean.FavBoard;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FavorBoardDao;
 import com.wuda.bbs.ui.main.MainActivity;
@@ -88,9 +88,9 @@ public class FavorBoardFragment extends Fragment {
             @Override
             public Fragment createFragment(int position) {
 
-                BoardArticleFragment boardArticleFragment = new BoardArticleFragment();
-                boardArticleFragment.setBoard(mViewModel.favorBoardList.getValue().get(position));
-                return boardArticleFragment;
+                BoardArticleFragment boardArticleFabFragment = new BoardArticleFragment();
+                boardArticleFabFragment.setBoard(mViewModel.favorBoardList.getValue().get(position));
+                return boardArticleFabFragment;
             }
 
             @Override
@@ -209,17 +209,18 @@ public class FavorBoardFragment extends Fragment {
 
                     hadRequest = true;
 
-                    List<BaseBoard> favorBoardList = XMLParser.parseFavorBoard(text);
+//                    List<BaseBoard> favorBoardList = XMLParser.parseFavorBoard(text);
+                    List<FavBoard> favorBoardList = XMLParser.parseFavorBoard(text).getContent();
                     if (getContext() == null)
                         return;
                     FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
                     favorBoardDao.clearAll();
                     // cast => save to database
-                    List<FavorBoard> castFavorBoardList = new ArrayList<>();
+                    List<FavBoard> castFavBoardList = new ArrayList<>();
                     for (int i=0; i<favorBoardList.size(); ++i) {
-                        castFavorBoardList.add((FavorBoard) favorBoardList.get(i));
+                        castFavBoardList.add((FavBoard) favorBoardList.get(i));
                     }
-                    favorBoardDao.insert(castFavorBoardList);
+                    favorBoardDao.insert(castFavBoardList);
 
                     queryFavorBoardsFromDB();
 

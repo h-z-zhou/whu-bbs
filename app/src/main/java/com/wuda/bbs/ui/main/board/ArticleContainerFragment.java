@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.main.base;
+package com.wuda.bbs.ui.main.board;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

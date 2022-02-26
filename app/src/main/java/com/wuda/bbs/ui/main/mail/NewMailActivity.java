@@ -17,14 +17,19 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.NetTool;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 import com.wuda.bbs.utils.parser.HtmlParser;
 
 import java.io.IOException;
@@ -139,28 +144,14 @@ public class NewMailActivity extends AppCompatActivity {
         form.put("signature", "0");
         form.put("backup", "on");
 
-        form = NetTool.encodeUrlFormWithGBK(form);
-
-        RootService rootService = ServiceCreator.create(RootService.class);
-        rootService.getWithEncoded("wForum/dosendmail.php", form).enqueue(new BBSCallback<ResponseBody>(NewMailActivity.this) {
+        NetworkEntry.sendMail(form, new WebResultHandler() {
             @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = new String(response.body().bytes(), "GBK");
-                    BaseResponse baseResponse = HtmlParser.parsePostMailResponse(text);
-                    if (!baseResponse.isSuccessful()) {
-                        new AlertDialog.Builder(NewMailActivity.this)
-                                .setTitle("出错啦")
-                                .setMessage(baseResponse.getMassage())
-                                .setPositiveButton("确定", null)
-                                .create()
-                                .show();
-                    }
-                    Log.d("text", text);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public void onResponseHandled(ContentResponse<WebResult> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(NewMailActivity.this, response.getContent().getResult(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
     }
 }

@@ -14,9 +14,13 @@ import android.widget.Toast;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.DetailBoardResponse;
+import com.wuda.bbs.logic.bean.response.FavBoardResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.DetailBoardDao;
 import com.wuda.bbs.logic.dao.FavorBoardDao;
@@ -24,11 +28,12 @@ import com.wuda.bbs.ui.adapter.BoardEntranceAdapter;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
+import com.wuda.bbs.utils.networkResponseHandler.FavBoardHandler;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -88,14 +93,14 @@ public class BoardEntranceFragment extends Fragment {
         AppDatabase database = AppDatabase.getDatabase(getContext());
 
         FavorBoardDao favorBoardDao = database.getFavorBoardDao();
-        List<FavorBoard> favorBoardList = favorBoardDao.loadAllFavorBoards();
+        List<FavBoard> favBoardList = favorBoardDao.loadAllFavorBoards();
         // Favor Board may empty
-        if (favorBoardList.isEmpty() && !isFavorBoardRequested) {
+        if (favBoardList.isEmpty() && !isFavorBoardRequested) {
             requestFavorBoardsFromServer();
             isFavorBoardRequested = true;
             return;
         }
-        allBoardGroupMap.put("我的收藏", cast2BaseBoard(favorBoardList));
+        allBoardGroupMap.put("我的收藏", cast2BaseBoard(favBoardList));
 
         DetailBoardDao detailBoardDao = database.getDetailBoardDao();
 //        room group by ??
@@ -128,81 +133,43 @@ public class BoardEntranceFragment extends Fragment {
 
         entrance_srl.setRefreshing(true);
 
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
-        mobileService.get("favor").enqueue(new Callback<ResponseBody>() {
-
+        FavBoardHandler handler = new FavBoardHandler() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = response.body().string();
-                    if (text.equals(NetConst.FAVOR_BOARD_ERROR)) {
-                        if (getContext() != null) {
-                            Toast.makeText(getContext(), "收藏版块需登录后获取", Toast.LENGTH_SHORT).show();
-                        }
-                        return;
-                    }
+            public void onResponseHandled(BaseResponse baseResponse) {
+                entrance_srl.setRefreshing(false);
+                if (baseResponse.isSuccessful()) {
+                    if (baseResponse instanceof FavBoardResponse) {
+                        FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
+                        // 清空，与云端保持同步
+                        favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
+                        favorBoardDao.insert(((FavBoardResponse) baseResponse).getFavBoardList());
 
-//                    hadRequestFavor = true;
-
-                    List<BaseBoard> favorBoardList = XMLParser.parseFavorBoard(text);
-                    if (getContext() == null)
-                        return;
-                    FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
-
-                    // 清空，与云端保持同步
-                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
-
-                    // cast => save to database
-                    List<FavorBoard> castFavorBoardList = new ArrayList<>();
-                    for (int i=0; i<favorBoardList.size(); ++i) {
-                        castFavorBoardList.add((FavorBoard) favorBoardList.get(i));
-                    }
-                    favorBoardDao.insert(castFavorBoardList);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (getActivity() != null) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 queryAllBoardFromDB();
-                                entrance_srl.setRefreshing(false);
                             }
                         });
                     }
                 }
             }
+        };
 
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            entrance_srl.setRefreshing(false);
-                        }
-                    });
-                }
-            }
-        });
+        NetworkEntry.requestFavBoard(handler);
+
     }
 
 
     private void requestDetailBoardsFromServer() {
 
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
-        mobileService.get("boards", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
+        entrance_srl.setRefreshing(true);
+
+        DetailBoardHandler handler = new DetailBoardHandler() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = response.body().string();
-
-                    List<BaseBoard> detailBoardList = XMLParser.parseDetailBoard(text);
-                    if (getContext() == null)
-                        return;
-
+            public void onResponseHandled(BaseResponse baseResponse) {
+                entrance_srl.setRefreshing(false);
+                if (baseResponse instanceof DetailBoardResponse) {
+                    List<DetailBoard> detailBoardList = ((DetailBoardResponse) baseResponse).getDetailBoardList();
                     DetailBoardDao detailBoardDao = AppDatabase.getDatabase(getContext()).getDetailBoardDao();
                     detailBoardDao.clearAll();
                     // cast => save to database
@@ -211,38 +178,10 @@ public class BoardEntranceFragment extends Fragment {
                         castFavorBoardList.add((DetailBoard) detailBoardList.get(i));
                     }
                     detailBoardDao.insert(castFavorBoardList);
-
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (getActivity() == null)
-                        return;
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            queryAllBoardFromDB();
-                            entrance_srl.setRefreshing(false);
-                        }
-                    });
-                }
-
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            entrance_srl.setRefreshing(false);
-                        }
-                    });
                 }
             }
-        });
+        };
+        NetworkEntry.requestDetailBoard(handler);
     }
 
     private List<BaseBoard> cast2BaseBoard(List<?> boards) {

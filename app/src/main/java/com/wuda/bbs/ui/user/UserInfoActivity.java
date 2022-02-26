@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Friend;
 import com.wuda.bbs.logic.bean.UserInfo;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
 import com.wuda.bbs.logic.bean.response.UserInfoResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
@@ -28,15 +30,13 @@ import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.xmlHandler.XMLParser;
+import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserInfoActivity extends AppCompatActivity {
@@ -120,43 +120,29 @@ public class UserInfoActivity extends AppCompatActivity {
 
 
     private void requestUserInfoFromServer() {
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
-        Map<String, String> form = new HashMap<>();
-//        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
-        form.put("userId", mViewModel.userId);
-        mobileService.get("userInfo", form).enqueue(new Callback<ResponseBody>() {
+
+        NetworkEntry.requestUserInfo(mViewModel.userId, new UserInfoResponseHandler() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    if (response.body() != null) {
-                        String text = response.body().string();
-                        UserInfoResponse userInfoResponse = XMLParser.parseUserInfo(text);
-                        if (userInfoResponse.isSuccessful()) {
-                            UserInfo userInfo = userInfoResponse.getUserInfo();
-                            userInfo.setId(mViewModel.userId);
-                            mViewModel.userInfo.postValue(userInfo);
-                        } else {
-                            new AlertDialog.Builder(UserInfoActivity.this)
-                                    .setMessage("该用户不存在")
-                                    .setCancelable(false)
-                                    .setPositiveButton("退出", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            UserInfoActivity.this.finish();
-                                        }
-                                    })
-                                    .create()
-                                    .show();
-                        }
+            public void onResponseHandled(BaseResponse baseResponse) {
+                if (baseResponse.isSuccessful()) {
+                    if (baseResponse instanceof UserInfoResponse) {
+                        UserInfo userInfo = ((UserInfoResponse) baseResponse).getUserInfo();
+                        userInfo.setId(mViewModel.userId);
+                        mViewModel.userInfo.postValue(userInfo);
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } else {
+                    new AlertDialog.Builder(UserInfoActivity.this)
+                            .setMessage("该用户不存在")
+                            .setCancelable(false)
+                            .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    UserInfoActivity.this.finish();
+                                }
+                            })
+                            .create()
+                            .show();
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
             }
         });
     }

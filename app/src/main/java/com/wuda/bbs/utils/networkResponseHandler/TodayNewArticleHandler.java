@@ -3,22 +3,21 @@ package com.wuda.bbs.utils.networkResponseHandler;
 import androidx.annotation.NonNull;
 
 import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.utils.parser.HtmlParser;
 
 import java.io.UnsupportedEncodingException;
 
-public abstract class SetPasswordResponseHandler implements BaseResponseHandler {
+public abstract class TodayNewArticleHandler implements BaseResponseHandler {
     @Override
     public BaseResponse handleNetworkResponse(@NonNull byte[] data) {
-        BaseResponse baseResponse;
         try {
-            String text = new String(data, "GBK");
-            baseResponse = HtmlParser.parseSetPasswordResponse(text);
+            String html = new String(data, "GBK");
+            return HtmlParser.parseNewsToday(html);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            baseResponse = new BaseResponse(ResultCode.ERROR, e.getMessage());
+            return new BriefArticleResponse(ResultCode.DATA_ERR, e.getMessage());
         }
-        return baseResponse;
     }
 }

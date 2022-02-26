@@ -34,11 +34,11 @@ public class BoardActivity extends AppCompatActivity {
             }
         });
 
-        BoardArticleFragment boardArticleFragment = new BoardArticleFragment();
-        boardArticleFragment.setBoard(board);
+        BoardArticleFabFragment boardArticleFabFragment = new BoardArticleFabFragment();
+        boardArticleFabFragment.setBoard(board);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.board_article_fragment_container, boardArticleFragment)
+                .replace(R.id.board_article_fragment_container, boardArticleFabFragment)
                 .commit();
     }
 }

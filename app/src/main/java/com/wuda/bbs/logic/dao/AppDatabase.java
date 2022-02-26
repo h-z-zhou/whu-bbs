@@ -8,11 +8,11 @@ import androidx.room.RoomDatabase;
 
 import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.bean.FavBoard;
 import com.wuda.bbs.logic.bean.Friend;
 import com.wuda.bbs.logic.bean.History;
 
-@Database(version = 2, entities = {Account.class, DetailBoard.class, FavorBoard.class, History.class, Friend.class})
+@Database(version = 2, entities = {Account.class, DetailBoard.class, FavBoard.class, History.class, Friend.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract AccountDao getAccountDao();
     public abstract DetailBoardDao getDetailBoardDao();

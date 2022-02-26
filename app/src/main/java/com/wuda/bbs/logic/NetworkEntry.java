@@ -6,8 +6,8 @@ import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.logic.bean.response.AccountResponse;
 import com.wuda.bbs.logic.bean.response.BaseResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
-import com.wuda.bbs.logic.bean.response.UserInfoResponse;
 import com.wuda.bbs.utils.network.BBSCallback2;
+import com.wuda.bbs.utils.network.BBSCallback22;
 import com.wuda.bbs.utils.network.BBSCallback3;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.RootService;
@@ -15,14 +15,21 @@ import com.wuda.bbs.utils.network.RootServiceGBKWrapper;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.BaseResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
+import com.wuda.bbs.utils.networkResponseHandler.FavBoardHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FindPasswordResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FriendResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.HotArticleHandler;
+import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
+import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
+import com.wuda.bbs.utils.networkResponseHandler.TodayNewArticleHandler;
+import com.wuda.bbs.utils.networkResponseHandler.RecommendArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.RegisterResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SetPasswordResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.TopicArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
-import com.wuda.bbs.utils.xmlHandler.XMLParser;
+import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +44,12 @@ public class NetworkEntry {
     static RootService mRootService = ServiceCreator.create(RootService.class);
     static RootServiceGBKWrapper mRootServiceGBKWrapper = new RootServiceGBKWrapper(mRootService);
     static MobileService mMobileService = ServiceCreator.create(MobileService.class);
+
+
+    // *******************************
+    // Account
+    // *******************************
+
 
     public static void login(Account account, AccountResponseHandler responseHandler) {
 
@@ -123,7 +136,11 @@ public class NetworkEntry {
         }));
     }
 
-    public static void requestUserInfoFromServer(String userId, UserInfoResponseHandler responseHandler) {
+    // *******************************
+    // User / Friend
+    // *******************************
+
+    public static void requestUserInfo(String userId, UserInfoResponseHandler responseHandler) {
         Map<String, String> form = new HashMap<>();
         form.put("userId", userId);
 
@@ -131,11 +148,73 @@ public class NetworkEntry {
     }
 
 
-    public static void requestFriendFromServer(FriendResponseHandler responseHandler) {
+    public static void requestFriend(FriendResponseHandler responseHandler) {
         Map<String, String> form = new HashMap<>();
         form.put("list", "all");
 
         mMobileService.get("friend", form).enqueue(new BBSCallback2(responseHandler));
     }
+
+    // *******************************
+    // Article
+    // *******************************
+    public static void requestRecommendArticle(RecommendArticleHandler responseHandler) {
+        mMobileService.get("recomm").enqueue(new BBSCallback3(responseHandler));
+    }
+
+    public static void requestTodayNewArticle(TodayNewArticleHandler responseHandler) {
+        mRootService.get("wForum/newtopic.php").enqueue(new BBSCallback3(responseHandler));
+    }
+
+    public static void requestHotArticle(HotArticleHandler responseHandler) {
+        mMobileService.get("hot").enqueue(new BBSCallback3(responseHandler));
+    }
+
+    public static void requestTopicArticle(Map<String, String> form, TopicArticleHandler responseHandler) {
+        mMobileService.get("topics", form).enqueue(new BBSCallback3(responseHandler));
+    }
+
+    // *******************************
+    // Board
+    // *******************************
+
+    public static void requestDetailBoard(DetailBoardHandler responseHandler) {
+        mMobileService.get("boards").enqueue(new BBSCallback3(responseHandler));
+    }
+
+    public static void requestFavBoard(FavBoardHandler responseHandler) {
+        mMobileService.get("favor").enqueue(new BBSCallback2(responseHandler));
+    }
+
+    // *******************************
+    // Mail
+    // *******************************
+
+
+
+    public static void requestMailList1(Map<String, String> form, MailListHandler responseHandler) {
+        mMobileService.get("mail", form).enqueue(new BBSCallback22<>(responseHandler));
+    }
+
+
+    public static void requestMailContent(Map<String, String> form, MailContentHandler responseHandler) {
+        mMobileService.get("mail", form).enqueue(new BBSCallback22<>(responseHandler));
+    }
+
+    public static void sendMail(Map<String, String> form, WebResultHandler responseHandler) {
+        mRootServiceGBKWrapper.post("wForum/dosendmail.php", form).enqueue(new BBSCallback22<>(responseHandler));
+    }
+
+    // *******************************
+    // Article
+    // *******************************
+
+    // *******************************
+    // Article
+    // *******************************
+
+    // *******************************
+    // Article
+    // *******************************
 
 }

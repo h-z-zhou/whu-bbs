@@ -123,6 +123,6 @@ public class FriendActivity extends AppCompatActivity {
                 }
             }
         };
-        NetworkEntry.requestFriendFromServer(responseHandler);
+        NetworkEntry.requestFriend(responseHandler);
     }
 }

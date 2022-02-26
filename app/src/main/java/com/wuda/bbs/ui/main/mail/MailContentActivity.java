@@ -1,32 +1,24 @@
 package com.wuda.bbs.ui.main.mail;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.logic.bean.response.MailContentResponse;
-import com.wuda.bbs.utils.network.MobileService;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.xmlHandler.XMLParser;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
-import java.io.IOException;
+import com.wuda.bbs.R;
+import com.wuda.bbs.logic.NetworkEntry;
+import com.wuda.bbs.logic.bean.Mail;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MailContentActivity extends AppCompatActivity {
 
@@ -97,29 +89,14 @@ public class MailContentActivity extends AppCompatActivity {
     }
 
     private void requestMailContentFromServer() {
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
         Map<String, String> form = new HashMap<>();
         form.put("read", mail.getNum());
         form.put("boxname", boxName);
-        mobileService.get("mail", form).enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    if (response.body() != null) {
-                        String text = response.body().string();
-                        MailContentResponse mailContentResponse = XMLParser.parseMailContent(text);
-                        if (mailContentResponse.isSuccessful()) {
-                            mViewModel.mailContent.postValue(mailContentResponse.getMailContent());
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
+        NetworkEntry.requestMailContent(form, new MailContentHandler() {
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
+            public void onResponseHandled(ContentResponse<String> response) {
+                mViewModel.mailContent.postValue(response.getContent());
             }
         });
     }

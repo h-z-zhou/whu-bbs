@@ -10,6 +10,10 @@ public class BriefArticleResponse extends BaseResponse {
     Integer totalPage;
     List<BriefArticle> briefArticleList;
 
+    public BriefArticleResponse(ResultCode resultCode, String massage) {
+        super(resultCode, massage);
+    }
+
     public BriefArticleResponse() {
         currentPage = 0;
         totalPage = 1;

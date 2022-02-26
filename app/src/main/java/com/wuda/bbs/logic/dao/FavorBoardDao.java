@@ -7,30 +7,30 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.bean.FavBoard;
 
 import java.util.List;
 
 @Dao
 public interface FavorBoardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insert(List<FavorBoard> boardList);
+    public abstract void insert(List<FavBoard> boardList);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insert(FavorBoard favorBoard);
+    public abstract void insert(FavBoard favBoard);
 
-    @Query("select * from FavorBoard")
-    public abstract List<FavorBoard> loadAllFavorBoards();
+    @Query("select * from FavBoard")
+    public abstract List<FavBoard> loadAllFavorBoards();
 
-    @Query("select * from FavorBoard where favor_by_username = :username")
+    @Query("select * from FavBoard where favor_by_username = :username")
     public abstract List<BaseBoard> loadFavorBoardByUsername(@NonNull String username);
 
-    @Query("delete from FavorBoard where favor_by_username = :username")
+    @Query("delete from FavBoard where favor_by_username = :username")
     public abstract void clearFavorBoardsByUsername(String username);
 
-    @Query("delete from FavorBoard")
+    @Query("delete from FavBoard")
     public abstract void clearAll();
 
-    @Query("delete from FavorBoard where id = :id")
+    @Query("delete from FavBoard where id = :id")
     public abstract void delete(String id);
 }

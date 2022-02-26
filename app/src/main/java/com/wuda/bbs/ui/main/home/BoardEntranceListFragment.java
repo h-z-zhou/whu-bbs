@@ -15,7 +15,7 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.bean.FavBoard;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.DetailBoardDao;
 import com.wuda.bbs.logic.dao.FavorBoardDao;
@@ -85,14 +85,14 @@ public class BoardEntranceListFragment extends Fragment {
         AppDatabase database = AppDatabase.getDatabase(getContext());
 
         FavorBoardDao favorBoardDao = database.getFavorBoardDao();
-        List<FavorBoard> favorBoardList = favorBoardDao.loadAllFavorBoards();
+        List<FavBoard> favBoardList = favorBoardDao.loadAllFavorBoards();
         // Favor Board may empty
-        if (favorBoardList.isEmpty() && !isFavorBoardRequested) {
+        if (favBoardList.isEmpty() && !isFavorBoardRequested) {
             requestFavorBoardsFromServer();
             isFavorBoardRequested = true;
             return;
         }
-        allBoardGroupMap.put("我的收藏", cast2BaseBoard(favorBoardList));
+        allBoardGroupMap.put("我的收藏", cast2BaseBoard(favBoardList));
 
         DetailBoardDao detailBoardDao = database.getDetailBoardDao();
 //        room group by ??
@@ -141,7 +141,8 @@ public class BoardEntranceListFragment extends Fragment {
 
 //                    hadRequestFavor = true;
 
-                    List<BaseBoard> favorBoardList = XMLParser.parseFavorBoard(text);
+//                    List<BaseBoard> favorBoardList = XMLParser.parseFavorBoard(text);
+                    List<FavBoard> favorBoardList = XMLParser.parseFavorBoard(text).getContent();
                     if (getContext() == null)
                         return;
                     FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
@@ -150,11 +151,11 @@ public class BoardEntranceListFragment extends Fragment {
                     favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
 
                     // cast => save to database
-                    List<FavorBoard> castFavorBoardList = new ArrayList<>();
+                    List<FavBoard> castFavBoardList = new ArrayList<>();
                     for (int i=0; i<favorBoardList.size(); ++i) {
-                        castFavorBoardList.add((FavorBoard) favorBoardList.get(i));
+                        castFavBoardList.add((FavBoard) favorBoardList.get(i));
                     }
-                    favorBoardDao.insert(castFavorBoardList);
+                    favorBoardDao.insert(castFavBoardList);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -196,7 +197,8 @@ public class BoardEntranceListFragment extends Fragment {
                 try {
                     String text = response.body().string();
 
-                    List<BaseBoard> detailBoardList = XMLParser.parseDetailBoard(text);
+//                    List<BaseBoard> detailBoardList = XMLParser.parseDetailBoard(text);
+                    List<DetailBoard> detailBoardList = XMLParser.parseDetailBoard(text).getDetailBoardList();
                     if (getContext() == null)
                         return;
 

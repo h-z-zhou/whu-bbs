@@ -14,7 +14,7 @@ public class BoardHandler extends DefaultHandler {
 
     String section = "";
 
-    private List<BaseBoard> detailBoardList;
+    private List<DetailBoard> detailBoardList;
 
     @Override
     public void startDocument() throws SAXException {
@@ -37,7 +37,7 @@ public class BoardHandler extends DefaultHandler {
         }
     }
 
-    public List<BaseBoard> getHandledResult() {
+    public List<DetailBoard> getHandledResult() {
         return detailBoardList;
     }
 }

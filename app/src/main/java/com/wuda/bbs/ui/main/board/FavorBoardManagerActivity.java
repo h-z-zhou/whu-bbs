@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Xml;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -21,9 +22,14 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textview.MaterialTextView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.FavorBoard;
+import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.logic.bean.response.DetailBoardResponse;
+import com.wuda.bbs.logic.bean.response.FavBoardResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.DetailBoardDao;
 import com.wuda.bbs.logic.dao.FavorBoardDao;
@@ -31,6 +37,8 @@ import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
+import com.wuda.bbs.utils.networkResponseHandler.FavBoardHandler;
 import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
 import java.io.IOException;
@@ -172,18 +180,14 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
     }
 
     private void requestDetailBoardsFromServer() {
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
-        mobileService.get("boards", new HashMap<>()).enqueue(new Callback<ResponseBody>() {
+
+        DetailBoardHandler handler = new DetailBoardHandler() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = response.body().string();
-
-                    List<BaseBoard> detailBoardList = XMLParser.parseDetailBoard(text);
-                    if (getApplicationContext() == null)
-                        return;
-
-                    DetailBoardDao detailBoardDao = AppDatabase.getDatabase(getApplicationContext()).getDetailBoardDao();
+            public void onResponseHandled(BaseResponse baseResponse) {
+//                entrance_srl.setRefreshing(false);
+                if (baseResponse instanceof DetailBoardResponse) {
+                    List<DetailBoard> detailBoardList = ((DetailBoardResponse) baseResponse).getDetailBoardList();
+                    DetailBoardDao detailBoardDao = AppDatabase.getDatabase(FavorBoardManagerActivity.this).getDetailBoardDao();
                     detailBoardDao.clearAll();
                     // cast => save to database
                     List<DetailBoard> castFavorBoardList = new ArrayList<>();
@@ -191,19 +195,10 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
                         castFavorBoardList.add((DetailBoard) detailBoardList.get(i));
                     }
                     detailBoardDao.insert(castFavorBoardList);
-
-                    queryDetailBoardsFromDB();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                t.printStackTrace();
-            }
-        });
+        };
+        NetworkEntry.requestDetailBoard(handler);
     }
 
     private void queryFavorBoardsFromDB() {
@@ -217,52 +212,32 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
     }
 
     private void requestFavorBoardsFromServer() {
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
-        mobileService.get("favor").enqueue(new Callback<ResponseBody>() {
+
+
+        FavBoardHandler handler = new FavBoardHandler() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = response.body().string();
-                    if (text.equals(NetConst.FAVOR_BOARD_ERROR)) {
-                        if (getApplicationContext() != null) {
-                            new AlertDialog.Builder(FavorBoardManagerActivity.this)
-                                    .setTitle("登录失效")
-                                    .setMessage("请先登录")
-                                    .create()
-                                    .show();
-                        }
-                        return;
+            public void onResponseHandled(BaseResponse baseResponse) {
+                if (baseResponse.isSuccessful()) {
+                    if (baseResponse instanceof ContentResponse) {
+                        FavorBoardDao favorBoardDao = AppDatabase.getDatabase(FavorBoardManagerActivity.this).getFavorBoardDao();
+                        // 清空，与云端保持同步
+
+                        favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
+                        favorBoardDao.insert(((ContentResponse<List<FavBoard>>) baseResponse).getContent());
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                queryFavorBoardsFromDB();
+                            }
+                        });
                     }
-
-//                    hadRequestFavor = true;
-
-                    List<BaseBoard> favorBoardList = XMLParser.parseFavorBoard(text);
-                    if (getApplicationContext() == null)
-                        return;
-                    FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getApplicationContext()).getFavorBoardDao();
-
-                    // 清空，与云端保持同步
-                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
-
-                    // cast => save to database
-                    List<FavorBoard> castFavorBoardList = new ArrayList<>();
-                    for (int i=0; i<favorBoardList.size(); ++i) {
-                        castFavorBoardList.add((FavorBoard) favorBoardList.get(i));
-                    }
-                    favorBoardDao.insert(castFavorBoardList);
-
-                    queryFavorBoardsFromDB();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
+        };
 
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                t.printStackTrace();
-            }
-        });
+        NetworkEntry.requestFavBoard(handler);
+
     }
 
     private void addOrRemoveFavor(DetailBoard board, boolean isAdd) {
@@ -270,7 +245,7 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
         FavorBoardDao favorBoardDao = AppDatabase.getDatabase(this).getFavorBoardDao();
         if (isAdd) {
             form.put("bname", board.getId());
-            favorBoardDao.insert(new FavorBoard(board.getId(), board.getName(), BBSApplication.getAccountId()));
+            favorBoardDao.insert(new FavBoard(board.getId(), board.getName(), BBSApplication.getAccountId()));
         } else {
             // 编号减一
             form.put("delete", Integer.valueOf(Integer.parseInt(board.getNumber()) - 1).toString());

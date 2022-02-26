@@ -21,9 +21,7 @@ import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.BaseResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
-import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,19 +1,22 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.logic.bean.response.MailContentResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MailContentHandler extends DefaultHandler {
 
-    MailContentResponse mailContentResponse;
+    ContentResponse<String> mailContentResponse;
     StringBuilder mailContent;
     String nodeName;
 
     public MailContentHandler() {
-        mailContentResponse = new MailContentResponse();
+        mailContentResponse = new ContentResponse<>();
         mailContent = new StringBuilder();
     }
 
@@ -35,20 +38,24 @@ public class MailContentHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
         if (localName.equals("Mail")) {
-            mailContentResponse.setMailContent(beautifyContent(mailContent.toString()));
+            mailContentResponse.setContent(beautifyContent(mailContent.toString()));
         }
     }
 
-    public MailContentResponse getMailContentResponse() {
+    public ContentResponse<String> getMailContentResponse() {
         return mailContentResponse;
     }
 
     private String beautifyContent(String content){
-        // prints('\n\n
-        content = content.substring(12, content.length()-3);
+        Pattern pattern = Pattern.compile("(?<=\\\\n\\\\n)(.*?)(?=\\\\n'\\);)");
+        Matcher matcher = pattern.matcher(content);
+
+        if (matcher.find()) {
+            content = matcher.group();
+        }
         content = content.replaceAll("\\\\n", "");
         content = content.replaceAll("\\\\r.*?m", "\n");
-        return content;
-//        return content.trim();
+
+        return content.trim();
     }
 }

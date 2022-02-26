@@ -5,7 +5,7 @@
     android:id="@+id/article_container_root_frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.base.ArticleContainerFragment">
+    tools:context=".ui.main.board.ArticleContainerFragment">
 
     <include layout="@layout/article_view" />
 

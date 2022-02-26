@@ -1,11 +1,13 @@
 package com.wuda.bbs.utils.xmlHandler;
 
+import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.Mail;
 import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
-import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.DetailArticleResponse;
+import com.wuda.bbs.logic.bean.response.DetailBoardResponse;
 import com.wuda.bbs.logic.bean.response.FriendResponse;
-import com.wuda.bbs.logic.bean.response.MailContentResponse;
-import com.wuda.bbs.logic.bean.response.MailResponse;
+import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.logic.bean.response.UserInfoResponse;
 
 import org.xml.sax.InputSource;
@@ -30,7 +32,9 @@ public class XMLParser {
         }
     }
 
-    public static List<BaseBoard> parseDetailBoard(String xmlData) {
+    public static DetailBoardResponse parseDetailBoard(String xmlData) {
+
+        DetailBoardResponse response = new DetailBoardResponse();
 
         xmlData = xmlData.replaceAll("true", "\"true\"");
         xmlData = xmlData.replace("&", "AND");
@@ -39,10 +43,13 @@ public class XMLParser {
         xmlReader.setContentHandler(boardHandler);
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
+            response.setDetailBoardList(boardHandler.getHandledResult());
         } catch (IOException | SAXException e) {
             e.printStackTrace();
+            response.setSuccessful(false);
+            response.setMassage(e.getMessage());
         }
-        return boardHandler.getHandledResult();
+        return response;
     }
 
     public static BriefArticleResponse parseRecommend(String xmlData) {
@@ -81,17 +88,24 @@ public class XMLParser {
         return topicHandler.getArticleResponse();
     }
 
-    public static List<BaseBoard> parseFavorBoard(String xmlData) {
+    public static ContentResponse<List<FavBoard>> parseFavorBoard(String xmlData) {
+
+        ContentResponse<List<FavBoard>> response = new ContentResponse<List<FavBoard>>();
+
         FavorBoardHandler favorBoardHandler = new FavorBoardHandler();
         xmlReader.setContentHandler(favorBoardHandler);
 
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
+            response.setContent(favorBoardHandler.getFavorBoards());
+
         } catch (IOException | SAXException e) {
             e.printStackTrace();
+            response.setResultCode(ResultCode.ERROR);
+            response.setMassage(e.getMessage());
         }
 
-        return favorBoardHandler.getFavorBoards();
+        return response;
     }
 
     public static DetailArticleResponse parseDetailArticle(String xmlData) {
@@ -144,8 +158,8 @@ public class XMLParser {
         return response;
     }
 
-    public static MailResponse parseMails(String xmlData) {
-        MailResponse mailResponse;
+    public static ContentResponse<List<Mail>> parseMailList(String xmlData) {
+        ContentResponse<List<Mail>> mailResponse;
 
         MailHandler mailHandler = new MailHandler();
         xmlReader.setContentHandler(mailHandler);
@@ -155,17 +169,16 @@ public class XMLParser {
             mailResponse = mailHandler.getMailResponse();
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            mailResponse = new MailResponse();
-            mailResponse.setSuccessful(false);
-            mailResponse.setMassage(e.getMessage());
+            mailResponse = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
         }
 
-        return  mailResponse;
+        return mailResponse;
     }
 
-    public static MailContentResponse parseMailContent(String xmlData) {
 
-        MailContentResponse mailContentResponse;
+    public static ContentResponse<String> parseMailContent(String xmlData) {
+
+        ContentResponse<String> mailContentResponse;
 
         MailContentHandler mailContentHandler = new MailContentHandler();
         xmlReader.setContentHandler(mailContentHandler);
@@ -175,9 +188,7 @@ public class XMLParser {
             mailContentResponse = mailContentHandler.getMailContentResponse();
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            mailContentResponse = new MailContentResponse();
-            mailContentResponse.setSuccessful(false);
-            mailContentResponse.setMassage(e.getMessage());
+            mailContentResponse = new ContentResponse<>(ResultCode.ERROR, e.getMessage());
         }
 
         return mailContentResponse;

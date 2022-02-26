@@ -1,20 +1,24 @@
 package com.wuda.bbs.utils.xmlHandler;
 
 import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.logic.bean.response.MailResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MailHandler extends DefaultHandler {
-    MailResponse mailResponse;
+    ContentResponse<List<Mail>> mailListResponse1;
     Mail mail;
     StringBuilder subject;
     String nodeName;
 
     public MailHandler() {
-        mailResponse = new MailResponse();
+        mailListResponse1 = new ContentResponse<>();
+        mailListResponse1.setContent(new ArrayList<>());
         subject = new StringBuilder();
     }
 
@@ -26,8 +30,8 @@ public class MailHandler extends DefaultHandler {
             case "Mails":
                 int currentPage = Integer.parseInt(attributes.getValue("Page"));
                 int totalPage = Integer.parseInt(attributes.getValue("TotalPage"));
-                mailResponse.setCurrentPage(currentPage);
-                mailResponse.setTotalPage(totalPage);
+                mailListResponse1.setCurrentPage(currentPage);
+                mailListResponse1.setTotalPage(totalPage);
                 break;
             case "Mail":
                 mail = new Mail();
@@ -57,11 +61,11 @@ public class MailHandler extends DefaultHandler {
         if (localName.equals("Mail")) {
             mail.setSubject(subject.toString());
             subject.setLength(0);
-            mailResponse.getMailList().add(mail);
+            mailListResponse1.getContent().add(mail);
         }
     }
 
-    public MailResponse getMailResponse() {
-        return mailResponse;
+    public ContentResponse<List<Mail>> getMailResponse() {
+        return mailListResponse1;
     }
 }

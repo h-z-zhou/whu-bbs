@@ -2,13 +2,12 @@ package com.wuda.bbs.utils.networkResponseHandler;
 
 import androidx.annotation.NonNull;
 
-import com.wuda.bbs.logic.bean.response.AccountResponse;
 import com.wuda.bbs.logic.bean.response.BaseResponse;
-import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.utils.xmlHandler.XMLParser;
 
-public abstract class AccountResponseHandler implements BaseResponseHandler {
+public abstract class DetailBoardHandler implements BaseResponseHandler {
     @Override
     public BaseResponse handleNetworkResponse(@NonNull byte[] data) {
-        return new AccountResponse();
+        return XMLParser.parseDetailBoard(new String(data));
     }
 }

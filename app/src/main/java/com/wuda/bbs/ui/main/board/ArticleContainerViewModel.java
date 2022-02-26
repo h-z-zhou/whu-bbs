@@ -1,4 +1,4 @@
-package com.wuda.bbs.ui.main.base;
+package com.wuda.bbs.ui.main.board;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

@@ -27,23 +27,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.response.MailResponse;
+import com.wuda.bbs.logic.NetworkEntry;
+import com.wuda.bbs.logic.bean.Mail;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.MailAdapter;
 import com.wuda.bbs.ui.main.MainActivity;
-import com.wuda.bbs.utils.network.BBSCallback;
-import com.wuda.bbs.utils.network.MobileService;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.xmlHandler.XMLParser;
+import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class MailFragment extends Fragment {
 
@@ -118,11 +113,31 @@ public class MailFragment extends Fragment {
     }
 
     private void eventBinding() {
-        mViewModel.mailResponse.observe(getViewLifecycleOwner(), new Observer<MailResponse>() {
+//        mViewModel.mailResponse.observe(getViewLifecycleOwner(), new Observer<MailListResponse>() {
+//            @Override
+//            public void onChanged(MailListResponse mailListResponse) {
+//                int currentPage = mailListResponse.getCurrentPage();
+//                int totalPage = mailListResponse.getTotalPage();
+//                if (currentPage != 0 && currentPage==totalPage) {
+//                    adapter.setMore(false);
+//                }
+////                if (briefArticleResponse.getCurrentPage() == briefArticleResponse.getTotalPage()-1) {
+////                    adapter.setMore(false);
+////                }
+//                if (currentPage == 1) {
+//                    adapter.setContents(mailListResponse.getMailList());
+//                } else {
+//                    adapter.appendContents(mailListResponse.getMailList());
+//                }
+////                adapter.appendContents(mailResponse.getMailList());
+//            }
+//        });
+
+        mViewModel.mailResponse.observe(getViewLifecycleOwner(), new Observer<ContentResponse<List<Mail>>>() {
             @Override
-            public void onChanged(MailResponse mailResponse) {
-                int currentPage = mailResponse.getCurrentPage();
-                int totalPage = mailResponse.getTotalPage();
+            public void onChanged(ContentResponse<List<Mail>> listContentResponse) {
+                int currentPage = listContentResponse.getCurrentPage();
+                int totalPage = listContentResponse.getTotalPage();
                 if (currentPage != 0 && currentPage==totalPage) {
                     adapter.setMore(false);
                 }
@@ -130,11 +145,10 @@ public class MailFragment extends Fragment {
 //                    adapter.setMore(false);
 //                }
                 if (currentPage == 1) {
-                    adapter.setContents(mailResponse.getMailList());
+                    adapter.setContents(listContentResponse.getContent());
                 } else {
-                    adapter.appendContents(mailResponse.getMailList());
+                    adapter.appendContents(listContentResponse.getContent());
                 }
-//                adapter.appendContents(mailResponse.getMailList());
             }
         });
 
@@ -187,27 +201,18 @@ public class MailFragment extends Fragment {
     }
 
     private void requestMailsFromServer() {
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
         Map<String, String> form = new HashMap<>();
         form.put("list", "1");
         form.put("boxname", mViewModel.box.getValue().first);
 
-
-        mobileService.get("mail", form).enqueue(new BBSCallback<ResponseBody>(getContext()) {
+        NetworkEntry.requestMailList1(form, new MailListHandler() {
             @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    if (response.body() != null) {
-                        String text = response.body().string();
-                        MailResponse mailResponse = XMLParser.parseMails(text);
-                        if (mailResponse.isSuccessful()) {
-                            mViewModel.mailResponse.postValue(mailResponse);
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public void onResponseHandled(ContentResponse<List<Mail>> response) {
+                if (response.isSuccessful()) {
+                    mViewModel.mailResponse.postValue(response);
                 }
             }
         });
+
     }
 }

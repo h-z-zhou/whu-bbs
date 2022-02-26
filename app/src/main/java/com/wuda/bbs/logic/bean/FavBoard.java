@@ -5,12 +5,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 @Entity
-public class FavorBoard extends BaseBoard{
+public class FavBoard extends BaseBoard{
     @NonNull
     @ColumnInfo(name = "favor_by_username")
     String favorByUsername;
 
-    public FavorBoard(@NonNull String id, String name, @NonNull String favorByUsername) {
+    public FavBoard(@NonNull String id, String name, @NonNull String favorByUsername) {
         super(id, name);
         this.favorByUsername = favorByUsername;
     }

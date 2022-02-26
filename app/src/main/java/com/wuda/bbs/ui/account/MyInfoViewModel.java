@@ -22,7 +22,7 @@ public class MyInfoViewModel extends ViewModel {
 
     public void requestUserInfo(String userId) {
 
-        NetworkEntry.requestUserInfoFromServer(userId, new UserInfoResponseHandler() {
+        NetworkEntry.requestUserInfo(userId, new UserInfoResponseHandler() {
             @Override
             public void onResponseHandled(BaseResponse baseResponse) {
                 if (baseResponse.isSuccessful()) {
