@@ -19,7 +19,7 @@
             android:name=".ui.article.AttachmentActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.mail.NewMailActivity"
+            android:name=".ui.mail.NewMailActivity"
             android:exported="false" />
         <activity
             android:name=".ui.drawer.FriendActivity"
@@ -32,7 +32,7 @@
             android:exported="false"
             android:theme="@style/Theme.BBS.ReplyDialog" />
         <activity
-            android:name=".ui.main.board.BoardActivity"
+            android:name=".ui.board.BoardActivity"
             android:exported="false" />
         <activity
             android:name=".ui.article.PostArticleActivity"
@@ -47,19 +47,19 @@
             android:name=".ui.drawer.TreasureBoxActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.mail.MailContentActivity"
+            android:name=".ui.mail.MailContentActivity"
             android:exported="false" />
         <activity
             android:name=".ui.user.UserInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.board.FavorBoardManagerActivity"
+            android:name=".ui.board.FavorBoardManagerActivity"
             android:exported="false" />
         <activity
             android:name=".ui.article.DetailArticleActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

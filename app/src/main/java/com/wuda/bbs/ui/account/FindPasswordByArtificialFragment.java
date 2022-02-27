@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.utils.validator.TextValidator;
 
@@ -81,15 +81,15 @@ public class FindPasswordByArtificialFragment extends BaseFragment {
 
     private void eventBinding() {
 
-        mViewModel.getBaseResponseLiveData().observe(getViewLifecycleOwner(), new Observer<BaseResponse>() {
+        mViewModel.getResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<Object>>() {
             @Override
-            public void onChanged(BaseResponse baseResponse) {
+            public void onChanged(ContentResponse<Object> objectContentResponse) {
                 new AlertDialog.Builder(getContext())
-                        .setMessage(baseResponse.getMassage())
+                        .setMessage(objectContentResponse.getMassage())
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (baseResponse.isSuccessful()) {
+                                if (objectContentResponse.isSuccessful()) {
                                     if (getActivity() != null)
                                         getActivity().onBackPressed();
                                 }
@@ -97,13 +97,6 @@ public class FindPasswordByArtificialFragment extends BaseFragment {
                         })
                         .create()
                         .show();
-            }
-        });
-
-        mViewModel.getBaseResponseLiveData().observe(getViewLifecycleOwner(), new Observer<BaseResponse>() {
-            @Override
-            public void onChanged(BaseResponse baseResponse) {
-                new AlertDialog.Builder(getContext()).setMessage(baseResponse.getMassage()).create().show();
             }
         });
 

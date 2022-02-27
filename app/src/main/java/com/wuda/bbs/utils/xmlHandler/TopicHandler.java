@@ -5,9 +5,13 @@ import com.wuda.bbs.logic.bean.BriefArticle;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TopicHandler extends BaseBriefArticleHandler {
 
     BriefArticle briefArticle;
+    List<BriefArticle> articleList;
     String nodeName;
     String boardID;
 
@@ -36,6 +40,7 @@ public class TopicHandler extends BaseBriefArticleHandler {
         if (nodeName.equals("topic")) {
             briefArticle = new BriefArticle();
         } else if (nodeName.equals("topics")) {
+            articleList = new ArrayList<>();
             briefArticleResponse.setCurrentPage(Integer.parseInt(attributes.getValue("page")));
             briefArticleResponse.setTotalPage(Integer.parseInt(attributes.getValue("totalPages")));
             boardID = attributes.getValue("board");
@@ -79,9 +84,12 @@ public class TopicHandler extends BaseBriefArticleHandler {
         super.endElement(uri, localName, qName);
 
         switch (localName) {
+            case "topics":
+                briefArticleResponse.setContent(articleList);
+                break;
             case "topic":
                 briefArticle.setBoardID(boardID);
-                briefArticleResponse.addArticle(briefArticle);
+                articleList.add(briefArticle);
                 break;
             case "GID":
                 briefArticle.setGID(groupID.toString());

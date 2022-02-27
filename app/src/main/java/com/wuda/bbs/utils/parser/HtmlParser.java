@@ -1,10 +1,9 @@
 package com.wuda.bbs.utils.parser;
 
-import com.wuda.bbs.logic.bean.response.BaseResponse;
 import com.wuda.bbs.logic.bean.BriefArticle;
-import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
 import com.wuda.bbs.logic.bean.Treasure;
-import com.wuda.bbs.logic.bean.response.UserParamResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.logic.bean.response.ResultCode;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,15 +15,16 @@ import java.util.List;
 
 public class HtmlParser {
 
-    public static BriefArticleResponse parseNewsToday(String htmlData) {
-        BriefArticleResponse briefArticleResponse = new BriefArticleResponse();
+    public static ContentResponse<List<BriefArticle>> parseNewsToday(String htmlData) {
+        ContentResponse<List<BriefArticle>> briefArticleResponse = new ContentResponse<>();
+        List<BriefArticle> articleList = new ArrayList<>();
         briefArticleResponse.setTotalPage(1);
         briefArticleResponse.setCurrentPage(1);
 
         Document doc = Jsoup.parse(htmlData);
         Elements tables = doc.getElementsByTag("table");
         if (tables.size() != 2) {
-            briefArticleResponse.setSuccessful(false);
+            briefArticleResponse.setResultCode(ResultCode.ERROR);
             briefArticleResponse.setMassage("未定义错误");
         } else {
             try {
@@ -45,10 +45,11 @@ public class HtmlParser {
                     Elements tds = trs.get(i).getElementsByTag("td");
                     briefArticle.setTime(tds.get(tds.size() - 1).text());
 
-                    briefArticleResponse.addArticle(briefArticle);
+//                    briefArticleResponse.addArticle(briefArticle);
+                    articleList.add(briefArticle);
                 }
             } catch (Exception e) {
-                briefArticleResponse.setSuccessful(false);
+                briefArticleResponse.setResultCode(ResultCode.ERROR);
                 briefArticleResponse.setMassage(e.getMessage());
             }
 
@@ -75,10 +76,12 @@ public class HtmlParser {
              */
         }
 
+        briefArticleResponse.setContent(articleList);
+
         return briefArticleResponse;
     }
 
-    public static <T> List<Treasure> parseTreasures(Class<T> treasureClz,String htmlData) {
+    public static List<Treasure> parseTreasures(String htmlData) {
         List<Treasure> treasureList = new ArrayList<>();
 
         Document doc = Jsoup.parse(htmlData);
@@ -92,33 +95,30 @@ public class HtmlParser {
                 continue;
 
             Treasure treasure = null;
-            try {
-                treasure = (Treasure) treasureClz.newInstance();
-                treasure.setName(links.get(0).text());
-                treasure.setSrcUrl(links.get(0).attr("href"));
-                treasure.setDelUrl(links.get(2).attr("href"));
+            treasure = new Treasure();
+            treasure.setName(links.get(0).text());
+            treasure.setSrcUrl(links.get(0).attr("href"));
+            treasure.setDelUrl(links.get(2).attr("href"));
 
-                treasureList.add(treasure);
+            treasureList.add(treasure);
 
-            } catch (IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
-            }
         }
 
         return treasureList;
     }
 
-    public static BaseResponse parseRegisterResponse(String htmlData) {
+    public static ContentResponse<String> parseRegisterResponse(String htmlData) {
 
-        BaseResponse response = new BaseResponse();
+//        BaseResponse response = new BaseResponse();
+        ContentResponse<String> response = new ContentResponse<>();
 
         Document doc = Jsoup.parse(htmlData);
         Elements infoTable = doc.getElementsByTag("table");
         if (infoTable.size() != 1) {
-            response.setSuccessful(false);
+            response.setResultCode(ResultCode.DATA_ERR);
             response.setMassage("未知错误");
         } else {
-            response.setMassage(infoTable.get(0).text());
+            response.setContent(infoTable.get(0).text());
         }
 
         return response;
@@ -134,8 +134,9 @@ public class HtmlParser {
          */
     }
 
-    public static BaseResponse parseSetPasswordResponse(String htmlData) {
-        BaseResponse response = new BaseResponse();
+    public static ContentResponse<String> parseSetPasswordResponse(String htmlData) {
+
+        ContentResponse<String> response = new ContentResponse<>();
 
         Document doc = Jsoup.parse(htmlData);
         Elements infoTable = doc.getElementsByTag("table");
@@ -154,25 +155,27 @@ public class HtmlParser {
  */
     }
 
-    public static UserParamResponse parseUserParamResponse(String htmlData) {
-        UserParamResponse response = new UserParamResponse();
+    public static ContentResponse<List<Boolean>> parseUserParamResponse(String htmlData) {
+//        UserParamResponse response = new UserParamResponse();
+
+        ContentResponse<List<Boolean>> response = new ContentResponse<>();
 
         Document doc = Jsoup.parse(htmlData);
         Elements paramTable = doc.getElementsByTag("form");
         if (paramTable.isEmpty()) {
-            response.setSuccessful(false);
+            response.setResultCode(ResultCode.ERROR);
             response.setMassage("未定义错误");
         } else {
             Elements trs = paramTable.get(0).getElementsByTag("tr");
             if (trs.size() != 11) {
-                response.setSuccessful(false);
+                response.setResultCode(ResultCode.ERROR);
                 response.setMassage("未定义错误");
             } else {
                 List<Boolean> paramValues = new ArrayList<>();
                 for (int i=1; i<10; i++) {
                     Elements tds = trs.get(i).getElementsByTag("td");
                     if (tds.size()!=2) {
-                        response.setSuccessful(false);
+                        response.setResultCode(ResultCode.ERROR);
                         response.setMassage("未定义错误");
                     }
                     Elements radios = tds.get(1).getElementsByTag("input");
@@ -183,10 +186,10 @@ public class HtmlParser {
                     }
                 }
                 if (paramValues.size() != 9) {
-                    response.setSuccessful(false);
+                    response.setResultCode(ResultCode.ERROR);
                     response.setMassage("未定义错误");
                 } else {
-                    response.setParamValues(paramValues);
+                    response.setContent(paramValues);
                 }
             }
         }
@@ -194,39 +197,33 @@ public class HtmlParser {
         return response;
     }
 
-    public static BaseResponse parsePostArticleResponse(String htmlData) {
-        BaseResponse response = new BaseResponse();
+    public static ContentResponse<String> parsePostArticleResponse(String htmlData) {
+
+        ContentResponse<String> response = new ContentResponse<>();
 
         Document doc = Jsoup.parse(htmlData);
         Elements tables = doc.getElementsByClass("TableBody1");
         if (tables.isEmpty()) {
-            response.setSuccessful(false);
+            response.setResultCode(ResultCode.DATA_ERR);
             response.setMassage("未定义错误");
         } else {
             String text = tables.get(0).text();
-            if (text.contains("错误")) {
-                response.setSuccessful(false);
-                response.setMassage(text);
-            }
+            response.setContent(text);
         }
-
         return response;
     }
 
-    public static BaseResponse parsePostMailResponse(String htmlData) {
-        BaseResponse response = new BaseResponse();
+    public static ContentResponse<String> parsePostMailResponse(String htmlData) {
+        ContentResponse<String> response = new ContentResponse<>();
 
         Document doc = Jsoup.parse(htmlData);
         Elements tables = doc.getElementsByClass("TableBody1");
         if (tables.isEmpty()) {
-            response.setSuccessful(false);
+            response.setResultCode(ResultCode.DATA_ERR);
             response.setMassage("未定义错误");
         } else {
             String text = tables.get(0).text();
-            if (text.contains("错误")) {
-                response.setSuccessful(false);
-                response.setMassage(text);
-            }
+            response.setContent(text);
         }
 
         return response;

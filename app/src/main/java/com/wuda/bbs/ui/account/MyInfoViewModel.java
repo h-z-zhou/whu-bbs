@@ -5,8 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.UserInfo;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
-import com.wuda.bbs.logic.bean.response.UserInfoResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 
 public class MyInfoViewModel extends ViewModel {
@@ -24,14 +23,10 @@ public class MyInfoViewModel extends ViewModel {
 
         NetworkEntry.requestUserInfo(userId, new UserInfoResponseHandler() {
             @Override
-            public void onResponseHandled(BaseResponse baseResponse) {
-                if (baseResponse.isSuccessful()) {
-                    if (baseResponse instanceof UserInfoResponse) {
-                        UserInfo userInfo = ((UserInfoResponse) baseResponse).getUserInfo();
-                        userInfo.setId(userId);
-                        userInfoLiveData.postValue(userInfo);
-                    }
-                }
+            public void onResponseHandled(ContentResponse<UserInfo> response) {
+                UserInfo userInfo = response.getContent();
+                userInfo.setId(userId);
+                userInfoLiveData.postValue(userInfo);
             }
         });
     }

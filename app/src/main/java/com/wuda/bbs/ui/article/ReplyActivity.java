@@ -1,8 +1,5 @@
 package com.wuda.bbs.ui.article;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -13,27 +10,24 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.DetailArticle;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
-import com.wuda.bbs.utils.network.NetTool;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.network.WebForumService;
-import com.wuda.bbs.utils.parser.HtmlParser;
+import com.wuda.bbs.logic.bean.WebResult;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ReplyActivity extends AppCompatActivity {
 
     private DetailArticle repliedArticle;
+    private String groupId;
     private String boardId;
 
     ImageView close_btn;
@@ -45,6 +39,7 @@ public class ReplyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         repliedArticle = (DetailArticle) getIntent().getSerializableExtra("article");
+        groupId = getIntent().getStringExtra("groupId");
         boardId = getIntent().getStringExtra("boardId");
         if (repliedArticle == null)
             finish();
@@ -108,42 +103,24 @@ public class ReplyActivity extends AppCompatActivity {
 
         String title = "@" + repliedArticle.getAuthor();
 
-        // board=&relID=0&font=&subject=&Content=&signature=
+        // board=&reID=0&font=&subject=&Content=&signature=
         Map<String, String> form = new HashMap<>();
         form.put("board", boardId);
-        form.put("relID", repliedArticle.getId());
+        form.put("reID", repliedArticle.getId());
+        form.put("groupID", groupId);
+        form.put("reToWho", repliedArticle.getAuthor());
         form.put("font", "");
         form.put("subject", title);
         form.put("Content", content.toString());
         form.put("signature", "");
 
-        Map<String, String> encodedForm = NetTool.encodeUrlFormWithGBK(form);
-
-        WebForumService webForumService = ServiceCreator.create(WebForumService.class);
-        webForumService.postWithEncoded("dopostarticle.php", encodedForm).enqueue(new Callback<ResponseBody>() {
+        NetworkEntry.postArticle(form, new WebResultHandler() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String text = new String(response.body().bytes(), "GBK");
-                    BaseResponse baseResponse = HtmlParser.parsePostArticleResponse(text);
-                    if (!baseResponse.isSuccessful()) {
-                        new AlertDialog.Builder(ReplyActivity.this)
-                                .setTitle("出错啦")
-                                .setMessage(baseResponse.getMassage())
-                                .setPositiveButton("确定", null)
-                                .create()
-                                .show();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public void onResponseHandled(ContentResponse<WebResult> response) {
+                if (response.isSuccessful()) {
+                    String text = response.getContent().getResult();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
-
 }

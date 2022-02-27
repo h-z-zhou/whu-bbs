@@ -84,6 +84,10 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<RecyclerView
         isMore = more;
     }
 
+    public void updateFooter() {
+        notifyItemChanged(mContents.size());
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     public void setContents(List<T> contents) {
         mContents.clear();

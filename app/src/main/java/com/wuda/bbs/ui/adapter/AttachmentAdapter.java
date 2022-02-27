@@ -49,7 +49,7 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
 
         MimeValidator.Mime mime = MimeValidator.getMimetype(attachment.getName());
         if (mime.type == MimeValidator.Mime.Type.IMAGE) {
-            Glide.with(mContext).load(url).into(holder.bg_iv);
+            Glide.with(mContext).load(url).placeholder(R.drawable.mimetype_image).into(holder.bg_iv);
         } else {
             Glide.with(mContext).load(mime.icon).into(holder.bg_iv);
             holder.name_tv.setText(attachment.getName());

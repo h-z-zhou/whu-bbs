@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.bean.Account;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.ui.adapter.AccountManagerFragmentAdapter;
 import com.wuda.bbs.ui.adapter.AccountRecyclerAdapter;
@@ -103,12 +103,13 @@ public class AccountFragment extends BaseFragment {
             public void onClick(View v) {
                 mSharedViewModel.logout(new SimpleResponseHandler() {
                     @Override
-                    public void onResponseHandled(BaseResponse baseResponse) {
-                        if (baseResponse.getResultCode() == ResultCode.LOGIN_ERR) {
+                    public void onResponseHandled(ContentResponse<Object> response) {
+                        if (response.getResultCode() == ResultCode.LOGIN_ERR) {
                             if (getActivity() !=null) {
                                 getActivity().onBackPressed();
                                 BBSApplication.setAccount(Account.GUEST);
                             }
+
                         }
                     }
                 });

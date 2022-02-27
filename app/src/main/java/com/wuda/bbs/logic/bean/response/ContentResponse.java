@@ -1,12 +1,19 @@
 package com.wuda.bbs.logic.bean.response;
 
-public class ContentResponse<T> extends BaseResponse {
+public class ContentResponse<T> {
+
+    ResultCode resultCode = ResultCode.SUCCESS;
+    String massage;  // 附带信息，=> Error
 
     private T content;
     private int currentPage;
     private int totalPage;
 
     public ContentResponse() {
+    }
+
+    public ContentResponse(T content) {
+        this.content = content;
     }
 
     public ContentResponse(ResultCode resultCode, String massage) {
@@ -26,6 +33,10 @@ public class ContentResponse<T> extends BaseResponse {
         this.content = content;
         this.currentPage = currentPage;
         this.totalPage = totalPage;
+    }
+
+    public boolean isSuccessful() {
+        return resultCode == ResultCode.SUCCESS;
     }
 
     public ResultCode getResultCode() {

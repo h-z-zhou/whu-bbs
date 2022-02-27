@@ -1,6 +1,8 @@
 package com.wuda.bbs.ui.account;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.KeyEvent;
@@ -20,7 +22,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.utils.validator.TextValidator;
 
@@ -105,10 +107,22 @@ public class RegisterFragment extends BaseFragment {
 
     private void eventBinding() {
 
-        mViewModel.getBaseResponseLiveData().observe(getViewLifecycleOwner(), new Observer<BaseResponse>() {
+        mViewModel.getResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<Object>>() {
             @Override
-            public void onChanged(BaseResponse baseResponse) {
-                new android.app.AlertDialog.Builder(getContext()).setMessage(baseResponse.getMassage()).create().show();
+            public void onChanged(ContentResponse<Object> objectContentResponse) {
+                new AlertDialog.Builder(getContext())
+                        .setMessage(objectContentResponse.getMassage())
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (objectContentResponse.isSuccessful()) {
+                                    if (getActivity() != null)
+                                        getActivity().onBackPressed();
+                                }
+                            }
+                        })
+                        .create()
+                        .show();
             }
         });
 

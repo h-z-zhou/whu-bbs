@@ -21,8 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Friend;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
-import com.wuda.bbs.logic.bean.response.FriendResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
@@ -104,6 +103,7 @@ public class FriendActivity extends AppCompatActivity {
         mViewModel.friendList.observe(this, new Observer<List<Friend>>() {
             @Override
             public void onChanged(List<Friend> friends) {
+                adapter.setMore(false);
                 adapter.setContents(friends);
                 FriendDao friendDao = AppDatabase.getDatabase(FriendActivity.this).getFriendDao();
                 friendDao.insertFriends(friends);
@@ -113,16 +113,11 @@ public class FriendActivity extends AppCompatActivity {
 
 
     private void requestAllFriendsFromServer() {
-        FriendResponseHandler responseHandler = new FriendResponseHandler() {
+        NetworkEntry.requestFriend(new FriendResponseHandler() {
             @Override
-            public void onResponseHandled(BaseResponse baseResponse) {
-                if (baseResponse.isSuccessful()) {
-                    if (baseResponse instanceof FriendResponse) {
-                        mViewModel.friendList.postValue(((FriendResponse)baseResponse).getFriendList());
-                    }
-                }
+            public void onResponseHandled(ContentResponse<List<Friend>> response) {
+                mViewModel.friendList.postValue(response.getContent());
             }
-        };
-        NetworkEntry.requestFriend(responseHandler);
+        });
     }
 }

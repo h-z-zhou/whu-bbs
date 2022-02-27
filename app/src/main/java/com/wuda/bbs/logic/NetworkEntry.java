@@ -3,29 +3,29 @@ package com.wuda.bbs.logic;
 import androidx.annotation.NonNull;
 
 import com.wuda.bbs.logic.bean.Account;
-import com.wuda.bbs.logic.bean.response.AccountResponse;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.UserInfo;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
-import com.wuda.bbs.utils.network.BBSCallback2;
-import com.wuda.bbs.utils.network.BBSCallback22;
-import com.wuda.bbs.utils.network.BBSCallback3;
+import com.wuda.bbs.utils.network.AuthBBSCallback;
 import com.wuda.bbs.utils.network.MobileService;
+import com.wuda.bbs.utils.network.NoAuthBBSCallback;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.RootServiceGBKWrapper;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
-import com.wuda.bbs.utils.networkResponseHandler.BaseResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.DetailArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
+import com.wuda.bbs.utils.networkResponseHandler.FavArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FavBoardHandler;
-import com.wuda.bbs.utils.networkResponseHandler.FindPasswordResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FriendResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.HotArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
-import com.wuda.bbs.utils.networkResponseHandler.TodayNewArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.RecommendArticleHandler;
-import com.wuda.bbs.utils.networkResponseHandler.RegisterResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SetPasswordResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.SettingParamHandler;
+import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.TodayNewArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.TopicArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
@@ -50,14 +50,16 @@ public class NetworkEntry {
     // Account
     // *******************************
 
-
     public static void login(Account account, AccountResponseHandler responseHandler) {
 
-//        Map<String, String> form = new HashMap<>();
-//        form.put("userId", account.getId());
-
-//        mMobileService.get("userInfo", form).enqueue(new BBSCallback3(responseHandler));
-        _login(account, responseHandler);
+        requestUserInfo(account.getId(), new UserInfoResponseHandler() {
+            @Override
+            public void onResponseHandled(ContentResponse<UserInfo> response) {
+                UserInfo info = response.getContent();
+                account.setAvatar(info.getAvatar());
+                _login(account, responseHandler);
+            }
+        });
     }
 
     private static void _login(Account account, AccountResponseHandler responseHandler) {
@@ -85,55 +87,73 @@ public class NetworkEntry {
                     }
                 }
 
-                AccountResponse accountResponse;
+//                AccountResponse accountResponse;
+                ContentResponse<Account> accountResponse;
 
                 // 是否成功登录
                 String userId = cookiesFilter.get("UTMPUSERID");
                 if (userId == null)
                     userId = "guest";
                 if (userId.equals("guest") || userId.equals("deleted")) {
-                    accountResponse = new AccountResponse();
-                    accountResponse.setResultCode(ResultCode.LOGIN_ERR);
-                    accountResponse.setMassage("登录失败，请检查帐号和密码！");
+                    accountResponse = new ContentResponse<>(ResultCode.LOGIN_ERR, "登录失败，请检查帐号和密码！");
                     responseHandler.onResponseHandled(accountResponse);
                     return;
                 }
 
-                responseHandler.onResponseHandled(new AccountResponse(account));
+                accountResponse = new ContentResponse<>();
+                accountResponse.setContent(account);
+
+                responseHandler.onResponseHandled(accountResponse);
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                AccountResponse accountResponse = new AccountResponse();
-                accountResponse.setResultCode(ResultCode.CONNECT_ERR);
-                responseHandler.onResponseHandled(accountResponse);
+                responseHandler.onResponseHandled(new ContentResponse<>(ResultCode.CONNECT_ERR, t.getMessage()));
             }
         });
     }
 
-    public static void logout(BaseResponseHandler responseHandler) {
-        mRootService.get("bbslogout.php").enqueue(new BBSCallback2(responseHandler));
+    public static void logout(SimpleResponseHandler responseHandler) {
+        mRootService.get("bbslogout.php").enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                String cookies = response.headers().get("Set-Cookie");
+                if (cookies == null) {
+                    responseHandler.onResponseHandled(new ContentResponse<>(ResultCode.LOGIN_ERR, "退出成功"));
+                } else {
+                    responseHandler.onResponseHandled(new ContentResponse<>(ResultCode.ERROR, "未知错误"));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                    responseHandler.onResponseHandled(new ContentResponse<>(ResultCode.CONNECT_ERR, t.getMessage()));
+            }
+        });
     }
 
-    public static void register(Map<String, String> form, RegisterResponseHandler responseHandler) {
-        mRootServiceGBKWrapper.post("bbsreg.php", form).enqueue(new BBSCallback3(responseHandler));
+    public static void register(Map<String, String> form, SimpleResponseHandler handler) {
+        mRootServiceGBKWrapper.post("bbsreg.php", form).enqueue(new NoAuthBBSCallback<>(handler));
     }
 
-    public static void setPassword(Map<String, String> form, SetPasswordResponseHandler responseHandler) {
+    public static void setPassword(Map<String, String> form, SetPasswordResponseHandler handler) {
         Map<String, String> queryMap = new HashMap<>();
         queryMap.put("do", "");
 
-        mRootService.post("bbspwd.php", queryMap, form).enqueue(new BBSCallback2(responseHandler));
+        mRootService.post("bbspwd.php", queryMap, form).enqueue(new AuthBBSCallback<>(handler));
     }
 
-    public static void findPassword(Map<String, String> form, BaseResponseHandler responseHandler) {
+    public static void findPassword(Map<String, String> form, SimpleResponseHandler responseHandler) {
 
-        mRootService.post("r/doreset.php", form).enqueue(new BBSCallback3(new FindPasswordResponseHandler() {
-            @Override
-            public void onResponseHandled(BaseResponse baseResponse) {
-                responseHandler.onResponseHandled(baseResponse);
-            }
-        }));
+        mRootService.post("r/doreset.php", form).enqueue(new NoAuthBBSCallback<>(responseHandler));
+    }
+
+    public static void requestSettingParam(SettingParamHandler responseHandler) {
+        mRootService.get("wForum/userparam.php").enqueue(new AuthBBSCallback<>(responseHandler));
+    }
+
+    public static void setSettingParam(Map<String, String> form, WebResultHandler handler) {
+        mRootService.post("wForum/saveuserparam.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     // *******************************
@@ -144,34 +164,59 @@ public class NetworkEntry {
         Map<String, String> form = new HashMap<>();
         form.put("userId", userId);
 
-        mMobileService.get("userInfo", form).enqueue(new BBSCallback3(responseHandler));
+        mMobileService.get("userInfo", form).enqueue(new NoAuthBBSCallback<>(responseHandler));
     }
-
 
     public static void requestFriend(FriendResponseHandler responseHandler) {
         Map<String, String> form = new HashMap<>();
         form.put("list", "all");
 
-        mMobileService.get("friend", form).enqueue(new BBSCallback2(responseHandler));
+        mMobileService.get("friend", form).enqueue(new AuthBBSCallback<>(responseHandler));
+    }
+
+    public static void operateFriend(Map<String, String> form, SimpleResponseHandler handler) {
+        mMobileService.get(form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     // *******************************
     // Article
     // *******************************
     public static void requestRecommendArticle(RecommendArticleHandler responseHandler) {
-        mMobileService.get("recomm").enqueue(new BBSCallback3(responseHandler));
+        mMobileService.get("recomm").enqueue(new NoAuthBBSCallback<>(responseHandler));
     }
 
     public static void requestTodayNewArticle(TodayNewArticleHandler responseHandler) {
-        mRootService.get("wForum/newtopic.php").enqueue(new BBSCallback3(responseHandler));
+        mRootService.get("wForum/newtopic.php").enqueue(new NoAuthBBSCallback<>(responseHandler));
     }
 
     public static void requestHotArticle(HotArticleHandler responseHandler) {
-        mMobileService.get("hot").enqueue(new BBSCallback3(responseHandler));
+        mMobileService.get("hot").enqueue(new NoAuthBBSCallback<>(responseHandler));
     }
 
     public static void requestTopicArticle(Map<String, String> form, TopicArticleHandler responseHandler) {
-        mMobileService.get("topics", form).enqueue(new BBSCallback3(responseHandler));
+        mMobileService.get("topics", form).enqueue(new NoAuthBBSCallback<>(responseHandler));
+    }
+
+    public static void requestArticleContent(Map<String, String> form, DetailArticleHandler handler) {
+        mMobileService.get("read", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void postArticle(Map<String, String> form, WebResultHandler handler) {
+        mRootServiceGBKWrapper.post("wForum/dopostarticle.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void requestFavArticle(FavArticleHandler handler) {
+        Map<String, String> form = new HashMap<>();
+        form.put("pid", "2");
+        mRootService.get("bbssfav.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void addArticle2Fav(Map<String, String> form, WebResultHandler handler) {
+        mRootServiceGBKWrapper.get("bbssfav.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void removeFavArticle(Map<String, String> form, WebResultHandler handler) {
+        mRootService.get("bbssfav.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     // *******************************
@@ -179,11 +224,15 @@ public class NetworkEntry {
     // *******************************
 
     public static void requestDetailBoard(DetailBoardHandler responseHandler) {
-        mMobileService.get("boards").enqueue(new BBSCallback3(responseHandler));
+        mMobileService.get("boards").enqueue(new NoAuthBBSCallback<>(responseHandler));
     }
 
     public static void requestFavBoard(FavBoardHandler responseHandler) {
-        mMobileService.get("favor").enqueue(new BBSCallback2(responseHandler));
+        mMobileService.get("favor").enqueue(new AuthBBSCallback<>(responseHandler));
+    }
+
+    public static void operateFavBoard(Map<String, String> form, SimpleResponseHandler handler) {
+        mRootService.get("bbsfav.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     // *******************************
@@ -192,17 +241,17 @@ public class NetworkEntry {
 
 
 
-    public static void requestMailList1(Map<String, String> form, MailListHandler responseHandler) {
-        mMobileService.get("mail", form).enqueue(new BBSCallback22<>(responseHandler));
+    public static void requestMailList(Map<String, String> form, MailListHandler responseHandler) {
+        mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(responseHandler));
     }
 
 
     public static void requestMailContent(Map<String, String> form, MailContentHandler responseHandler) {
-        mMobileService.get("mail", form).enqueue(new BBSCallback22<>(responseHandler));
+        mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(responseHandler));
     }
 
     public static void sendMail(Map<String, String> form, WebResultHandler responseHandler) {
-        mRootServiceGBKWrapper.post("wForum/dosendmail.php", form).enqueue(new BBSCallback22<>(responseHandler));
+        mRootServiceGBKWrapper.post("wForum/dosendmail.php", form).enqueue(new AuthBBSCallback<>(responseHandler));
     }
 
     // *******************************

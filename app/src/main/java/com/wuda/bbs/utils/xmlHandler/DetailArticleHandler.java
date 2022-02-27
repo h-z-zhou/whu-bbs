@@ -7,8 +7,12 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DetailArticleHandler extends DefaultHandler {
     DetailArticleResponse detailArticleResponse;
+    List<DetailArticle> articleList;
     DetailArticle detailArticle;
     String nodeName;
 
@@ -31,6 +35,7 @@ public class DetailArticleHandler extends DefaultHandler {
         super.startElement(uri, localName, qName, attributes);
         nodeName = localName;
         if (localName.equals("page")) {
+            articleList = new ArrayList<>();
             detailArticleResponse = new DetailArticleResponse();
             detailArticleResponse.setGID(attributes.getValue("GID"));
             detailArticleResponse.setCurrentPage(Integer.parseInt(attributes.getValue("num")));
@@ -73,8 +78,11 @@ public class DetailArticleHandler extends DefaultHandler {
         super.endElement(uri, localName, qName);
 
         switch (localName) {
+            case "page":
+                detailArticleResponse.setContent(articleList);
+                break;
             case "article":
-                detailArticleResponse.addDetailArticle(detailArticle);
+                articleList.add(detailArticle);
                 break;
             case "floor":
                 detailArticle.setFloor(floor.toString());

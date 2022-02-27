@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Account;
-import com.wuda.bbs.logic.bean.response.AccountResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
 
 import java.util.List;
@@ -103,16 +103,16 @@ public class LoginFragment extends BaseFragment {
             }
         });
 
-        mViewModel.getAccountResponseLiveData().observe(getViewLifecycleOwner(), new Observer<AccountResponse>() {
+        mViewModel.getAccountResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<Account>>() {
             @Override
-            public void onChanged(AccountResponse accountResponse) {
-                if (accountResponse.isSuccessful()) {
-                    mSharedViewModel.updateCurrentAccount(accountResponse.getAccount());
+            public void onChanged(ContentResponse<Account> accountContentResponse) {
+                if (accountContentResponse.isSuccessful()) {
+                    mSharedViewModel.updateCurrentAccount(accountContentResponse.getContent());
                     if (getActivity() != null) {
                         getActivity().onBackPressed();
                     }
                 } else {
-                    Toast.makeText(getContext(), accountResponse.getMassage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), accountContentResponse.getMassage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

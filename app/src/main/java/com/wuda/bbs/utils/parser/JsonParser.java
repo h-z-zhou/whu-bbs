@@ -1,34 +1,33 @@
 package com.wuda.bbs.utils.parser;
 
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.logic.bean.response.ResultCode;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JsonParser {
 
-    public static BaseResponse parseFindPasswordResponse(String responseText) {
-        BaseResponse response = new BaseResponse();
+    public static ContentResponse<String> parseFindPasswordResponse(String responseText) {
+        ContentResponse<String> response;
 
         JSONObject responseJson = null;
         try {
             responseJson = new JSONObject(responseText);
             responseJson.has("success");
             if (responseJson.has("success")) {
-                response.setMassage(responseJson.getString("success"));
+                response = new ContentResponse<>();
+                response.setContent(responseJson.getString("success"));
+//                response.setMassage(responseJson.getString("success"));
             } else if (responseJson.has("error")) {
-                response.setSuccessful(false);
-                response.setMassage(responseJson.getString("error"));
+                response = new ContentResponse<>(ResultCode.ERROR, responseJson.getString("error"));
             } else {
-                response.setSuccessful(false);
-                response.setMassage("未定义错误！");
+                response = new ContentResponse<>(ResultCode.ERROR, "未定义错误！");
             }
         } catch (JSONException e) {
+            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
             e.printStackTrace();
-            response.setSuccessful(false);
-            response.setMassage(e.getMessage());
         }
-
         return response;
     }
 }

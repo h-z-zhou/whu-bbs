@@ -9,11 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.ui.main.mail.MailContentActivity;
+import com.wuda.bbs.ui.mail.MailContentActivity;
 
 import java.util.ArrayList;
 import java.util.List;

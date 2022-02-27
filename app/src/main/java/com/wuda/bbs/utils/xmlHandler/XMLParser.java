@@ -1,14 +1,14 @@
 package com.wuda.bbs.utils.xmlHandler;
 
+import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.DetailBoard;
 import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.Friend;
 import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
+import com.wuda.bbs.logic.bean.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.DetailArticleResponse;
-import com.wuda.bbs.logic.bean.response.DetailBoardResponse;
-import com.wuda.bbs.logic.bean.response.FriendResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
-import com.wuda.bbs.logic.bean.response.UserInfoResponse;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -32,9 +32,9 @@ public class XMLParser {
         }
     }
 
-    public static DetailBoardResponse parseDetailBoard(String xmlData) {
+    public static ContentResponse<List<DetailBoard>> parseDetailBoard(String xmlData) {
 
-        DetailBoardResponse response = new DetailBoardResponse();
+        ContentResponse<List<DetailBoard>> response;
 
         xmlData = xmlData.replaceAll("true", "\"true\"");
         xmlData = xmlData.replace("&", "AND");
@@ -43,16 +43,16 @@ public class XMLParser {
         xmlReader.setContentHandler(boardHandler);
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
-            response.setDetailBoardList(boardHandler.getHandledResult());
+            response = new ContentResponse<>();
+            response.setContent(boardHandler.getHandledResult());
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            response.setSuccessful(false);
-            response.setMassage(e.getMessage());
+            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
         }
         return response;
     }
 
-    public static BriefArticleResponse parseRecommend(String xmlData) {
+    public static ContentResponse<List<BriefArticle>> parseRecommend(String xmlData) {
         RecommendHandler recommendHandler = new RecommendHandler();
         xmlReader.setContentHandler(recommendHandler);
         try {
@@ -61,10 +61,10 @@ public class XMLParser {
             e.printStackTrace();
         }
 
-        return recommendHandler.getArticleResponse();
+        return recommendHandler.getBriefArticleResponse();
     }
 
-    public static BriefArticleResponse parseHot(String xmlData) {
+    public static ContentResponse<List<BriefArticle>> parseHot(String xmlData) {
         HotHandler hotHandler = new HotHandler();
         xmlReader.setContentHandler(hotHandler);
         try {
@@ -73,10 +73,10 @@ public class XMLParser {
             e.printStackTrace();
         }
 
-        return hotHandler.getArticleResponse();
+        return hotHandler.getBriefArticleResponse();
     }
 
-    public static BriefArticleResponse parseTopic(String xmlData) {
+    public static ContentResponse<List<BriefArticle>> parseTopic(String xmlData) {
         TopicHandler topicHandler = new TopicHandler();
         xmlReader.setContentHandler(topicHandler);
         try {
@@ -85,7 +85,7 @@ public class XMLParser {
             e.printStackTrace();
         }
 
-        return topicHandler.getArticleResponse();
+        return topicHandler.getBriefArticleResponse();
     }
 
     public static ContentResponse<List<FavBoard>> parseFavorBoard(String xmlData) {
@@ -109,50 +109,56 @@ public class XMLParser {
     }
 
     public static DetailArticleResponse parseDetailArticle(String xmlData) {
+        DetailArticleResponse response;
+
         DetailArticleHandler detailArticleHandler = new DetailArticleHandler();
         xmlReader.setContentHandler(detailArticleHandler);
 
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
+            response = detailArticleHandler.getDetailArticleResponse();
         } catch (IOException | SAXException e) {
             e.printStackTrace();
+            response = new DetailArticleResponse(ResultCode.DATA_ERR, e.getMessage());
         }
 
-        return detailArticleHandler.getDetailArticleResponse();
+        return response;
     }
 
-    public static UserInfoResponse parseUserInfo(String xmlData) {
+    public static ContentResponse<UserInfo> parseUserInfo(String xmlData) {
 
-        UserInfoResponse response = new UserInfoResponse();
+//        UserInfoResponse response = new UserInfoResponse();
+        ContentResponse<UserInfo> response;
 
         UserInfoHandler userInfoHandler = new UserInfoHandler();
         xmlReader.setContentHandler(userInfoHandler);
 
         try {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
-            response.setUserInfo(userInfoHandler.getUserInfo());
+            response = new ContentResponse<>();
+            response.setContent(userInfoHandler.userInfo);
+//            response.setUserInfo(userInfoHandler.getUserInfo());
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            response.setSuccessful(false);
-            response.setMassage(e.getMessage());
+            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
         }
 
         return response;
     }
 
-    public static FriendResponse parseFriends(String xmlData) {
-        FriendResponse response = new FriendResponse();
+    public static ContentResponse<List<Friend>> parseFriends(String xmlData) {
+        ContentResponse<List<Friend>> response;
 
         FriendHandler friendHandler = new FriendHandler();
         xmlReader.setContentHandler(friendHandler);
 
         try {
+            response = new ContentResponse<>();
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
-            response.setFriendList(friendHandler.getFriendList());
+            response.setContent(friendHandler.getFriendList());
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            response.setSuccessful(false);
-            response.setMassage(e.getMessage());
+            response = new ContentResponse<>(ResultCode.CONNECT_ERR, e.getMessage());
         }
 
         return response;

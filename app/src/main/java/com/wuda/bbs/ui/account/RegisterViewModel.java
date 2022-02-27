@@ -4,26 +4,29 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
-import com.wuda.bbs.utils.networkResponseHandler.RegisterResponseHandler;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 
 import java.util.Map;
 
 public class RegisterViewModel extends ViewModel {
-    private MutableLiveData<BaseResponse> baseResponseLiveData;
+    private MutableLiveData<ContentResponse<Object>> responseLiveData;
 
-    public MutableLiveData<BaseResponse> getBaseResponseLiveData() {
-        if (baseResponseLiveData == null) {
-            baseResponseLiveData = new MutableLiveData<>();
+    public MutableLiveData<ContentResponse<Object>> getResponseLiveData() {
+        if (responseLiveData == null) {
+            responseLiveData = new MutableLiveData<>();
         }
-        return baseResponseLiveData;
+        return responseLiveData;
     }
 
     public void register(Map<String, String> form) {
-        NetworkEntry.register(form, new RegisterResponseHandler() {
+
+        NetworkEntry.register(form, new SimpleResponseHandler() {
             @Override
-            public void onResponseHandled(BaseResponse baseResponse) {
-                baseResponseLiveData.postValue(baseResponse);
+            public void onResponseHandled(ContentResponse<Object> response) {
+                if (response.isSuccessful()) {
+                    responseLiveData.postValue(response);
+                }
             }
         });
     }

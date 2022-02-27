@@ -15,24 +15,17 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
-import com.wuda.bbs.utils.network.NetTool;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.network.WebForumService;
-import com.wuda.bbs.utils.parser.HtmlParser;
+import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PostArticleActivity extends AppCompatActivity {
 
@@ -142,31 +135,10 @@ public class PostArticleActivity extends AppCompatActivity {
         form.put("Content", content.toString());
         form.put("signature", "");
 
-        Map<String, String> encodedForm = NetTool.encodeUrlFormWithGBK(form);
-
-        WebForumService webForumService = ServiceCreator.create(WebForumService.class);
-        webForumService.postWithEncoded("dopostarticle.php", encodedForm).enqueue(new Callback<ResponseBody>() {
+        NetworkEntry.postArticle(form, new WebResultHandler() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    String text = new String(response.body().bytes(), "GBK");
-                    BaseResponse baseResponse = HtmlParser.parsePostArticleResponse(text);
-                    if (!baseResponse.isSuccessful()) {
-                        new AlertDialog.Builder(PostArticleActivity.this)
-                                .setTitle("出错啦")
-                                .setMessage(baseResponse.getMassage())
-                                .setPositiveButton("确定", null)
-                                .create()
-                                .show();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+            public void onResponseHandled(ContentResponse<WebResult> response) {
+                String text = response.getContent().getResult();
             }
         });
     }

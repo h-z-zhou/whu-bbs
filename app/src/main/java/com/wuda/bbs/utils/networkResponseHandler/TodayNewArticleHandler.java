@@ -2,22 +2,22 @@ package com.wuda.bbs.utils.networkResponseHandler;
 
 import androidx.annotation.NonNull;
 
-import com.wuda.bbs.logic.bean.response.BaseResponse;
-import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
+import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.utils.parser.HtmlParser;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
-public abstract class TodayNewArticleHandler implements BaseResponseHandler {
+public abstract class TodayNewArticleHandler implements ContentResponseHandler<List<BriefArticle>> {
     @Override
-    public BaseResponse handleNetworkResponse(@NonNull byte[] data) {
+    public ContentResponse<List<BriefArticle>> handleNetworkResponse(@NonNull byte[] data) {
         try {
-            String html = new String(data, "GBK");
-            return HtmlParser.parseNewsToday(html);
+            return HtmlParser.parseNewsToday(new String(data, "GBK"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return new BriefArticleResponse(ResultCode.DATA_ERR, e.getMessage());
+            return new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
         }
     }
 }

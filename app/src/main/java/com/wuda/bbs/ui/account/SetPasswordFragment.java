@@ -10,13 +10,14 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.utils.validator.TextValidator;
 
@@ -66,16 +67,20 @@ public class SetPasswordFragment extends BaseFragment {
 
     private void eventBinding() {
 
-        mViewModel.getBaseResponseLiveData().observe(getViewLifecycleOwner(), new Observer<BaseResponse>() {
+        mViewModel.getResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<String>>() {
             @Override
-            public void onChanged(BaseResponse baseResponse) {
+            public void onChanged(ContentResponse<String> stringContentResponse) {
                 String msg;
-                if (baseResponse.isSuccessful()) {
-                    msg = baseResponse.getMassage();
+                if (stringContentResponse.isSuccessful()) {
+                    msg = stringContentResponse.getMassage();
                 } else {
-                    msg = baseResponse.getResultCode().getMsg();
+                    msg = stringContentResponse.getResultCode().getMsg();
                 }
-                new android.app.AlertDialog.Builder(getContext()).setMessage(msg).create().show();
+                new AlertDialog.Builder(getContext())
+                        .setMessage(msg)
+                        .setPositiveButton("确定", null)
+                        .create().
+                        show();
             }
         });
 

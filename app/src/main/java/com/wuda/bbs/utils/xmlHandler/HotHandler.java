@@ -5,7 +5,11 @@ import com.wuda.bbs.logic.bean.BriefArticle;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HotHandler extends BaseBriefArticleHandler {
+    List<BriefArticle> articleList;
     BriefArticle briefArticle;
     private String nodeName;
 
@@ -32,7 +36,9 @@ public class HotHandler extends BaseBriefArticleHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         nodeName = localName;
-        if (nodeName.equals("hot")) {
+        if (nodeName.equals("hots")) {
+            articleList = new ArrayList<>();
+        } else if (nodeName.equals("hot")) {
             briefArticle = new BriefArticle();
             briefArticle.setFlag(BriefArticle.FLAG_SYSTEM);
         }
@@ -72,8 +78,11 @@ public class HotHandler extends BaseBriefArticleHandler {
         super.endElement(uri, localName, qName);
 
         switch (localName) {
+            case "hots":
+                briefArticleResponse.setContent(articleList);
+                break;
             case "hot":
-                briefArticleResponse.addArticle(briefArticle);
+                articleList.add(briefArticle);
                 break;
             case "title":
                 briefArticle.setTitle(title.toString());

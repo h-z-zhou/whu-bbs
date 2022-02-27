@@ -4,27 +4,29 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.utils.networkResponseHandler.SetPasswordResponseHandler;
 
 import java.util.Map;
 
 public class SetPasswordViewModel extends ViewModel {
     // TODO: Implement the ViewModel
-    private MutableLiveData<BaseResponse> baseResponseLiveData;
+    private MutableLiveData<ContentResponse<String>> responseLiveData;
 
-    public MutableLiveData<BaseResponse> getBaseResponseLiveData() {
-        if (baseResponseLiveData == null) {
-            baseResponseLiveData = new MutableLiveData<>();
+    public MutableLiveData<ContentResponse<String>> getResponseLiveData() {
+        if (responseLiveData == null) {
+            responseLiveData = new MutableLiveData<>();
         }
-        return baseResponseLiveData;
+        return responseLiveData;
     }
 
     public void setPassword(Map<String, String> form) {
         NetworkEntry.setPassword(form, new SetPasswordResponseHandler() {
             @Override
-            public void onResponseHandled(BaseResponse baseResponse) {
-                baseResponseLiveData.postValue(baseResponse);
+            public void onResponseHandled(ContentResponse<String> response) {
+                if (response.isSuccessful()) {
+                    responseLiveData.postValue(response);
+                }
             }
         });
     }

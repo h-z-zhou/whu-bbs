@@ -8,7 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.ui.main.board.BoardActivity;
+import com.wuda.bbs.ui.board.BoardActivity;
 
 import java.util.List;
 

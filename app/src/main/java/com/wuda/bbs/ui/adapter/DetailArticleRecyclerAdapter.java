@@ -32,13 +32,15 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     Context mContext;
     List<DetailArticle> mDetailArticleList;
     Intent userInfoIntent;
+    String mGroupId;
     String mBoardId;
 
     private final int TYPE_CONTENT = 0;
     private final int TYPE_REPLY = 1;
 
-    public DetailArticleRecyclerAdapter(Context context, String boardId) {
+    public DetailArticleRecyclerAdapter(Context context, String groupId, String boardId) {
         mContext = context;
+        mGroupId = groupId;
         mBoardId = boardId;
         mDetailArticleList = new ArrayList<>();
         userInfoIntent = new Intent(mContext, UserInfoActivity.class);
@@ -68,10 +70,12 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             ((ReplyViewHolder) holder).replierUsername_tv.setText(article.getAuthor());
             ((ReplyViewHolder) holder).replyTime_tv.setText(article.getTime());
             ((ReplyViewHolder) holder).replyContent_tv.setText(replyContentBuilder(article));
-            Glide.with(mContext)
-                    .load(NetConst.BASE + "/" + article.getUserFaceImg())
-                    .error(R.drawable.ic_face)
-                    .into(((ReplyViewHolder) holder).replierAvatar_iv);
+            if (!article.getUserFaceImg().equals("wForum/")) {
+                Glide.with(mContext)
+                        .load(NetConst.BASE + "/" + article.getUserFaceImg())
+                        .error(R.drawable.ic_face)
+                        .into(((ReplyViewHolder) holder).replierAvatar_iv);
+            }
             ((ReplyViewHolder) holder).replierAvatar_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -86,6 +90,7 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 //                    replyDialog.show();
                     Intent intent = new Intent(mContext, ReplyActivity.class);
                     intent.putExtra("article", article);
+                    intent.putExtra("groupId", mGroupId);
                     intent.putExtra("boardId", mBoardId);
                     mContext.startActivity(intent);
                 }
@@ -95,10 +100,13 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             ((ContentViewHolder) holder).authorUsername_tv.setText(article.getAuthor());
             ((ContentViewHolder) holder).postTime_tv.setText(article.getTime());
             ((ContentViewHolder) holder).postContent_tv.setText(article.getContent());
-            Glide.with(mContext)
-                    .load(NetConst.BASE + "/" + article.getUserFaceImg())
-                    .error(R.drawable.ic_face)
-                    .into(((ContentViewHolder) holder).authorAvatar_iv);
+            if (!article.getUserFaceImg().equals("wForum/")) {
+                Glide.with(mContext)
+                        .load(NetConst.BASE + "/" + article.getUserFaceImg())
+                        .error(R.drawable.ic_face)
+                        .into(((ContentViewHolder) holder).authorAvatar_iv);
+            }
+
 //            ((ContentViewHolder) holder).replyNum_tv.setText(article.);
             ((ContentViewHolder) holder).authorAvatar_iv.setOnClickListener(new View.OnClickListener() {
                 @Override

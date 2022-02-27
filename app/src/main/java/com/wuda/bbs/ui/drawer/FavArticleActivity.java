@@ -1,5 +1,9 @@
 package com.wuda.bbs.ui.drawer;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,32 +12,19 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ProgressDialog;
-import android.os.Bundle;
-import android.view.View;
-
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.DetailBoard;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.FavArticle;
-import com.wuda.bbs.logic.bean.Treasure;
-import com.wuda.bbs.logic.dao.AppDatabase;
-import com.wuda.bbs.logic.dao.DetailBoardDao;
+import com.wuda.bbs.logic.bean.WebResult;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.FavArticleAdapter;
-import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.NetTool;
-import com.wuda.bbs.utils.parser.HtmlParser;
-import com.wuda.bbs.utils.network.RootService;
-import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.utils.networkResponseHandler.FavArticleHandler;
+import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class FavArticleActivity extends AppCompatActivity {
 
@@ -60,7 +51,6 @@ public class FavArticleActivity extends AppCompatActivity {
         adapter = new FavArticleAdapter(FavArticleActivity.this, new ArrayList<>());
         favArticle_rv.setAdapter(adapter);
 
-//        favArticle_rv.setAdapter(new FavArticleAdapter(FavArticleActivity.this, new ArrayList<>()));
         favArticle_rv.addItemDecoration(new DividerItemDecoration(FavArticleActivity.this, DividerItemDecoration.VERTICAL));
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
@@ -86,6 +76,8 @@ public class FavArticleActivity extends AppCompatActivity {
                 if (favArticle != null) {
                     removeFavArticle(favArticle);
                 }
+                // 防止 Footer 被移除
+                adapter.updateFooter();
             }
         });
         mItemTouchHelper.attachToRecyclerView(favArticle_rv);
@@ -96,95 +88,26 @@ public class FavArticleActivity extends AppCompatActivity {
 
     private void requestFavArticleFromServer() {
 
-        ProgressDialog progressDialog = new ProgressDialog(FavArticleActivity.this);
-        progressDialog.setMessage("请求中~");
-        progressDialog.show();
-
-        RootService rootService = ServiceCreator.create(RootService.class);
-        Map<String, String> form = new HashMap<>();
-        form.put("pid", "2");
-        rootService.get("bbssfav.php", form).enqueue(new BBSCallback<ResponseBody>(FavArticleActivity.this) {
+        NetworkEntry.requestFavArticle(new FavArticleHandler() {
             @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = new String(response.body().bytes(), "GBK");
-                    List<Treasure> treasureList = HtmlParser.parseTreasures(FavArticle.class, text);
-                    List<FavArticle> favArticleList = parseSrcUrl(treasureList);
-//                    ((FavArticleAdapter) favArticle_rv.getAdapter()).updateFavArticles(favArticleList);
-                    adapter.setContents(favArticleList);
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public void onResponseHandled(ContentResponse<List<FavArticle>> response) {
+                if (response.isSuccessful()) {
+                    adapter.setContents(response.getContent());
+                    adapter.setMore(false);
                 }
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                progressDialog.dismiss();
             }
         });
     }
 
-    private List<FavArticle> parseSrcUrl(List<Treasure> treasureList) {
-
-        List<FavArticle> favArticleList = new ArrayList<>();
-
-        DetailBoardDao boardDao = AppDatabase.getDatabase(FavArticleActivity.this).getDetailBoardDao();
-        List<DetailBoard> allBoards = boardDao.loadAllBoards();
-
-//        Map<String, String> id2num = allBoards.stream().collect(Collectors.toMap(DetailBoard::getId))
-        Map<String, String> num2id = new HashMap<>();
-        for (DetailBoard board: allBoards) {
-            num2id.put(board.getNumber(), board.getId());
-        }
-
-        // url => bbscon.php?bid=102&id=1105517542
-        // url => wForum/disparticle.php?boardName=Advice&ID=1105517558&pos=1
-
-        for (int i=0; i<treasureList.size(); i++) {
-            FavArticle favArticle = ((FavArticle) treasureList.get(i));
-            String params = favArticle.getSrcUrl().split("\\?")[1];
-            String[] param_arr = params.split("&");
-            String bid, gid;
-            if (param_arr.length == 2) {
-                bid = param_arr[0].split("=")[1];
-                bid = num2id.get(bid);
-                gid = param_arr[1].split("=")[1];
-            } else if (param_arr.length == 3) {
-                bid = param_arr[0].split("=")[1];
-                gid = param_arr[1].split("=")[1];
-            } else {
-                continue;
-            }
-
-            favArticle.setBoardId(bid);
-            favArticle.setGroupId(gid);
-
-            favArticleList.add(favArticle);
-        }
-
-        return favArticleList;
-    }
-
     public void removeFavArticle(FavArticle favArticle) {
-        RootService rootService = ServiceCreator.create(RootService.class);
-        Map<String, String> form = NetTool.extractUrlParam(favArticle.getDelUrl());
-        rootService.get("bbssfav.php", form).enqueue(new BBSCallback<ResponseBody>(FavArticleActivity.this) {
-            @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = new String(response.body().bytes(), "GBK");
-                    List<Treasure> treasureList = HtmlParser.parseTreasures(FavArticle.class, text);
-                    List<FavArticle> favArticleList = parseSrcUrl(treasureList);
-//                    ((FavArticleAdapter) favArticle_rv.getAdapter()).updateFavArticles(favArticleList);
-                    adapter.setContents(favArticleList);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
 
+        Map<String, String> form = NetTool.extractUrlParam(favArticle.getDelUrl());
+        NetworkEntry.removeFavArticle(form, new WebResultHandler() {
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+            public void onResponseHandled(ContentResponse<WebResult> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(FavArticleActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

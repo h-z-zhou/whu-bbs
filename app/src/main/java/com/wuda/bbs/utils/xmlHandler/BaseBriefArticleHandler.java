@@ -1,17 +1,20 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.logic.bean.response.BriefArticleResponse;
+import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.util.List;
+
 public class BaseBriefArticleHandler extends DefaultHandler {
-    BriefArticleResponse briefArticleResponse;
+    ContentResponse<List<BriefArticle>> briefArticleResponse;
 
     public BaseBriefArticleHandler() {
-        briefArticleResponse = new BriefArticleResponse();
+        briefArticleResponse = new ContentResponse<>();
     }
 
-    public BriefArticleResponse getArticleResponse() {
+    public ContentResponse<List<BriefArticle>> getBriefArticleResponse() {
         return briefArticleResponse;
     }
 }

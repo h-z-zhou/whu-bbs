@@ -1,6 +1,5 @@
 package com.wuda.bbs.ui.user;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
@@ -21,23 +20,16 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Friend;
 import com.wuda.bbs.logic.bean.UserInfo;
-import com.wuda.bbs.logic.bean.response.BaseResponse;
-import com.wuda.bbs.logic.bean.response.UserInfoResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
-import com.wuda.bbs.ui.main.mail.NewMailActivity;
-import com.wuda.bbs.utils.network.BBSCallback;
-import com.wuda.bbs.utils.network.MobileService;
+import com.wuda.bbs.ui.mail.NewMailActivity;
 import com.wuda.bbs.utils.network.NetConst;
-import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class UserInfoActivity extends AppCompatActivity {
 
@@ -52,8 +44,6 @@ public class UserInfoActivity extends AppCompatActivity {
     private Button chat_btn;
 
     private UserInfoViewModel mViewModel;
-//    private String userId;
-//    private UserInfo userInfo;
     private boolean isFriend;
     FriendDao friendDao;
 
@@ -123,13 +113,12 @@ public class UserInfoActivity extends AppCompatActivity {
 
         NetworkEntry.requestUserInfo(mViewModel.userId, new UserInfoResponseHandler() {
             @Override
-            public void onResponseHandled(BaseResponse baseResponse) {
-                if (baseResponse.isSuccessful()) {
-                    if (baseResponse instanceof UserInfoResponse) {
-                        UserInfo userInfo = ((UserInfoResponse) baseResponse).getUserInfo();
-                        userInfo.setId(mViewModel.userId);
-                        mViewModel.userInfo.postValue(userInfo);
-                    }
+            public void onResponseHandled(ContentResponse<UserInfo> response) {
+
+                if (response.isSuccessful()) {
+                    UserInfo userInfo = response.getContent();
+                    userInfo.setId(mViewModel.userId);
+                    mViewModel.userInfo.postValue(userInfo);
                 } else {
                     new AlertDialog.Builder(UserInfoActivity.this)
                             .setMessage("该用户不存在")
@@ -145,6 +134,7 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     private void operateFriend() {
@@ -156,24 +146,18 @@ public class UserInfoActivity extends AppCompatActivity {
             form.put("add", mViewModel.userId);
         }
 
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
-        mobileService.get(form).enqueue(new BBSCallback<ResponseBody>(UserInfoActivity.this) {
+        NetworkEntry.operateFriend(form, new SimpleResponseHandler() {
             @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        isFriend = !isFriend;
-                        Friend friend = new Friend(mViewModel.userInfo.getValue().getId(), "", mViewModel.userInfo.getValue().getAvatar());
-                        if (isFriend) {
-                            friendDao.insertFriend(friend);
-                        } else {
-                            friendDao.deleteFriend(friend);
-                        }
-                        setFriendBtnText();
-                        Toast.makeText(UserInfoActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onResponseHandled(ContentResponse<Object> response) {
+                isFriend = !isFriend;
+                Friend friend = new Friend(mViewModel.userInfo.getValue().getId(), "", mViewModel.userInfo.getValue().getAvatar());
+                if (isFriend) {
+                    friendDao.insertFriend(friend);
+                } else {
+                    friendDao.deleteFriend(friend);
+                }
+                setFriendBtnText();
+                Toast.makeText(UserInfoActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
             }
         });
     }

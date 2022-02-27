@@ -5,8 +5,12 @@ import com.wuda.bbs.logic.bean.BriefArticle;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecommendHandler extends BaseBriefArticleHandler {
     BriefArticle briefArticle;
+    List<BriefArticle> articleList;
 
     private String nodeName;
 
@@ -33,7 +37,9 @@ public class RecommendHandler extends BaseBriefArticleHandler {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         nodeName = localName;
-        if (nodeName.equals("recomm")) {
+        if (nodeName.equals("recomms")) {
+            articleList = new ArrayList<>();
+        } else if (nodeName.equals("recomm")) {
             briefArticle = new BriefArticle();
             briefArticle.setFlag(BriefArticle.FLAG_SYSTEM);
         }
@@ -70,8 +76,11 @@ public class RecommendHandler extends BaseBriefArticleHandler {
         super.endElement(uri, localName, qName);
 
         switch (localName) {
+            case "recomms":
+                briefArticleResponse.setContent(articleList);
+                break;
             case "recomm":
-                briefArticleResponse.addArticle(briefArticle);
+                articleList.add(briefArticle);
                 break;
             case "title":
                 briefArticle.setTitle(title.toString());

@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/bottom_nav_home"
-        android:name="com.wuda.bbs.ui.main.home.HomeFragment"
+        android:name="com.wuda.bbs.ui.home.HomeFragment"
         android:label="主页"
         tools:layout="@layout/home_fragment" />
 
     <fragment
         android:id="@+id/bottom_nav_board"
-        android:name="com.wuda.bbs.ui.main.board.FavorBoardFragment"
+        android:name="com.wuda.bbs.ui.board.FavorBoardFragment"
         android:label="收藏板块"
         tools:layout="@layout/favor_board_fragment" />
 
     <fragment
         android:id="@+id/bottom_nav_mail"
-        android:name="com.wuda.bbs.ui.main.mail.MailFragment"
+        android:name="com.wuda.bbs.ui.mail.MailFragment"
         android:label="信件"
         tools:layout="@layout/mail_fragment"/>
 

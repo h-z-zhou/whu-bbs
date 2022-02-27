@@ -4,13 +4,13 @@
     android:id="@+id/boardEntrance_swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.home.BoardEntranceListFragment">
+    tools:context=".ui.home.BoardEntranceFragment">
 
     <ExpandableListView
         android:id="@+id/boardEntrance_expandableListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.home.BoardEntranceListFragment" />
+        tools:context=".ui.home.BoardEntranceFragment" />
 
 <!--    <pokercc.android.expandablerecyclerview.ExpandableRecyclerView-->
 <!--        android:id="@+id/boardEntrance_expandableRecyclerView"-->

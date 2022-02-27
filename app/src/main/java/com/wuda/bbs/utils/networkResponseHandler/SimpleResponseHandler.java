@@ -2,16 +2,16 @@ package com.wuda.bbs.utils.networkResponseHandler;
 
 import androidx.annotation.NonNull;
 
-import com.wuda.bbs.logic.bean.response.BaseResponse;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 
 /*
 *   do nothing，just return BaseResponse with SUCCESS
 *
-*   => login / logout
+*   => login / logout / (add/delete)friend
 * */
-public abstract class SimpleResponseHandler implements BaseResponseHandler {
+public abstract class SimpleResponseHandler implements ContentResponseHandler<Object> {
     @Override
-    public BaseResponse handleNetworkResponse(@NonNull byte[] data) {
-        return new BaseResponse();
+    public ContentResponse<Object> handleNetworkResponse(@NonNull byte[] data) {
+        return new ContentResponse<>();
     }
 }

@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,37 +18,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BriefArticle;
 import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.logic.bean.History;
-import com.wuda.bbs.logic.bean.response.DetailArticleResponse;
+import com.wuda.bbs.logic.bean.WebResult;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.HistoryDao;
+import com.wuda.bbs.ui.account.AccountActivity;
 import com.wuda.bbs.ui.adapter.DetailArticleRecyclerAdapter;
 import com.wuda.bbs.ui.widget.TopicDecoration;
-import com.wuda.bbs.utils.network.BBSCallback;
-import com.wuda.bbs.utils.network.MobileService;
-import com.wuda.bbs.utils.network.NetTool;
-import com.wuda.bbs.utils.network.RootService;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.xmlHandler.XMLParser;
+import com.wuda.bbs.utils.networkResponseHandler.DetailArticleHandler;
+import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Response;
 
 public class DetailArticleActivity extends AppCompatActivity {
 
     BriefArticle mBriefArticle;
     boolean isFavor;
-//    String boardId;
-//    String groupId;
-    DetailArticleResponse detailArticleResponse;
 
     Toolbar toolbar;
     RecyclerView article_rv;
@@ -60,12 +55,10 @@ public class DetailArticleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_article_detail);
 
         mBriefArticle = (BriefArticle) getIntent().getSerializableExtra("briefArticle");
-//        boardId = getIntent().getStringExtra("boardId");
-//        groupId = getIntent().getStringExtra("groupId");
 
         article_rv = findViewById(R.id.detailArticle_recyclerView);
         article_rv.setLayoutManager(new LinearLayoutManager(DetailArticleActivity.this));
-        article_rv.setAdapter(new DetailArticleRecyclerAdapter(DetailArticleActivity.this, mBriefArticle.getBoardID()));
+        article_rv.setAdapter(new DetailArticleRecyclerAdapter(DetailArticleActivity.this, mBriefArticle.getGID(), mBriefArticle.getBoardID()));
         article_rv.addItemDecoration(new TopicDecoration(DetailArticleActivity.this));
 
         toolbar = findViewById(R.id.detailArticle_toolbar);
@@ -120,6 +113,7 @@ public class DetailArticleActivity extends AppCompatActivity {
                 article.setContent(mBriefArticle.getTitle());
 //                article.setAuthor();
                 intent.putExtra("article", article);
+                intent.putExtra("groupId", mBriefArticle.getGID());
                 intent.putExtra("boardId", mBriefArticle.getBoardID());
                 startActivity(intent);
             }
@@ -145,32 +139,40 @@ public class DetailArticleActivity extends AppCompatActivity {
 
 
     private void requestContentFromServer() {
-        MobileService mobileService = ServiceCreator.create(MobileService.class);
         Map<String, String> form = new HashMap<>();
-//        int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("GID", mBriefArticle.getGID());
         form.put("board", mBriefArticle.getBoardID());
         form.put("page", "1");
         Log.d("article", form.toString());
 
-        mobileService.get("read", form).enqueue(new BBSCallback<ResponseBody>(DetailArticleActivity.this) {
+        NetworkEntry.requestArticleContent(form, new DetailArticleHandler() {
             @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    if (response.body() != null) {
-                        String text = response.body().string();
-                        detailArticleResponse = XMLParser.parseDetailArticle(text);
-                        ((DetailArticleRecyclerAdapter) article_rv.getAdapter()).updateDataSet(detailArticleResponse.getDetailArticleList());
+            public void onResponseHandled(ContentResponse<List<DetailArticle>> response) {
+                if (response.isSuccessful()) {
+                    ((DetailArticleRecyclerAdapter) article_rv.getAdapter()).updateDataSet(response.getContent());
+                } else {
+                    if (response.getResultCode() == ResultCode.LOGIN_ERR) {
+                        new AlertDialog.Builder(DetailArticleActivity.this)
+                                .setTitle("未登录")
+                                .setMessage("请先登录")
+                                .setPositiveButton("去登录", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(DetailArticleActivity.this, AccountActivity.class);
+                                        intent.putExtra("isLogin", true);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .create()
+                                .show();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
+
         });
     }
 
     private void add2Favor() {
-        RootService rootService = ServiceCreator.create(RootService.class);
         Map<String, String> form = new HashMap<>();
         // act=add&title=&type=0&pid=2&url=
         form.put("act", "add");
@@ -182,11 +184,12 @@ public class DetailArticleActivity extends AppCompatActivity {
         String url = "wForum/disparticle.php?boardName=" + mBriefArticle.getBoardID() + "&" + "ID=" + mBriefArticle.getGID() + "&pos=1";
         form.put("url", url);
 
-        Map<String, String> encodedForm = NetTool.encodeUrlFormWithGBK(form);
-        rootService.getWithEncoded("bbssfav.php", encodedForm).enqueue(new BBSCallback<ResponseBody>(DetailArticleActivity.this) {
+        NetworkEntry.addArticle2Fav(form, new WebResultHandler() {
             @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                Toast.makeText(DetailArticleActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+            public void onResponseHandled(ContentResponse<WebResult> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(DetailArticleActivity.this, "收藏成功", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

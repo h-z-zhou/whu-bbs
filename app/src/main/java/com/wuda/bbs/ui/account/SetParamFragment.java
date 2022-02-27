@@ -7,21 +7,23 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.response.UserParamResponse;
+import com.wuda.bbs.logic.NetworkEntry;
+import com.wuda.bbs.logic.bean.WebResult;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
-import com.wuda.bbs.utils.network.BBSCallback;
 import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.parser.HtmlParser;
+import com.wuda.bbs.utils.networkResponseHandler.SettingParamHandler;
+import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -115,20 +117,11 @@ public class SetParamFragment extends BaseFragment {
         }
         form.put("Submit", "");
 
-        RootService rootService = ServiceCreator.create(RootService.class);
-        rootService.post("wForum/saveuserparam.php", form).enqueue(new Callback<ResponseBody>() {
+        NetworkEntry.setSettingParam(form, new WebResultHandler() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = new String(response.body().bytes(), "GBK");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-
+            public void onResponseHandled(ContentResponse<WebResult> response) {
+                String text = response.getContent().getResult();
+                Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -139,31 +132,24 @@ public class SetParamFragment extends BaseFragment {
         progressDialog.setMessage("请求中");
         progressDialog.show();
 
-        RootService rootService = ServiceCreator.create(RootService.class);
-        rootService.get("wForum/userparam.php").enqueue(new BBSCallback<ResponseBody>(getContext()) {
+        NetworkEntry.requestSettingParam(new SettingParamHandler() {
             @Override
-            public void onResponseWithoutLogout(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                try {
-                    String text = new String(response.body().bytes(), "GBK");
-                    UserParamResponse userParamResponse = HtmlParser.parseUserParamResponse(text);
-                    if (userParamResponse.isSuccessful()) {
-                        if (getActivity()!=null) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    List<Boolean> userParam = userParamResponse.getParamValues();
-                                    for (int i=0; i<userParam.size(); i++) {
-                                        switches[i].setChecked(userParam.get(i));
-                                    }
-                                    initialed = true;
+            public void onResponseHandled(ContentResponse<List<Boolean>> response) {
+                if (response.isSuccessful()) {
+                    if (getActivity()!=null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                List<Boolean> userParam = response.getContent();
+                                for (int i=0; i<userParam.size(); i++) {
+                                    switches[i].setChecked(userParam.get(i));
                                 }
-                            });
-                        }
+                                initialed = true;
+                            }
+                        });
                     }
-                    progressDialog.dismiss();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+                progressDialog.dismiss();
             }
         });
 
