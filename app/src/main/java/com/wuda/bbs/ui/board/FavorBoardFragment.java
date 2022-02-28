@@ -154,7 +154,7 @@ public class FavorBoardFragment extends Fragment {
         if (BBSApplication.getAccountId().equals(""))
             return;
 
-        List<BaseBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getAccountId());
+        List<FavBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getAccountId());
 
         if (favorBoardList.isEmpty()) {
             if (!hadRequest) {

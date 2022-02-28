@@ -1,13 +1,13 @@
 package com.wuda.bbs.ui.adapter;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,23 +15,25 @@ import androidx.annotation.NonNull;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.ui.board.BoardActivity;
-
 
 import java.util.List;
 
 import pokercc.android.expandablerecyclerview.ExpandableAdapter;
 
-public class BoardEntranceAdapter extends ExpandableAdapter<ExpandableAdapter.ViewHolder> {
-
+public class FavBoardSelectorAdapter extends ExpandableAdapter<ExpandableAdapter.ViewHolder> {
     Context mContext;
     List<String> mSectionList;
-    List<List<BaseBoard>> mSectionBoardList;
+    List<List<Pair<BaseBoard, Boolean>>> mSectionBoardList;
+    OnBoardFavChangedListener mOnBoardFavChangedListener;
 
-    public BoardEntranceAdapter(Context mContext, List<String> mSectionList, List<List<BaseBoard>> mSectionBoardList) {
+    public FavBoardSelectorAdapter(Context mContext, List<String> mSectionList, List<List<Pair<BaseBoard, Boolean>>> mSectionBoardList) {
         this.mContext = mContext;
         this.mSectionList = mSectionList;
         this.mSectionBoardList = mSectionBoardList;
+    }
+
+    public void setOnBoardFavChangedListener(OnBoardFavChangedListener mOnBoardFavChangedListener) {
+        this.mOnBoardFavChangedListener = mOnBoardFavChangedListener;
     }
 
     @Override
@@ -45,44 +47,39 @@ public class BoardEntranceAdapter extends ExpandableAdapter<ExpandableAdapter.Vi
     }
 
     @Override
-    protected void onBindChildViewHolder(@NonNull ViewHolder viewHolder, int i, int i1, @NonNull List<?> list) {
-        BaseBoard board = mSectionBoardList.get(i).get(i1);
-        ((BoardHolder) viewHolder).board_tv.setText(board.getName());
-        ((BoardHolder) viewHolder).board_tv.setOnClickListener(new View.OnClickListener() {
+    protected void onBindChildViewHolder(@NonNull ExpandableAdapter.ViewHolder viewHolder, int i, int i1, @NonNull List<?> list) {
+        Pair<BaseBoard, Boolean> boardSelection = mSectionBoardList.get(i).get(i1);
+        ((BoardHolder) viewHolder).board_cb.setText(boardSelection.first.getName());
+        ((BoardHolder) viewHolder).board_cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, BoardActivity.class);
-                intent.putExtra("board", board);
-                mContext.startActivity(intent);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mOnBoardFavChangedListener.onBoardFavChanged(boardSelection.first, isChecked);
             }
         });
+        ((BoardHolder) viewHolder).board_cb.setChecked(boardSelection.second);
     }
 
     @Override
-    protected void onBindGroupViewHolder(@NonNull ViewHolder viewHolder, int i, boolean b, @NonNull List<?> list) {
+    protected void onBindGroupViewHolder(@NonNull ExpandableAdapter.ViewHolder viewHolder, int i, boolean b, @NonNull List<?> list) {
         ((SectionHolder) viewHolder).sectionName_tv.setText(mSectionList.get(i));
     }
 
     @NonNull
     @Override
-    protected ViewHolder onCreateChildViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        TextView board_tv = new TextView(viewGroup.getContext());
-        board_tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        board_tv.setTextSize(16);
-        board_tv.setPadding(128, 32, 0, 32);
-        board_tv.setBackgroundColor(mContext.getColor(R.color.bg));
-        return new BoardHolder(board_tv);
+    protected ExpandableAdapter.ViewHolder onCreateChildViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fav_board_selector_item, viewGroup, false);
+        return new BoardHolder(view);
     }
 
     @NonNull
     @Override
-    protected ViewHolder onCreateGroupViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    protected ExpandableAdapter.ViewHolder onCreateGroupViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.board_section_item, viewGroup, false);
         return new SectionHolder(view);
     }
 
     @Override
-    protected void onGroupViewHolderExpandChange(@NonNull ViewHolder viewHolder, int i, long l, boolean b) {
+    protected void onGroupViewHolderExpandChange(@NonNull ExpandableAdapter.ViewHolder viewHolder, int i, long l, boolean b) {
         if (viewHolder instanceof SectionHolder) {
             ImageView arrow_iv = ((SectionHolder) viewHolder).sectionArrow_iv;
             if (b) {
@@ -105,10 +102,14 @@ public class BoardEntranceAdapter extends ExpandableAdapter<ExpandableAdapter.Vi
     }
 
     static class BoardHolder extends ExpandableAdapter.ViewHolder {
-        TextView board_tv;
+        CheckBox board_cb;
         public BoardHolder(@NonNull View itemView) {
             super(itemView);
-            board_tv = (TextView) itemView;
+            board_cb = itemView.findViewById(R.id.board_checkBox);
         }
+    }
+
+    public static interface OnBoardFavChangedListener {
+        public void onBoardFavChanged(BaseBoard board, boolean isFav);
     }
 }

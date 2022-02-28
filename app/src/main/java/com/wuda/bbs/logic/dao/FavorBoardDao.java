@@ -23,7 +23,7 @@ public interface FavorBoardDao {
     public abstract List<FavBoard> loadAllFavorBoards();
 
     @Query("select * from FavBoard where favor_by_username = :username")
-    public abstract List<BaseBoard> loadFavorBoardByUsername(@NonNull String username);
+    public abstract List<FavBoard> loadFavorBoardByUsername(@NonNull String username);
 
     @Query("delete from FavBoard where favor_by_username = :username")
     public abstract void clearFavorBoardsByUsername(String username);

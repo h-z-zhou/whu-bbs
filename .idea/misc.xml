@@ -75,6 +75,8 @@
         <entry key="app/src/main/res/layout/article_view.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/attachment_item.xml" value="0.2890625" />
         <entry key="app/src/main/res/layout/board_fragment.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/board_item.xml" value="1.2107142857142856" />
+        <entry key="app/src/main/res/layout/board_section_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/board_view.xml" value="0.26510416666666664" />
         <entry key="app/src/main/res/layout/bottom_nav_main.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/contact_fragment.xml" value="0.3359375" />
@@ -82,6 +84,7 @@
         <entry key="app/src/main/res/layout/content_setting.xml" value="0.27239583333333334" />
         <entry key="app/src/main/res/layout/dialog_reply.xml" value="0.30185185185185187" />
         <entry key="app/src/main/res/layout/drawer_nav_header_main.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/fav_board_selector_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/favorBoard_fragment.xml" value="0.1015625" />
         <entry key="app/src/main/res/layout/favor_board_fragment.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/find_password_by_artificial_fragment.xml" value="0.31927083333333334" />

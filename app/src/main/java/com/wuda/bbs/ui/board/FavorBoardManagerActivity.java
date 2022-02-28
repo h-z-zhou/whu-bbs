@@ -1,24 +1,17 @@
 package com.wuda.bbs.ui.board;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
+import android.util.Pair;
+import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.textview.MaterialTextView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.NetworkEntry;
@@ -29,29 +22,25 @@ import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.DetailBoardDao;
 import com.wuda.bbs.logic.dao.FavorBoardDao;
-import com.wuda.bbs.utils.network.RootService;
-import com.wuda.bbs.utils.network.ServiceCreator;
+import com.wuda.bbs.ui.adapter.FavBoardSelectorAdapter;
 import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FavBoardHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import pokercc.android.expandablerecyclerview.ExpandableRecyclerView;
 
 public class FavorBoardManagerActivity extends AppCompatActivity {
 
     FavorBoardManagerViewModel mViewModel;
-    RecyclerView board_rv;
-    LinearLayout boardItem_ll;
-//    boolean hadRequestFavor = false;
+    ExpandableRecyclerView board_erv;
+    FavBoardSelectorAdapter adapter;
+    boolean isFavBoardRequested = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +50,23 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_favor_board_manager);
 
-        boardItem_ll = findViewById(R.id.boardItemContainer_linearLayout);
+        Toolbar toolbar = findViewById(R.id.back_toolbar);
+        toolbar.setTitle("板块管理");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        board_rv = findViewById(R.id.recyclerView);
+        board_erv = findViewById(R.id.favBoardManager_expandableRecyclerView);
+        board_erv.setLayoutManager(new LinearLayoutManager(FavorBoardManagerActivity.this));
 
-        bindingEvent();
+        eventBinding();
 
         if (BBSApplication.isLogin()) {
-            requestFavorBoardsFromServer();
+            requestFavBoardsFromServer();
         } else {
             new AlertDialog.Builder(FavorBoardManagerActivity.this)
                     .setTitle("未登录")
@@ -86,18 +84,12 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
-
-    private void bindingEvent() {
+    private void eventBinding() {
 
         // 完成收藏板块后获取所有板块
-        mViewModel.favorBoards.observe(this, new Observer<List<BaseBoard>>() {
+        mViewModel.favBoards.observe(this, new Observer<List<FavBoard>>() {
             @Override
-            public void onChanged(List<BaseBoard> baseBoards) {
+            public void onChanged(List<FavBoard> favBoards) {
                 queryDetailBoardsFromDB();
             }
         });
@@ -106,56 +98,32 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<DetailBoard> detailBoardList) {
 
-                boardItem_ll.removeAllViews();
-
-                ChipGroup sectionGroup_cg = new ChipGroup(FavorBoardManagerActivity.this);
-                MaterialTextView sectionLabel_tv = new MaterialTextView(FavorBoardManagerActivity.this);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.setMargins(0, 16, 0, 16);
-                int labelColor = getColor(R.color.colorPrimary);
-                @SuppressLint("UseCompatLoadingForDrawables") Drawable labelIcon = getDrawable(R.drawable.ic_new_label);
-                labelIcon.setBounds(0, 0, labelIcon.getMinimumWidth(), labelIcon.getMinimumHeight());
-
-                String currentSection = "";
-                for (int i=0; i<detailBoardList.size(); ++i) {
-                    if (!detailBoardList.get(i).getSection().equals(currentSection)) {
-                        currentSection = detailBoardList.get(i).getSection();
-
-                        sectionGroup_cg = new ChipGroup(FavorBoardManagerActivity.this);
-                        sectionLabel_tv = new MaterialTextView(FavorBoardManagerActivity.this);
-
-                        sectionLabel_tv.setText(currentSection);
-                        sectionLabel_tv.setTextSize(18);
-                        sectionLabel_tv.setBackgroundColor(labelColor);
-                        sectionLabel_tv.setCompoundDrawables(labelIcon, null, null, null);
-                        sectionLabel_tv.setCompoundDrawablePadding(16);
-                        sectionLabel_tv.setLayoutParams(params);
-                        sectionLabel_tv.setPadding(0, 8, 0, 8);
-
-                        boardItem_ll.addView(sectionLabel_tv);
-                        boardItem_ll.addView(sectionGroup_cg);
+                LinkedHashMap<String, List<Pair<BaseBoard, Boolean>>> allBoardGroupMap = new LinkedHashMap<>();
+                for (DetailBoard board: detailBoardList) {
+                    String section = board.getSection();
+                    if (!allBoardGroupMap.containsKey(section)) {
+                        allBoardGroupMap.put(section, new ArrayList<>());
                     }
-
-                    Chip boardItemChip = new Chip(FavorBoardManagerActivity.this);
-//                    boardItemChip.setRippleColor(getColorStateList(R.color.chip_bg_state));
-                    boardItemChip.setChipBackgroundColor(getColorStateList(R.color.chip_bg_state));
-                    boardItemChip.setCheckable(true);
-                    boardItemChip.setText(detailBoardList.get(i).getName());
-                    if (mViewModel.isFavorite(detailBoardList.get(i))) {
-                        boardItemChip.setChecked(true);
-                    }
-                    int finalI = i;
-
-                    boardItemChip.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            addOrRemoveFavor(detailBoardList.get(finalI), isChecked);
-                        }
-                    });
-
-                    sectionGroup_cg.addView(boardItemChip);
+                    allBoardGroupMap.get(section).add(new Pair<>(board, mViewModel.isFavorite(board)));
                 }
 
+                List<String> sectionList = new ArrayList<>();
+                sectionList.addAll(allBoardGroupMap.keySet());
+                List<List<Pair<BaseBoard, Boolean>>> allBoardGroupList = new ArrayList<>();
+                allBoardGroupList.addAll(allBoardGroupMap.values());
+
+                adapter = new FavBoardSelectorAdapter(FavorBoardManagerActivity.this, sectionList, allBoardGroupList);
+
+                adapter.setOnBoardFavChangedListener(new FavBoardSelectorAdapter.OnBoardFavChangedListener() {
+                    @Override
+                    public void onBoardFavChanged(BaseBoard board, boolean isFav) {
+                        if (board instanceof DetailBoard) {
+                            addOrRemoveFavor((DetailBoard) board, isFav);
+                        }
+                    }
+                });
+
+                board_erv.setAdapter(adapter);
             }
         });
     }
@@ -168,7 +136,7 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
         if (detailBoardList.isEmpty()) {
             requestDetailBoardsFromServer();
         } else {
-            mViewModel.allBoards.setValue(detailBoardList);
+            mViewModel.allBoards.postValue(detailBoardList);
         }
 
     }
@@ -181,12 +149,7 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
                 List<DetailBoard> detailBoardList = response.getContent();
                 DetailBoardDao detailBoardDao = AppDatabase.getDatabase(FavorBoardManagerActivity.this).getDetailBoardDao();
                 detailBoardDao.clearAll();
-                // cast => save to database
-                List<DetailBoard> castFavorBoardList = new ArrayList<>();
-                for (int i=0; i<detailBoardList.size(); ++i) {
-                    castFavorBoardList.add((DetailBoard) detailBoardList.get(i));
-                }
-                detailBoardDao.insert(castFavorBoardList);
+                detailBoardDao.insert(detailBoardList);
             }
         });
     }
@@ -196,29 +159,25 @@ public class FavorBoardManagerActivity extends AppCompatActivity {
         if (BBSApplication.getAccountId().equals(""))
             return;
 
-        List<BaseBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getAccountId());
+        List<FavBoard> favorBoardList = favorBoardDao.loadFavorBoardByUsername(BBSApplication.getAccountId());
 
-        mViewModel.favorBoards.setValue(favorBoardList);
+        mViewModel.favBoards.postValue(favorBoardList);
     }
 
-    private void requestFavorBoardsFromServer() {
+    private void requestFavBoardsFromServer() {
 
         NetworkEntry.requestFavBoard(new FavBoardHandler() {
             @Override
             public void onResponseHandled(ContentResponse<List<FavBoard>> response) {
                 if (response.isSuccessful()) {
+                    isFavBoardRequested = true;
+
                     FavorBoardDao favorBoardDao = AppDatabase.getDatabase(FavorBoardManagerActivity.this).getFavorBoardDao();
                     // 清空，与云端保持同步
 
                     favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
                     favorBoardDao.insert(response.getContent());
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            queryFavorBoardsFromDB();
-                        }
-                    });
+                    queryFavorBoardsFromDB();
                 }
             }
         });
