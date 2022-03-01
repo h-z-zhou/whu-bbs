@@ -1,5 +1,6 @@
 package com.wuda.bbs.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -20,7 +21,8 @@ import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.DetailBoardDao;
 import com.wuda.bbs.logic.dao.FavorBoardDao;
-import com.wuda.bbs.ui.adapter.BoardEntranceAdapter;
+import com.wuda.bbs.ui.adapter.BoardListAdapter;
+import com.wuda.bbs.ui.board.BoardActivity;
 import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FavBoardHandler;
 
@@ -112,7 +114,17 @@ public class BoardEntranceFragment extends Fragment {
         List<List<BaseBoard>> allBoardGroupList = new ArrayList<>();
         allBoardGroupList.addAll(allBoardGroupMap.values());
 
-        entrance_erv.setAdapter(new BoardEntranceAdapter(getContext(), sectionList, allBoardGroupList));
+        BoardListAdapter adapter = new BoardListAdapter(getContext(), sectionList, allBoardGroupList);
+        adapter.setOnBoardSelectedListener(new BoardListAdapter.OnBoardSelectedListener() {
+            @Override
+            public void onBoardSelected(BaseBoard board) {
+                Intent intent = new Intent(getContext(), BoardActivity.class);
+                intent.putExtra("board", board);
+                getActivity().startActivity(intent);
+            }
+        });
+
+        entrance_erv.setAdapter(adapter);
 
     }
 

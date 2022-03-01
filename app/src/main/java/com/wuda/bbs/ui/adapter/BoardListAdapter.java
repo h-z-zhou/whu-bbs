@@ -22,16 +22,21 @@ import java.util.List;
 
 import pokercc.android.expandablerecyclerview.ExpandableAdapter;
 
-public class BoardEntranceAdapter extends ExpandableAdapter<ExpandableAdapter.ViewHolder> {
+public class BoardListAdapter extends ExpandableAdapter<ExpandableAdapter.ViewHolder> {
 
     Context mContext;
     List<String> mSectionList;
     List<List<BaseBoard>> mSectionBoardList;
+    OnBoardSelectedListener mOnBoardSelectedListener;
 
-    public BoardEntranceAdapter(Context mContext, List<String> mSectionList, List<List<BaseBoard>> mSectionBoardList) {
+    public BoardListAdapter(Context mContext, List<String> mSectionList, List<List<BaseBoard>> mSectionBoardList) {
         this.mContext = mContext;
         this.mSectionList = mSectionList;
         this.mSectionBoardList = mSectionBoardList;
+    }
+
+    public void setOnBoardSelectedListener(OnBoardSelectedListener onBoardSelectedListener) {
+        this.mOnBoardSelectedListener = onBoardSelectedListener;
     }
 
     @Override
@@ -51,9 +56,10 @@ public class BoardEntranceAdapter extends ExpandableAdapter<ExpandableAdapter.Vi
         ((BoardHolder) viewHolder).board_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, BoardActivity.class);
-                intent.putExtra("board", board);
-                mContext.startActivity(intent);
+                if (mOnBoardSelectedListener != null) {
+                    mOnBoardSelectedListener.onBoardSelected(board);
+                }
+
             }
         });
     }
@@ -110,5 +116,9 @@ public class BoardEntranceAdapter extends ExpandableAdapter<ExpandableAdapter.Vi
             super(itemView);
             board_tv = (TextView) itemView;
         }
+    }
+
+    public interface OnBoardSelectedListener {
+        public void onBoardSelected(BaseBoard board);
     }
 }

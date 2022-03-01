@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
@@ -30,6 +31,7 @@ import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FavorBoardDao;
 import com.wuda.bbs.ui.MainActivity;
+import com.wuda.bbs.ui.article.PostArticleActivity;
 import com.wuda.bbs.utils.networkResponseHandler.FavBoardHandler;
 
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public class FavorBoardFragment extends Fragment {
     private FavorBoardViewModel mViewModel;
     private TabLayout board_tl;
     private ViewPager2 board_vp2;
-//    private FloatingActionButton writeArticle_fab;
+    private FloatingActionButton writeArticle_fab;
 
     // 收藏可能为空，请求一次后不再请求
     private boolean hadRequest = false;
@@ -61,8 +63,8 @@ public class FavorBoardFragment extends Fragment {
         View view = inflater.inflate(R.layout.favor_board_fragment, container, false);
         board_tl = view.findViewById(R.id.favorBoard_tabLayout);
         board_vp2 = view.findViewById(R.id.favorBoard_viewPager2);
-//        writeArticle_fab = view.findViewById(R.id.favorBoard_writeArticle_fab);
-        requestFavorBoardsFromServer();
+        writeArticle_fab = view.findViewById(R.id.favorBoard_writeArticle_fab);
+//        requestFavorBoardsFromServer();
 
         if (getActivity() != null) {
             ((MainActivity) getActivity()).getToolbar().setTitle("收藏版块");
@@ -75,6 +77,8 @@ public class FavorBoardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(FavorBoardViewModel.class);
+
+        queryFavorBoardsFromDB();
 
 //        board_vp2.setAdapter(new BoardViewPager2Adapter(getContext(), mViewModel.favoriteBoardList.getValue()));
         board_vp2.setAdapter(new FragmentStateAdapter(requireActivity().getSupportFragmentManager(), getLifecycle()) {
@@ -142,6 +146,16 @@ public class FavorBoardFragment extends Fragment {
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
+            }
+        });
+
+        writeArticle_fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FavBoard favBoard = mViewModel.favorBoardList.getValue().get(mViewModel.currentBoardIdx.getValue());
+                Intent intent = new Intent(getContext(), PostArticleActivity.class);
+                intent.putExtra("board", favBoard);
+                startActivity(intent);
             }
         });
 

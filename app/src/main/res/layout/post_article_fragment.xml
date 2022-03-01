@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.article.PostArticleFragment">
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/postArticle_boardName_TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_menu_dashboard"
+                android:drawableEnd="@drawable/ic_keyboard_arrow_right"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/colorPrimaryLight"
+                android:gravity="center_vertical"
+                android:hint="板块"
+                android:padding="8dp"
+                android:textSize="16sp" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="?android:attr/listDivider" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/postArticle_title_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:ems="10"
+                android:hint="加个标题"
+                android:padding="8dp" />
+
+            <View
+                android:id="@+id/divider4"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="?android:attr/listDivider" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/postArticle_content_editText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="说点啥吧"
+                android:padding="8dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>
