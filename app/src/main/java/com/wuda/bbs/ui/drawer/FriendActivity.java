@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
@@ -60,6 +61,14 @@ public class FriendActivity extends AppCompatActivity {
         friend_rv.setLayoutManager(new LinearLayoutManager(FriendActivity.this));
 
         adapter = new FriendAdapter(FriendActivity.this, new ArrayList<>());
+        adapter.setOnFriendSelectedListener(new FriendAdapter.OnFriendSelectedListener() {
+            @Override
+            public void oFriendSelected(Friend friend) {
+                Intent intent = new Intent(FriendActivity.this, UserInfoActivity.class);
+                intent.putExtra("userId", friend.getId());
+                startActivity(intent);
+            }
+        });
         friend_rv.setAdapter(adapter);
 
 
@@ -116,7 +125,15 @@ public class FriendActivity extends AppCompatActivity {
         NetworkEntry.requestFriend(new FriendResponseHandler() {
             @Override
             public void onResponseHandled(ContentResponse<List<Friend>> response) {
-                mViewModel.friendList.postValue(response.getContent());
+                if (response.isSuccessful()) {
+                    mViewModel.friendList.postValue(response.getContent());
+                } else {
+                    String text = response.getMassage();
+                    if (text == null) {
+                        text = response.getResultCode().getMsg();
+                    }
+                    Toast.makeText(FriendActivity.this, text, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

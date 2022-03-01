@@ -62,6 +62,7 @@
         <entry key="app/src/main/res/layout/activity_post_article.xml" value="0.28379629629629627" />
         <entry key="app/src/main/res/layout/activity_reply.xml" value="0.2994791666666667" />
         <entry key="app/src/main/res/layout/activity_reply2.xml" value="0.18070652173913043" />
+        <entry key="app/src/main/res/layout/activity_send_mail.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_treasure_box.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_user_info.xml" value="0.37135416666666665" />
@@ -102,6 +103,7 @@
         <entry key="app/src/main/res/layout/fragment_entrance_item.xml" value="0.37135416666666665" />
         <entry key="app/src/main/res/layout/fragment_forgot_password.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/fragment_logout.xml" value="0.31927083333333334" />
+        <entry key="app/src/main/res/layout/fragment_select_friend.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/fragment_setting_menu.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/friend_fragment.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/friend_item.xml" value="0.31927083333333334" />
@@ -115,6 +117,7 @@
         <entry key="app/src/main/res/layout/main_login_fragment.xml" value="0.21467391304347827" />
         <entry key="app/src/main/res/layout/menu_text_item.xml" value="0.29074074074074074" />
         <entry key="app/src/main/res/layout/my_info_fragment.xml" value="0.37135416666666665" />
+        <entry key="app/src/main/res/layout/new_mail_fragment.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/news_today_fragment.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/param_setting_fragment.xml" value="0.284375" />
         <entry key="app/src/main/res/layout/recommend_fragment.xml" value="0.3359375" />

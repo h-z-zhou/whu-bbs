@@ -106,7 +106,7 @@ public class MailFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_mail_new) {
-            Intent intent = new Intent(getContext(), NewMailActivity.class);
+            Intent intent = new Intent(getContext(), SendMailActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

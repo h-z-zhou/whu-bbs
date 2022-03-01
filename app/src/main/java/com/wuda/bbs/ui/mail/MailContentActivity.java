@@ -80,7 +80,7 @@ public class MailContentActivity extends AppCompatActivity {
         reply_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MailContentActivity.this, NewMailActivity.class);
+                Intent intent = new Intent(MailContentActivity.this, SendMailActivity.class);
                 intent.putExtra("userId", mail.getSender());
                 intent.putExtra("title", "Re: " + mail.getSubject());
                 startActivity(intent);

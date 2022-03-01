@@ -23,7 +23,7 @@ import com.wuda.bbs.logic.bean.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
-import com.wuda.bbs.ui.mail.NewMailActivity;
+import com.wuda.bbs.ui.mail.SendMailActivity;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
@@ -101,7 +101,7 @@ public class UserInfoActivity extends AppCompatActivity {
         chat_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserInfoActivity.this, NewMailActivity.class);
+                Intent intent = new Intent(UserInfoActivity.this, SendMailActivity.class);
                 intent.putExtra("userId", mViewModel.userId);
                 startActivity(intent);
             }

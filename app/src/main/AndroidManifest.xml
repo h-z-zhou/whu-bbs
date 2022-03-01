@@ -19,7 +19,7 @@
             android:name=".ui.article.AttachmentActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.mail.NewMailActivity"
+            android:name=".ui.mail.SendMailActivity"
             android:exported="false" />
         <activity
             android:name=".ui.drawer.FriendActivity"

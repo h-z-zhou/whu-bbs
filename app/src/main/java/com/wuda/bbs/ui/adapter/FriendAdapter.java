@@ -1,7 +1,6 @@
 package com.wuda.bbs.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +12,22 @@ import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Friend;
-import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.utils.network.NetConst;
 
 import java.util.List;
 
 public class FriendAdapter extends FooterAdapter<Friend> {
 
+    // for FriendActivity and SelectFriendFragment
+
+    OnFriendSelectedListener mOnFriendSelectedListener;
+
     public FriendAdapter(Context mContext, List<Friend> mContent) {
         super(mContext, mContent);
+    }
+
+    public void setOnFriendSelectedListener(OnFriendSelectedListener onFriendSelectedListener) {
+        this.mOnFriendSelectedListener = onFriendSelectedListener;
     }
 
     @Override
@@ -34,9 +40,9 @@ public class FriendAdapter extends FooterAdapter<Friend> {
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 Friend friend = mContents.get(position);
-                Intent intent = new Intent(mContext, UserInfoActivity.class);
-                intent.putExtra("userId", friend.getId());
-                mContext.startActivity(intent);
+                if (mOnFriendSelectedListener != null) {
+                    mOnFriendSelectedListener.oFriendSelected(friend);
+                }
             }
         });
 
@@ -64,5 +70,9 @@ public class FriendAdapter extends FooterAdapter<Friend> {
             avatar_iv = itemView.findViewById(R.id.friend_avatar_imageView);
             id_tv = itemView.findViewById(R.id.friend_id_textView);
         }
+    }
+
+    public interface OnFriendSelectedListener {
+        public void oFriendSelected(Friend friend);
     }
 }

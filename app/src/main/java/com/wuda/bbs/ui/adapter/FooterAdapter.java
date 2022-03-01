@@ -90,6 +90,8 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<RecyclerView
 
     @SuppressLint("NotifyDataSetChanged")
     public void setContents(List<T> contents) {
+        if (contents == null)
+            return;
         mContents.clear();
         mContents.addAll(contents);
         notifyDataSetChanged();
