@@ -81,16 +81,6 @@ public class BoardEntranceFragment extends Fragment {
         if (getContext() == null) return;
         AppDatabase database = AppDatabase.getDatabase(getContext());
 
-        FavorBoardDao favorBoardDao = database.getFavorBoardDao();
-        List<FavBoard> favBoardList = favorBoardDao.loadAllFavorBoards();
-        // Favor Board may empty
-        if (favBoardList.isEmpty() && !isFavorBoardRequested) {
-            requestFavorBoardsFromServer();
-            isFavorBoardRequested = true;
-            return;
-        }
-        allBoardGroupMap.put("我的收藏", cast2BaseBoard(favBoardList));
-
         DetailBoardDao detailBoardDao = database.getDetailBoardDao();
 //        room group by ??
 //        List<DetailBoard> detailBoardList = detailBoardDao.loadBoardsGroupBySection();
