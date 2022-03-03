@@ -18,6 +18,7 @@ import com.wuda.bbs.ui.article.AttachmentActivity;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.validator.MimeValidator;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.ViewHolder> {
@@ -38,7 +39,19 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.attachment_item, parent, false);
-        return new ViewHolder(view);
+        ViewHolder holder = new ViewHolder(view);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, AttachmentActivity.class);
+                intent.putExtra("attachments", (Serializable) mAttachmentList);
+                intent.putExtra("board", mBoardId);
+                intent.putExtra("articleId", mArticleId);
+                intent.putExtra("position", holder.getAdapterPosition());
+                mContext.startActivity(intent);
+            }
+        });
+        return holder;
     }
 
     @Override
@@ -54,18 +67,6 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
             Glide.with(mContext).load(mime.icon).into(holder.bg_iv);
             holder.name_tv.setText(attachment.getName());
         }
-
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext, AttachmentActivity.class);
-                intent.putExtra("url", url);
-                intent.putExtra("name", attachment.getName());
-                intent.putExtra("mime", mime);
-
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override

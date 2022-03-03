@@ -109,6 +109,8 @@ public class XMLParser {
     }
 
     public static DetailArticleResponse parseDetailArticle(String xmlData) {
+        xmlData = xmlData.replaceAll("&", "&amp;");
+//        xmlData = xmlData.replaceAll("\\\\", "");
         DetailArticleResponse response;
 
         DetailArticleHandler detailArticleHandler = new DetailArticleHandler();

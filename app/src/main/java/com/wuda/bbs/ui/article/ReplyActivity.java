@@ -102,6 +102,12 @@ public class ReplyActivity extends AppCompatActivity {
         }
 
         String title = "@" + repliedArticle.getAuthor();
+        StringBuilder builder = new StringBuilder();
+        builder.append(content);
+        builder.append("\n【 在 ").append(repliedArticle.getAuthor()).append(" 的大作中提到: 】\n");
+        String[] replyContent = repliedArticle.getContent().split("\\\\n");
+        builder.append(": ").append(replyContent[0]);
+
 
         // board=&reID=0&font=&subject=&Content=&signature=
         Map<String, String> form = new HashMap<>();
@@ -111,14 +117,14 @@ public class ReplyActivity extends AppCompatActivity {
         form.put("reToWho", repliedArticle.getAuthor());
         form.put("font", "");
         form.put("subject", title);
-        form.put("Content", content.toString());
+        form.put("Content", builder.toString());
         form.put("signature", "");
 
         NetworkEntry.postArticle(form, new WebResultHandler() {
             @Override
             public void onResponseHandled(ContentResponse<WebResult> response) {
                 if (response.isSuccessful()) {
-                    String text = response.getContent().getResult();
+                    finish();
                 }
             }
         });

@@ -60,6 +60,9 @@
         </item>
     </style>
 
+    <style name="TextAppearance.BBS.Title.Expanded" parent="TextAppearance.AppCompat">
+    </style>
+
     <style name="Theme.BBS.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.BBS.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

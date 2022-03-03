@@ -48,6 +48,7 @@
         <entry key="app/src/main/res/layout/activity_account.xml" value="0.31307456588355465" />
         <entry key="app/src/main/res/layout/activity_app.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_article_detail.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/activity_article_detail2.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_attachment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_board.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_fav_article.xml" value="0.31927083333333334" />
@@ -75,6 +76,7 @@
         <entry key="app/src/main/res/layout/article_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/article_view.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/attachment_item.xml" value="0.2890625" />
+        <entry key="app/src/main/res/layout/attachment_pager2_item.xml" value="0.15555555555555556" />
         <entry key="app/src/main/res/layout/board_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/board_item.xml" value="1.2107142857142856" />
         <entry key="app/src/main/res/layout/board_section_item.xml" value="0.3359375" />

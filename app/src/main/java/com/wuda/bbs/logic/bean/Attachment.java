@@ -1,6 +1,8 @@
 package com.wuda.bbs.logic.bean;
 
-public class Attachment {
+import java.io.Serializable;
+
+public class Attachment implements Serializable {
     String name;
     String size;
     String id;

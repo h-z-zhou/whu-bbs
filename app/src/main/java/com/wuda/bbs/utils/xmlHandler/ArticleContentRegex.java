@@ -30,9 +30,17 @@ public class ArticleContentRegex {
         if (matcher.find()) {
             String content = matcher.group();
             content = content.replaceAll("\\\\n", "\n");
-            return content.trim();
+            content = content.replaceAll("\\\\", "");
+            StringBuilder builder = new StringBuilder();
+            for (String s: content.split("\\n")) {
+                if (s.startsWith("【") || s.startsWith(":")) {
+                    continue;
+                }
+                builder.append(s).append("\n");
+            }
+            return builder.toString().trim();
         }
-        return "";
+        return rawContent;
     }
 
     public static String getReply2username(String rawContent) {

@@ -1,63 +1,39 @@
 package com.wuda.bbs.ui.article;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.wuda.bbs.R;
-import com.wuda.bbs.utils.validator.MimeValidator;
+import com.wuda.bbs.logic.bean.Attachment;
+import com.wuda.bbs.ui.adapter.AttachmentPager2Adapter;
+
+import java.util.List;
 
 public class AttachmentActivity extends AppCompatActivity {
-
-    String url;
-    String name;
-    MimeValidator.Mime mime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attachment);
 
-        url = getIntent().getStringExtra("url");
-        name = getIntent().getStringExtra("name");
-        mime = (MimeValidator.Mime) getIntent().getSerializableExtra("mime");
+        List<Attachment> attachmentList = (List<Attachment>) getIntent().getSerializableExtra("attachments");
+        String board = getIntent().getStringExtra("board");
+        String articleId = getIntent().getStringExtra("articleId");
+        int position = getIntent().getIntExtra("position", 0);
 
-        ImageView face_iv = findViewById(R.id.attachment_face_imageView);
-        TextView filename_tv = findViewById(R.id.attachment_filename_textView);
-        Button download_btn = findViewById(R.id.attachment_download_button);
+        ViewPager2 attachment_vp2 = findViewById(R.id.attachment_viewPager2);
+        attachment_vp2.setAdapter(new AttachmentPager2Adapter(AttachmentActivity.this, attachmentList, board, articleId));
+        attachment_vp2.setCurrentItem(position, false);
 
-
-        if (mime.type == MimeValidator.Mime.Type.IMAGE) {
-            Glide.with(AttachmentActivity.this).load(url).into(face_iv);
-        } else {
-            ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(500, 500);
-            // 0 => parent id
-            params.topToTop = 0;
-            params.bottomToBottom = 0;
-            params.startToStart = 0;
-            params.endToEnd = 0;
-            face_iv.setLayoutParams(params);
-            Glide.with(AttachmentActivity.this).load(mime.icon).into(face_iv);
-            filename_tv.setText(name);
-        }
-
-        download_btn.setOnClickListener(new View.OnClickListener() {
+        attachment_vp2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
-                startActivity(intent);
+                Toast.makeText(AttachmentActivity.this, Integer.valueOf(attachment_vp2.getCurrentItem()).toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 }
