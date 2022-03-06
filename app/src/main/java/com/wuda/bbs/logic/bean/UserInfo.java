@@ -3,7 +3,7 @@ package com.wuda.bbs.logic.bean;
 public class UserInfo {
     String id;
     String nickname;
-    String sex;
+    String gender;
     String avatar;
     String photo;
     String level;
@@ -27,12 +27,19 @@ public class UserInfo {
         this.nickname = nickname;
     }
 
-    public String getSex() {
-        return sex;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public int getGenderValue() {
+        if (gender.equals("男"))
+            return 1;
+        else
+            return 2;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getAvatar() {

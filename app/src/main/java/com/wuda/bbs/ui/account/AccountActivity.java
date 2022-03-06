@@ -1,5 +1,6 @@
 package com.wuda.bbs.ui.account;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -9,13 +10,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.application.BBSApplication;
+import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.ui.base.NavigationHost;
 
 public class AccountActivity extends AppCompatActivity implements NavigationHost {
 
     Toolbar toolbar;
+    AccountSharedViewModel mViewModel;
 
     boolean isLogin;  // go to login page
 
@@ -45,6 +51,18 @@ public class AccountActivity extends AppCompatActivity implements NavigationHost
         } else {
             navigationTo(new AccountFragment(), false);
         }
+
+        mViewModel = new ViewModelProvider(this).get(AccountSharedViewModel.class);
+        mViewModel.getCurrentAccount().observe(this, new Observer<Account>() {
+            @Override
+            public void onChanged(Account account) {
+                Intent intent = new Intent();
+                intent.putExtra("accountChanged", true);
+                setResult(RESULT_OK, intent);
+                BBSApplication.setAccount(account);
+            }
+        });
+
     }
 
     @Override
@@ -77,4 +95,5 @@ public class AccountActivity extends AppCompatActivity implements NavigationHost
         super.onSaveInstanceState(outState);
         outState.putBoolean("isLogin", isLogin);
     }
+
 }

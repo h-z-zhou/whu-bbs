@@ -13,6 +13,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
 import com.wuda.bbs.ui.user.UserInfoActivity;
+import com.wuda.bbs.ui.widget.CustomDialog;
 import com.wuda.bbs.utils.networkResponseHandler.FriendResponseHandler;
 
 import java.util.ArrayList;
@@ -86,23 +89,26 @@ public class FriendActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_add_friend) {
             TextInputEditText id_et = new TextInputEditText(FriendActivity.this);
-            new AlertDialog.Builder(FriendActivity.this)
-                    .setTitle("请输入好友ID")
-                    .setView(id_et)
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+            View view = LayoutInflater.from(FriendActivity.this).inflate(R.layout.dialog_input_view, null, false);
+            TextInputEditText content_et = view.findViewById(R.id.dialog_input_editText);
+
+            new CustomDialog(FriendActivity.this)
+                    .setDialogTitle("请输入用户ID")
+                    .setCustomView(view)
+                    .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickedListener() {
                         @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Editable id = id_et.getText();
-                            if (id == null || id.length() == 0) {
-                                return;
+                        public void onButtonClicked() {
+                            if (content_et.getText() != null) {
+                                String id = content_et.getText().toString();
+                                if(!TextUtils.isEmpty(id)) {
+                                    Intent intent = new Intent(FriendActivity.this, UserInfoActivity.class);
+                                    intent.putExtra("userId", id);
+                                    startActivity(intent);
+                                }
                             }
-                            Intent intent = new Intent(FriendActivity.this, UserInfoActivity.class);
-                            intent.putExtra("userId", id.toString());
-                            startActivity(intent);
                         }
                     })
-                    .setNegativeButton("取消", null)
-                    .create()
                     .show();
         }
         return super.onOptionsItemSelected(item);

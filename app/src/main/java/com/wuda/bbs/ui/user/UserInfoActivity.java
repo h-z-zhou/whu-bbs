@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +35,8 @@ import java.util.Map;
 public class UserInfoActivity extends AppCompatActivity {
 
     private View root;
+
+    private ImageView photo_iv;
     private ImageView avatar_iv;
     private TextView name_tv;
     private TextView level_tv;
@@ -53,6 +56,7 @@ public class UserInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_info);
 
         root = findViewById(R.id.userInfo_root);
+        photo_iv = findViewById(R.id.userInfo_photo_imageView);
         avatar_iv = findViewById(R.id.userInfo_avatar_imageView);
         name_tv = findViewById(R.id.userInfo_name_textView);
         level_tv = findViewById(R.id.userInfo_level_textView);
@@ -79,10 +83,23 @@ public class UserInfoActivity extends AppCompatActivity {
 
     private void eventBinding() {
         mViewModel.userInfo.observe(this, new Observer<UserInfo>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(UserInfo userInfo) {
+
+                if (!userInfo.getPhoto().equals("")) {
+                    Glide.with(UserInfoActivity.this)
+                            .load(NetConst.BASE + userInfo.getPhoto())
+                            .error(R.drawable.default_user_photo)
+                            .into(photo_iv);
+                } else {
+                    Glide.with(UserInfoActivity.this)
+                            .load(R.drawable.default_user_photo)
+                            .into(photo_iv);
+                }
+
                 Glide.with(UserInfoActivity.this).load(NetConst.BASE + userInfo.getAvatar()).into(avatar_iv);
-                name_tv.setText(userInfo.getId() + "(" + userInfo.getNickname() + ")");
+                name_tv.setText(userInfo.getId() + "(" + userInfo.getNickname() + ")" + "\n" + userInfo.getGender());
                 level_tv.append(userInfo.getLevel());
                 experience_tv.append(userInfo.getExp());
                 postNum_tv.append(userInfo.getPostNum());

@@ -6,17 +6,20 @@ import androidx.lifecycle.ViewModel;
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Account;
+import com.wuda.bbs.logic.bean.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AccountDao;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 
 import java.util.List;
 
 public class AccountSharedViewModel extends ViewModel {
     private MutableLiveData<Account> currentAccount;
     private MutableLiveData<List<Account>> allAccounts;
+    private MutableLiveData<UserInfo> userInfo;
 
     public MutableLiveData<Account> getCurrentAccount() {
         if (currentAccount == null) {
@@ -40,6 +43,14 @@ public class AccountSharedViewModel extends ViewModel {
         return allAccounts;
     }
 
+    public MutableLiveData<UserInfo> getUserInfo() {
+        if (userInfo == null) {
+            userInfo = new MutableLiveData<>();
+            requestUserInfo();
+        }
+        return userInfo;
+    }
+
     private void loadAccounts() {
         new Thread(new Runnable() {
             @Override
@@ -58,6 +69,7 @@ public class AccountSharedViewModel extends ViewModel {
     }
 
     public void updateCurrentAccount(Account account) {
+
         List<Account> accountList = allAccounts.getValue();
         if (accountList == null)
             return;
@@ -68,6 +80,8 @@ public class AccountSharedViewModel extends ViewModel {
             accountList.get(i).flag = Account.FLAG_HISTORY;
             if (accountList.get(i).id.equals(account.id)){
                 accountList.get(i).setFlag(Account.FLAG_CURRENT);
+                accountList.get(i).setAvatar(account.getAvatar());
+                accountList.get(i).setPasswd(account.getPasswd());
                 existed = true;
             }
         }
@@ -76,6 +90,10 @@ public class AccountSharedViewModel extends ViewModel {
         }
         allAccounts.postValue(accountList);
         currentAccount.postValue(account);
+
+        if (userInfo != null) {
+            requestUserInfo();
+        }
 
         AccountDao accountDao = AppDatabase.getDatabase(BBSApplication.getAppContext()).getAccountDao();
         BBSApplication.setAccount(account);
@@ -94,6 +112,23 @@ public class AccountSharedViewModel extends ViewModel {
 
     public void logout(SimpleResponseHandler responseHandler) {
         NetworkEntry.logout(responseHandler);
+    }
 
+    public void requestUserInfo() {
+        String userId = currentAccount.getValue().getId();
+        NetworkEntry.requestUserInfo(userId, new UserInfoResponseHandler() {
+            @Override
+            public void onResponseHandled(ContentResponse<UserInfo> response) {
+                UserInfo userInfo = response.getContent();
+                userInfo.setId(userId);
+                AccountSharedViewModel.this.userInfo.postValue(userInfo);
+
+                Account account = currentAccount.getValue();
+                if (!account.getAvatar().equals(userInfo.getAvatar())) {
+                    account.setAvatar(userInfo.getAvatar());
+                    updateCurrentAccount(account);
+                }
+            }
+        });
     }
 }

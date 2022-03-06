@@ -22,11 +22,13 @@ import com.wuda.bbs.utils.networkResponseHandler.HotArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
 import com.wuda.bbs.utils.networkResponseHandler.RecommendArticleHandler;
+import com.wuda.bbs.utils.networkResponseHandler.MyUserDataHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SetPasswordResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SettingParamHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.TodayNewArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.TopicArticleHandler;
+import com.wuda.bbs.utils.networkResponseHandler.UpLoadAvatarHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
@@ -34,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,19 +53,19 @@ public class NetworkEntry {
     // Account
     // *******************************
 
-    public static void login(Account account, AccountResponseHandler responseHandler) {
+    public static void login(Account account, AccountResponseHandler handler) {
 
         requestUserInfo(account.getId(), new UserInfoResponseHandler() {
             @Override
             public void onResponseHandled(ContentResponse<UserInfo> response) {
                 UserInfo info = response.getContent();
                 account.setAvatar(info.getAvatar());
-                _login(account, responseHandler);
+                _login(account, handler);
             }
         });
     }
 
-    private static void _login(Account account, AccountResponseHandler responseHandler) {
+    private static void _login(Account account, AccountResponseHandler handler) {
 
         Map<String, String> form = new HashMap<>();
         form.put("app", "login");
@@ -96,38 +99,38 @@ public class NetworkEntry {
                     userId = "guest";
                 if (userId.equals("guest") || userId.equals("deleted")) {
                     accountResponse = new ContentResponse<>(ResultCode.LOGIN_ERR, "登录失败，请检查帐号和密码！");
-                    responseHandler.onResponseHandled(accountResponse);
+                    handler.onResponseHandled(accountResponse);
                     return;
                 }
 
                 accountResponse = new ContentResponse<>();
                 accountResponse.setContent(account);
 
-                responseHandler.onResponseHandled(accountResponse);
+                handler.onResponseHandled(accountResponse);
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                responseHandler.onResponseHandled(new ContentResponse<>(ResultCode.CONNECT_ERR, t.getMessage()));
+                handler.onResponseHandled(new ContentResponse<>(ResultCode.CONNECT_ERR, t.getMessage()));
             }
         });
     }
 
-    public static void logout(SimpleResponseHandler responseHandler) {
+    public static void logout(SimpleResponseHandler handler) {
         mRootService.get("bbslogout.php").enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 String cookies = response.headers().get("Set-Cookie");
                 if (cookies == null) {
-                    responseHandler.onResponseHandled(new ContentResponse<>(ResultCode.LOGIN_ERR, "退出成功"));
+                    handler.onResponseHandled(new ContentResponse<>(ResultCode.LOGIN_ERR, "退出成功"));
                 } else {
-                    responseHandler.onResponseHandled(new ContentResponse<>(ResultCode.ERROR, "未知错误"));
+                    handler.onResponseHandled(new ContentResponse<>(ResultCode.ERROR, "未知错误"));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                    responseHandler.onResponseHandled(new ContentResponse<>(ResultCode.CONNECT_ERR, t.getMessage()));
+                    handler.onResponseHandled(new ContentResponse<>(ResultCode.CONNECT_ERR, t.getMessage()));
             }
         });
     }
@@ -143,35 +146,51 @@ public class NetworkEntry {
         mRootService.post("bbspwd.php", queryMap, form).enqueue(new AuthBBSCallback<>(handler));
     }
 
-    public static void findPassword(Map<String, String> form, SimpleResponseHandler responseHandler) {
+    public static void findPassword(Map<String, String> form, SimpleResponseHandler handler) {
 
-        mRootService.post("r/doreset.php", form).enqueue(new NoAuthBBSCallback<>(responseHandler));
+        mRootService.post("r/doreset.php", form).enqueue(new NoAuthBBSCallback<>(handler));
     }
 
-    public static void requestSettingParam(SettingParamHandler responseHandler) {
-        mRootService.get("wForum/userparam.php").enqueue(new AuthBBSCallback<>(responseHandler));
+    public static void requestSettingParam(SettingParamHandler handler) {
+        mRootService.get("wForum/userparam.php").enqueue(new AuthBBSCallback<>(handler));
     }
 
     public static void setSettingParam(Map<String, String> form, WebResultHandler handler) {
         mRootService.post("wForum/saveuserparam.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
+    public static void requestMyUserData(MyUserDataHandler handler) {
+        mRootService.get("wForum/modifyuserdata.php").enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void setMyUserInfo(Map<String, String> form, SimpleResponseHandler handler) {
+        mRootServiceGBKWrapper.post("wForum/saveuserdata.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void uploadAvatar(MultipartBody.Part body, UpLoadAvatarHandler handler) {
+        mRootService.uploadFile("wForum/dopostface.php", body).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void setNickname(Map<String, String> form, WebResultHandler handler) {
+        mRootServiceGBKWrapper.post("wForum/dochangepasswd.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
     // *******************************
     // User / Friend
     // *******************************
 
-    public static void requestUserInfo(String userId, UserInfoResponseHandler responseHandler) {
+    public static void requestUserInfo(String userId, UserInfoResponseHandler handler) {
         Map<String, String> form = new HashMap<>();
         form.put("userId", userId);
 
-        mMobileService.get("userInfo", form).enqueue(new NoAuthBBSCallback<>(responseHandler));
+        mMobileService.get("userInfo", form).enqueue(new NoAuthBBSCallback<>(handler));
     }
 
-    public static void requestFriend(FriendResponseHandler responseHandler) {
+    public static void requestFriend(FriendResponseHandler handler) {
         Map<String, String> form = new HashMap<>();
         form.put("list", "all");
 
-        mMobileService.get("friend", form).enqueue(new AuthBBSCallback<>(responseHandler));
+        mMobileService.get("friend", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     public static void operateFriend(Map<String, String> form, SimpleResponseHandler handler) {
@@ -181,20 +200,20 @@ public class NetworkEntry {
     // *******************************
     // Article
     // *******************************
-    public static void requestRecommendArticle(RecommendArticleHandler responseHandler) {
-        mMobileService.get("recomm").enqueue(new NoAuthBBSCallback<>(responseHandler));
+    public static void requestRecommendArticle(RecommendArticleHandler handler) {
+        mMobileService.get("recomm").enqueue(new NoAuthBBSCallback<>(handler));
     }
 
-    public static void requestTodayNewArticle(TodayNewArticleHandler responseHandler) {
-        mRootService.get("wForum/newtopic.php").enqueue(new NoAuthBBSCallback<>(responseHandler));
+    public static void requestTodayNewArticle(TodayNewArticleHandler handler) {
+        mRootService.get("wForum/newtopic.php").enqueue(new NoAuthBBSCallback<>(handler));
     }
 
-    public static void requestHotArticle(HotArticleHandler responseHandler) {
-        mMobileService.get("hot").enqueue(new NoAuthBBSCallback<>(responseHandler));
+    public static void requestHotArticle(HotArticleHandler handler) {
+        mMobileService.get("hot").enqueue(new NoAuthBBSCallback<>(handler));
     }
 
-    public static void requestTopicArticle(Map<String, String> form, TopicArticleHandler responseHandler) {
-        mMobileService.get("topics", form).enqueue(new NoAuthBBSCallback<>(responseHandler));
+    public static void requestTopicArticle(Map<String, String> form, TopicArticleHandler handler) {
+        mMobileService.get("topics", form).enqueue(new NoAuthBBSCallback<>(handler));
     }
 
     public static void requestArticleContent(Map<String, String> form, DetailArticleHandler handler) {
@@ -223,12 +242,12 @@ public class NetworkEntry {
     // Board
     // *******************************
 
-    public static void requestDetailBoard(DetailBoardHandler responseHandler) {
-        mMobileService.get("boards").enqueue(new NoAuthBBSCallback<>(responseHandler));
+    public static void requestDetailBoard(DetailBoardHandler handler) {
+        mMobileService.get("boards").enqueue(new NoAuthBBSCallback<>(handler));
     }
 
-    public static void requestFavBoard(FavBoardHandler responseHandler) {
-        mMobileService.get("favor").enqueue(new AuthBBSCallback<>(responseHandler));
+    public static void requestFavBoard(FavBoardHandler handler) {
+        mMobileService.get("favor").enqueue(new AuthBBSCallback<>(handler));
     }
 
     public static void operateFavBoard(Map<String, String> form, SimpleResponseHandler handler) {
@@ -241,17 +260,17 @@ public class NetworkEntry {
 
 
 
-    public static void requestMailList(Map<String, String> form, MailListHandler responseHandler) {
-        mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(responseHandler));
+    public static void requestMailList(Map<String, String> form, MailListHandler handler) {
+        mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
 
-    public static void requestMailContent(Map<String, String> form, MailContentHandler responseHandler) {
-        mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(responseHandler));
+    public static void requestMailContent(Map<String, String> form, MailContentHandler handler) {
+        mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
-    public static void sendMail(Map<String, String> form, WebResultHandler responseHandler) {
-        mRootServiceGBKWrapper.post("wForum/dosendmail.php", form).enqueue(new AuthBBSCallback<>(responseHandler));
+    public static void sendMail(Map<String, String> form, WebResultHandler handler) {
+        mRootServiceGBKWrapper.post("wForum/dosendmail.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     // *******************************

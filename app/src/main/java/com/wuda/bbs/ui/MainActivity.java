@@ -1,5 +1,9 @@
 package com.wuda.bbs.ui;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,12 +39,26 @@ public class MainActivity extends AppCompatActivity {
     NavigationView drawer_nav;
     BottomNavigationView bottom_nav;
 
-
+    ActivityResultLauncher<Intent> mAccountActivityLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAccountActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            Intent data = result.getData();
+                            boolean accountChanged = data.getBooleanExtra("accountChanged", false);
+                            if (accountChanged) {
+                                initDrawerHeader();
+                            }
+                        }
+                    }
+                });
 
         toolbar = findViewById(R.id.detailArticle_toolbar);
 //        toolbar.setNavigationIcon(R.drawable.ic_menu);
@@ -78,13 +96,9 @@ public class MainActivity extends AppCompatActivity {
         drawer_nav.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-                if (BBSApplication.getAccountId().equals("guest")) {
-                    intent.putExtra("isLogin", true);
-                } else {
-                    intent.putExtra("isLogin", false);
-                }
-                startActivity(intent);
+
+                openAccountActivity(false);
+
                 drawer.close();
             }
         });
@@ -131,5 +145,11 @@ public class MainActivity extends AppCompatActivity {
 
     public Toolbar getToolbar() {
         return toolbar;
+    }
+
+    public void openAccountActivity(boolean isLogin) {
+        Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+        intent.putExtra("isLogin", BBSApplication.getAccountId().equals("guest") || isLogin);
+        mAccountActivityLauncher.launch(intent);
     }
 }

@@ -11,7 +11,7 @@ public class UserInfoHandler extends DefaultHandler {
 
 //    StringBuilder id;
     StringBuilder nickname;
-    StringBuilder sex;
+    StringBuilder gender;
     StringBuilder avatar;
     StringBuilder photo;
     StringBuilder level;
@@ -26,7 +26,7 @@ public class UserInfoHandler extends DefaultHandler {
 
 //        id = new StringBuilder();
         nickname = new StringBuilder();
-        sex = new StringBuilder();
+        gender = new StringBuilder();
         avatar = new StringBuilder();
         photo = new StringBuilder();
         level = new StringBuilder();
@@ -55,7 +55,7 @@ public class UserInfoHandler extends DefaultHandler {
                 nickname.append(ch, start, length);
                 break;
             case "sex":
-                sex.append(ch, start, length);
+                gender.append(ch, start, length);
                 break;
             case "numposts":
                 postNum.append(ch, start, length);
@@ -142,8 +142,8 @@ public class UserInfoHandler extends DefaultHandler {
                 nickname.setLength(0);
                 break;
             case "sex":
-                userInfo.setSex(sex.toString());
-                sex.setLength(0);
+                userInfo.setGender(gender.toString());
+                gender.setLength(0);
                 break;
             case "numposts":
                 userInfo.setPostNum(postNum.toString());

@@ -24,6 +24,12 @@ public abstract class WebResultHandler implements ContentResponseHandler<WebResu
             if (!tables.isEmpty()) {
                 Element tb = tables.get(tables.size()-1);
                 response.setContent(new WebResult(tb.text()));
+            } else {
+                tables = doc.getElementsByClass("TableBody2");
+                if (!tables.isEmpty()) {
+                    Element tb = tables.get(tables.size()-1);
+                    response.setContent(new WebResult(tb.text()));
+                }
             }
 
         } catch (UnsupportedEncodingException e) {
