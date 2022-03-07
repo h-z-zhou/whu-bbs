@@ -63,7 +63,7 @@ public class BoardEntranceFragment extends Fragment {
         entrance_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestFavorBoardsFromServer();
+//                requestFavorBoardsFromServer();
                 requestDetailBoardsFromServer();
             }
         });
@@ -172,16 +172,9 @@ public class BoardEntranceFragment extends Fragment {
                     castFavorBoardList.add((DetailBoard) detailBoardList.get(i));
                 }
                 detailBoardDao.insert(castFavorBoardList);
+                queryAllBoardFromDB();
             }
         });
     }
 
-    private List<BaseBoard> cast2BaseBoard(List<?> boards) {
-        // FavorBoard / DetailBoard => BaseBoard
-        List<BaseBoard> baseBoardList = new ArrayList<>();
-        for (Object board: boards) {
-            baseBoardList.add((BaseBoard) board);
-        }
-        return baseBoardList;
-    }
 }
