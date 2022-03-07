@@ -264,10 +264,15 @@ public class NetworkEntry {
         mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
-
+    // fail to mark mail as unread
     public static void requestMailContent(Map<String, String> form, MailContentHandler handler) {
         mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(handler));
     }
+
+    public static void requestMailContent(Map<String, String> form, WebResultHandler handler) {
+        mRootServiceGBKWrapper.get("bbsmailcon.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
 
     public static void sendMail(Map<String, String> form, WebResultHandler handler) {
         mRootServiceGBKWrapper.post("wForum/dosendmail.php", form).enqueue(new AuthBBSCallback<>(handler));

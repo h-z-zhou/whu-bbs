@@ -63,7 +63,6 @@ public class BoardEntranceFragment extends Fragment {
         entrance_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                requestFavorBoardsFromServer();
                 requestDetailBoardsFromServer();
             }
         });
@@ -116,36 +115,6 @@ public class BoardEntranceFragment extends Fragment {
 
         entrance_erv.setAdapter(adapter);
 
-    }
-
-    private void requestFavorBoardsFromServer() {
-
-        entrance_srl.setRefreshing(true);
-
-        NetworkEntry.requestFavBoard(new FavBoardHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<List<FavBoard>> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        entrance_srl.setRefreshing(false);
-                    }
-                });
-                if (response.isSuccessful()) {
-                    FavorBoardDao favorBoardDao = AppDatabase.getDatabase(getContext()).getFavorBoardDao();
-                    // 清空，与云端保持同步
-                    favorBoardDao.clearFavorBoardsByUsername(BBSApplication.getAccountId());
-                    favorBoardDao.insert(response.getContent());
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            queryAllBoardFromDB();
-                        }
-                    });
-                }
-            }
-        });
     }
 
 

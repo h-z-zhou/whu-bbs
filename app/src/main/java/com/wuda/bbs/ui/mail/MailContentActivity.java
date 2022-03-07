@@ -14,8 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Mail;
+import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
+import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +66,7 @@ public class MailContentActivity extends AppCompatActivity {
         eventBinding();
 
         requestMailContentFromServer();
+        markMailAsRead();
     }
 
     private void eventBinding() {
@@ -97,6 +100,18 @@ public class MailContentActivity extends AppCompatActivity {
             @Override
             public void onResponseHandled(ContentResponse<String> response) {
                 mViewModel.mailContent.postValue(response.getContent());
+            }
+        });
+    }
+
+    private void markMailAsRead() {
+        Map<String, String> form = new HashMap<>();
+        form.put("dir", ".DIR");
+        form.put("num", mail.getNum());
+        NetworkEntry.requestMailContent(form, new WebResultHandler() {
+            @Override
+            public void onResponseHandled(ContentResponse<WebResult> response) {
+
             }
         });
     }

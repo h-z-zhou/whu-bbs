@@ -11,14 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MailHandler extends DefaultHandler {
-    ContentResponse<List<Mail>> mailListResponse1;
+    ContentResponse<List<Mail>> mailListResponse;
     Mail mail;
     StringBuilder subject;
     String nodeName;
 
     public MailHandler() {
-        mailListResponse1 = new ContentResponse<>();
-        mailListResponse1.setContent(new ArrayList<>());
+        mailListResponse = new ContentResponse<>();
+        mailListResponse.setContent(new ArrayList<>());
         subject = new StringBuilder();
     }
 
@@ -30,8 +30,8 @@ public class MailHandler extends DefaultHandler {
             case "Mails":
                 int currentPage = Integer.parseInt(attributes.getValue("Page"));
                 int totalPage = Integer.parseInt(attributes.getValue("TotalPage"));
-                mailListResponse1.setCurrentPage(currentPage);
-                mailListResponse1.setTotalPage(totalPage);
+                mailListResponse.setCurrentPage(currentPage);
+                mailListResponse.setTotalPage(totalPage);
                 break;
             case "Mail":
                 mail = new Mail();
@@ -41,7 +41,7 @@ public class MailHandler extends DefaultHandler {
                 String time = attributes.getValue("time");
                 mail.setNum(num);
                 mail.setSender(sender);
-                mail.setNew(isNew.equals(""));
+                mail.setNew(isNew.equals("N "));
                 mail.setTime(time);
                 break;
         }
@@ -61,11 +61,11 @@ public class MailHandler extends DefaultHandler {
         if (localName.equals("Mail")) {
             mail.setSubject(subject.toString());
             subject.setLength(0);
-            mailListResponse1.getContent().add(mail);
+            mailListResponse.getContent().add(mail);
         }
     }
 
     public ContentResponse<List<Mail>> getMailResponse() {
-        return mailListResponse1;
+        return mailListResponse;
     }
 }

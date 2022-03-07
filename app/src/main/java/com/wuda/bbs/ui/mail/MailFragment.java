@@ -36,6 +36,7 @@ import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,10 +124,12 @@ public class MailFragment extends Fragment {
                 if (currentPage != 0 && currentPage==totalPage) {
                     adapter.setMore(false);
                 }
+                List<Mail> mailList = listContentResponse.getContent();
+                Collections.reverse(mailList);
                 if (currentPage == 1) {
-                    adapter.setContents(listContentResponse.getContent());
+                    adapter.setContents(mailList);
                 } else {
-                    adapter.appendContents(listContentResponse.getContent());
+                    adapter.appendContents(mailList);
                 }
             }
         });

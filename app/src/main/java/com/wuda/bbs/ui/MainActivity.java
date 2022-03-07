@@ -29,7 +29,6 @@ import com.wuda.bbs.ui.drawer.FavArticleActivity;
 import com.wuda.bbs.ui.drawer.FriendActivity;
 import com.wuda.bbs.ui.drawer.HistoryActivity;
 import com.wuda.bbs.ui.account.AccountActivity;
-import com.wuda.bbs.ui.setting.SettingActivity;
 import com.wuda.bbs.utils.network.NetConst;
 
 public class MainActivity extends AppCompatActivity {
@@ -116,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (item.getItemId() == R.id.drawer_nav_friend) {
                     intent = new Intent(MainActivity.this, FriendActivity.class);
                 } else { // (item.getItemId() == R.id.drawer_nav_setting) {
-                    intent = new Intent(MainActivity.this, SettingActivity.class);
+                    intent = new Intent(MainActivity.this, FriendActivity.class);
                 }
 
                 startActivity(intent);

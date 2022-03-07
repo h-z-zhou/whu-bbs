@@ -29,4 +29,6 @@ public class NetConst {
 
     // 首页背景图
     public static final String HOME_BG = "http://bbs.whu.edu.cn/indexpages/now/ad.jpg";
+
+    public static final String WEB_READ_MAIL = "http://bbs.whu.edu.cn/bbsmailcon.php?dir=.DIR&num=3&title=%CA%D5%BC%FE%CF%E4";
 }
