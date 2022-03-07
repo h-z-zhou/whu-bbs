@@ -142,7 +142,9 @@ public class UserInfoHandler extends DefaultHandler {
                 nickname.setLength(0);
                 break;
             case "sex":
-                userInfo.setGender(gender.toString());
+                // 男 => "??"，不使用.equals("??")，万一哪天就好了
+                String _gender = gender.toString().equals("女") ? "女": "男";
+                userInfo.setGender(_gender);
                 gender.setLength(0);
                 break;
             case "numposts":

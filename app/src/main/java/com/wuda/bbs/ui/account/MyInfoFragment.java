@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -68,10 +69,10 @@ public class MyInfoFragment extends BaseFragment {
             @Override
             public void onChanged(UserInfo userInfo) {
                 if (getContext() != null) {
-                    if (!userInfo.getPhoto().equals("")) {
-                        Glide.with(getContext()).load(NetConst.BASE + userInfo.getPhoto()).into(photo_iv);
+                    if (TextUtils.isEmpty(userInfo.getPhoto())) {
+                        Glide.with(getContext()).load(R.mipmap.default_user_photo).into(photo_iv);
                     } else {
-                        Glide.with(getContext()).load(R.drawable.ic_login_bg).into(photo_iv);
+                        Glide.with(getContext()).load(NetConst.BASE + userInfo.getPhoto()).into(photo_iv);
                     }
 
                     Glide.with(getContext()).load(NetConst.BASE + userInfo.getAvatar()).into(avatar_iv);

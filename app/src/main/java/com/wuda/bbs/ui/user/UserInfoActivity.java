@@ -90,11 +90,11 @@ public class UserInfoActivity extends AppCompatActivity {
                 if (!userInfo.getPhoto().equals("")) {
                     Glide.with(UserInfoActivity.this)
                             .load(NetConst.BASE + userInfo.getPhoto())
-                            .error(R.drawable.default_user_photo)
+                            .error(R.mipmap.default_user_photo)
                             .into(photo_iv);
                 } else {
                     Glide.with(UserInfoActivity.this)
-                            .load(R.drawable.default_user_photo)
+                            .load(R.mipmap.default_user_photo)
                             .into(photo_iv);
                 }
 
