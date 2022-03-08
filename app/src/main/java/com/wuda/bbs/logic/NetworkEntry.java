@@ -13,6 +13,7 @@ import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.RootServiceGBKWrapper;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.AttachmentDetectHandler;
 import com.wuda.bbs.utils.networkResponseHandler.DetailArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FavArticleHandler;
@@ -237,6 +238,10 @@ public class NetworkEntry {
 
     public static void removeFavArticle(Map<String, String> form, WebResultHandler handler) {
         mRootService.get("bbssfav.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void detectAttachment(Map<String, String> form, AttachmentDetectHandler handler) {
+        mRootService.get("bbspst.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     // *******************************

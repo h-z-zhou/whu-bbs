@@ -61,8 +61,6 @@ public class PostArticleActivity extends AppCompatActivity implements Navigation
 
     }
 
-
-
     @Override
     public void navigationTo(Fragment fragment, boolean addToBackstack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction().replace(R.id.post_article_container, fragment);
@@ -71,8 +69,5 @@ public class PostArticleActivity extends AppCompatActivity implements Navigation
         }
         transaction.commit();
     }
-
-
-
 
 }

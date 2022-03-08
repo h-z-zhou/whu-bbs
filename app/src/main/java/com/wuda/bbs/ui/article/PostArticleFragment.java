@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
@@ -28,6 +29,7 @@ import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.ui.base.NavigationHost;
+import com.wuda.bbs.utils.networkResponseHandler.AttachmentDetectHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
 import java.util.HashMap;
@@ -76,6 +78,7 @@ public class PostArticleFragment extends Fragment {
             @Override
             public void onChanged(BaseBoard board) {
                 boardName_tv.setText(board.getName());
+                detectAttachment();
             }
         });
 
@@ -85,6 +88,7 @@ public class PostArticleFragment extends Fragment {
                 ((NavigationHost) getActivity()).navigationTo(new SelectBoardFragment(), true);
             }
         });
+
     }
 
     @Override
@@ -141,6 +145,21 @@ public class PostArticleFragment extends Fragment {
             @Override
             public void onResponseHandled(ContentResponse<WebResult> response) {
                 String text = response.getContent().getResult();
+            }
+        });
+    }
+
+    private void detectAttachment() {
+        Map<String, String> form = new HashMap<>();
+        form.put("board", mBoardViewModel.boardMutableLiveData.getValue().getId());
+        NetworkEntry.detectAttachment(form, new AttachmentDetectHandler() {
+            @Override
+            public void onResponseHandled(ContentResponse<Boolean> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "添加附件: " + Boolean.toString(response.getContent()), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "不可以添加附件", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
