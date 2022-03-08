@@ -30,6 +30,7 @@ import com.wuda.bbs.utils.networkResponseHandler.TodayNewArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.TopicArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UpLoadAvatarHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.WebMailContentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
 import java.util.HashMap;
@@ -258,8 +259,6 @@ public class NetworkEntry {
     // Mail
     // *******************************
 
-
-
     public static void requestMailList(Map<String, String> form, MailListHandler handler) {
         mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(handler));
     }
@@ -269,7 +268,7 @@ public class NetworkEntry {
         mMobileService.get("mail", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
-    public static void requestMailContent(Map<String, String> form, WebResultHandler handler) {
+    public static void requestMailContent(Map<String, String> form, WebMailContentHandler handler) {
         mRootServiceGBKWrapper.get("bbsmailcon.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 

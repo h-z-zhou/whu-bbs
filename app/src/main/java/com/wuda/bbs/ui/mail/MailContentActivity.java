@@ -14,10 +14,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
-import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
+import com.wuda.bbs.utils.networkResponseHandler.WebMailContentHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -65,8 +64,8 @@ public class MailContentActivity extends AppCompatActivity {
 
         eventBinding();
 
-        requestMailContentFromServer();
-        markMailAsRead();
+//        requestMailContent();
+        requestMailContentFromWeb();
     }
 
     private void eventBinding() {
@@ -91,27 +90,29 @@ public class MailContentActivity extends AppCompatActivity {
         });
     }
 
-    private void requestMailContentFromServer() {
-        Map<String, String> form = new HashMap<>();
-        form.put("read", mail.getNum());
-        form.put("boxname", boxName);
+//    private void requestMailContent() {
+//        Map<String, String> form = new HashMap<>();
+//        form.put("read", mail.getNum());
+//        form.put("boxname", boxName);
+//
+//        NetworkEntry.requestMailContent(form, new MailContentHandler() {
+//            @Override
+//            public void onResponseHandled(ContentResponse<String> response) {
+//                mViewModel.mailContent.postValue(response.getContent());
+//            }
+//        });
+//    }
 
-        NetworkEntry.requestMailContent(form, new MailContentHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<String> response) {
-                mViewModel.mailContent.postValue(response.getContent());
-            }
-        });
-    }
-
-    private void markMailAsRead() {
+    private void requestMailContentFromWeb() {
         Map<String, String> form = new HashMap<>();
         form.put("dir", ".DIR");
         form.put("num", mail.getNum());
-        NetworkEntry.requestMailContent(form, new WebResultHandler() {
+        NetworkEntry.requestMailContent(form, new WebMailContentHandler() {
             @Override
-            public void onResponseHandled(ContentResponse<WebResult> response) {
-
+            public void onResponseHandled(ContentResponse<String> response) {
+                if (response.isSuccessful()) {
+                    mViewModel.mailContent.postValue(response.getContent());
+                }
             }
         });
     }

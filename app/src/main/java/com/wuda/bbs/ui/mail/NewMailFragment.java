@@ -182,6 +182,8 @@ public class NewMailFragment extends Fragment {
             public void onResponseHandled(ContentResponse<WebResult> response) {
                 if (response.isSuccessful()) {
                     Toast.makeText(getContext(), response.getContent().getResult(), Toast.LENGTH_SHORT).show();
+                    if (getActivity() != null)
+                        getActivity().onBackPressed();
                 }
             }
         });
