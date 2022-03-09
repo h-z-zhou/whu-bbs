@@ -27,6 +27,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import com.google.android.material.textfield.TextInputEditText;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.SelectMimeType;
+import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 import com.wuda.bbs.R;
@@ -137,7 +138,9 @@ public class MyInfoSettingFragment extends BaseFragment {
                 PictureSelector.create(getContext())
                         .openGallery(SelectMimeType.ofImage())
                         .setImageEngine(GlideEngine.createGlideEngine())
-                        .setMaxSelectNum(1)
+                        .setSelectionMode(SelectModeConfig.SINGLE)
+                        .isDisplayCamera(false)
+                        .isDirectReturnSingle(true)
                         .forResult(new OnResultCallbackListener<LocalMedia>() {
                             @Override
                             public void onResult(ArrayList<LocalMedia> result) {

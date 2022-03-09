@@ -133,7 +133,7 @@ public class GlideEngine implements ImageEngine {
         Glide.with(context).resumeRequests();
     }
 
-    private GlideEngine() {
+    public GlideEngine() {
     }
 
     private static GlideEngine instance;

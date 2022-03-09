@@ -30,7 +30,6 @@
                 android:textSize="16sp" />
 
             <View
-                android:id="@+id/divider3"
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 android:background="?android:attr/listDivider" />
@@ -45,7 +44,6 @@
                 android:padding="8dp" />
 
             <View
-                android:id="@+id/divider4"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="?android:attr/listDivider" />
@@ -53,12 +51,19 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/postArticle_content_editText"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@null"
                 android:ems="10"
                 android:gravity="start"
                 android:hint="说点啥吧"
+                android:minLines="8"
                 android:padding="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/postArticle_attachment_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

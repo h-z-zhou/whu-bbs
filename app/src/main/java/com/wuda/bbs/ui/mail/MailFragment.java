@@ -1,22 +1,10 @@
 package com.wuda.bbs.ui.mail;
 
-import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,12 +14,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Mail;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.ui.adapter.MailAdapter;
 import com.wuda.bbs.ui.MainActivity;
+import com.wuda.bbs.ui.adapter.AdapterListener;
+import com.wuda.bbs.ui.adapter.MailAdapter;
 import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
 
 import java.lang.reflect.Field;
@@ -48,6 +52,25 @@ public class MailFragment extends Fragment {
     private TextView toolbar_tv;
     RecyclerView mail_rv;
     MailAdapter adapter;
+
+    ActivityResultLauncher<Intent> mailContentActivityLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        if (data != null) {
+                            boolean deleted = data.getBooleanExtra("deleted", false);
+                            if (deleted) {
+                                adapter.deleteMail(mViewModel.selectedPosition);
+                            }
+                        }
+                    }
+                }
+            });
+
 
     public static MailFragment newInstance() {
         return new MailFragment();
@@ -85,6 +108,17 @@ public class MailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MailViewModel.class);
         adapter = new MailAdapter(getContext(), new ArrayList<>(), mViewModel.box.getValue().first);
+        adapter.setAdapterListener(new AdapterListener<Mail>() {
+            @Override
+            public void onItemClicked(Mail data, int position) {
+                Intent intent = new Intent(getContext(), MailContentActivity.class);
+                intent.putExtra("mail", data);
+                intent.putExtra("boxName", mViewModel.box.getValue().first);
+//                startActivity(intent);
+                mViewModel.selectedPosition = position;
+                mailContentActivityLauncher.launch(intent);
+            }
+        });
         mail_rv.setAdapter(adapter);
         mail_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 

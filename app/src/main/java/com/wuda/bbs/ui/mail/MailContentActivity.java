@@ -14,8 +14,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Mail;
+import com.wuda.bbs.logic.bean.MailContent;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.utils.network.NetTool;
 import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
+import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebMailContentHandler;
 
 import java.util.HashMap;
@@ -69,10 +72,10 @@ public class MailContentActivity extends AppCompatActivity {
     }
 
     private void eventBinding() {
-        mViewModel.mailContent.observe(this, new Observer<String>() {
+        mViewModel.mailContent.observe(this, new Observer<MailContent>() {
             @Override
-            public void onChanged(String s) {
-                content_tv.setText(s);
+            public void onChanged(MailContent mailContent) {
+                content_tv.setText(mailContent.getContent());
                 subject_tv.append(mail.getSubject());
                 sender_tv.append(mail.getSender());
                 time_tv.append(mail.getTime());
@@ -86,6 +89,24 @@ public class MailContentActivity extends AppCompatActivity {
                 intent.putExtra("userId", mail.getSender());
                 intent.putExtra("title", "Re: " + mail.getSubject());
                 startActivity(intent);
+            }
+        });
+
+        delete_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Map<String, String> form = NetTool.extractUrlParam(mViewModel.mailContent.getValue().getDelUrl());
+                NetworkEntry.deleteMail(form, new SimpleResponseHandler() {
+                    @Override
+                    public void onResponseHandled(ContentResponse<Object> response) {
+                        if (response.isSuccessful()) {
+                            Intent intent = new Intent();
+                            intent.putExtra("deleted", true);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+                });
             }
         });
     }
@@ -105,11 +126,13 @@ public class MailContentActivity extends AppCompatActivity {
 
     private void requestMailContentFromWeb() {
         Map<String, String> form = new HashMap<>();
-        form.put("dir", ".DIR");
+
+        form.put("dir", mViewModel.box2dir(boxName));
         form.put("num", mail.getNum());
+
         NetworkEntry.requestMailContent(form, new WebMailContentHandler() {
             @Override
-            public void onResponseHandled(ContentResponse<String> response) {
+            public void onResponseHandled(ContentResponse<MailContent> response) {
                 if (response.isSuccessful()) {
                     mViewModel.mailContent.postValue(response.getContent());
                 }

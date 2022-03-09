@@ -20,6 +20,7 @@ public class MailViewModel extends ViewModel {
     final String[] boxNames = new String[]{"inbox", "sendbox", "deleted"};
     final String[] boxTitles = new String[]{"收信箱", "发信箱", "废信箱"};
     MutableLiveData<Pair<String, String>> box;
+    int selectedPosition = -1;
 
     public MailViewModel() {
         box = new MutableLiveData<>(new Pair<>("inbox", "收信箱"));

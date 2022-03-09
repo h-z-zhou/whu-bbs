@@ -277,9 +277,12 @@ public class NetworkEntry {
         mRootServiceGBKWrapper.get("bbsmailcon.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
-
     public static void sendMail(Map<String, String> form, WebResultHandler handler) {
         mRootServiceGBKWrapper.post("wForum/dosendmail.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void deleteMail(Map<String, String> form, SimpleResponseHandler handler) {
+        mRootService.get("bbsmailact.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     // *******************************

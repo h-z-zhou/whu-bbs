@@ -17,10 +17,12 @@ import com.wuda.bbs.ui.mail.MailContentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MailAdapter extends FooterAdapter<Mail> {
 
     String mBoxName;
+    AdapterListener<Mail> mAdapterListener;
 
     public MailAdapter(Context mContext, List<Mail> mContents, String mBoxName) {
         super(mContext, mContents);
@@ -42,10 +44,14 @@ public class MailAdapter extends FooterAdapter<Mail> {
                     notifyItemChanged(holder.getBindingAdapterPosition());
                 }
 
-                Intent intent = new Intent(mContext, MailContentActivity.class);
-                intent.putExtra("mail", mail);
-                intent.putExtra("boxName", mBoxName);
-                mContext.startActivity(intent);
+                if (mAdapterListener != null) {
+                    mAdapterListener.onItemClicked(mail, holder.getBindingAdapterPosition());
+                }
+
+//                Intent intent = new Intent(mContext, MailContentActivity.class);
+//                intent.putExtra("mail", mail);
+//                intent.putExtra("boxName", mBoxName);
+//                mContext.startActivity(intent);
             }
         });
 
@@ -65,6 +71,10 @@ public class MailAdapter extends FooterAdapter<Mail> {
         }
     }
 
+    public void setAdapterListener(AdapterListener<Mail> mAdapterListener) {
+        this.mAdapterListener = mAdapterListener;
+    }
+
     public void changeBox(String boxName) {
         this.mBoxName = boxName;
         setContents(new ArrayList<>());
@@ -72,6 +82,11 @@ public class MailAdapter extends FooterAdapter<Mail> {
 
     public void setBoxName(String boxName) {
         this.mBoxName = boxName;
+    }
+
+    public void deleteMail(int position) {
+        mContents.remove(position);
+        notifyItemRemoved(position);
     }
 
     static class MailViewHolder extends ContentViewHolder {
