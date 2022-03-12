@@ -2,18 +2,13 @@ package com.wuda.bbs.ui.article;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,28 +18,23 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import android.provider.MediaStore;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.luck.picture.lib.app.PictureAppMaster;
-import com.luck.picture.lib.basic.PictureSelectionCameraModel;
-import com.luck.picture.lib.basic.PictureSelectionModel;
-import com.luck.picture.lib.basic.PictureSelectionSystemModel;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.SelectMimeType;
-import com.luck.picture.lib.config.SelectModeConfig;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.luck.picture.lib.engine.ImageEngine;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -58,31 +48,29 @@ import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.logic.dao.AppDatabase;
-import com.wuda.bbs.ui.account.MyInfoSettingFragment;
 import com.wuda.bbs.ui.adapter.GridAttachmentAdapter;
 import com.wuda.bbs.ui.base.NavigationHost;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.utils.GlideEngine;
 import com.wuda.bbs.utils.networkResponseHandler.AttachmentDetectHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
-import com.yalantis.ucrop.UCrop;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PostArticleFragment extends Fragment {
 
-    private PostArticleViewModel mViewModel;
+    private PostArticleViewModel mArticleViewModel;
     private PostBoardViewModel mBoardViewModel;
 
-    TextView boardName_tv;
-    TextInputEditText title_et;
-    TextInputEditText content_et;
-    RecyclerView attachment_rv;
-    GridAttachmentAdapter attachmentAdapter;
+    private TextView boardName_tv;
+    private TextInputEditText title_et;
+    private TextInputEditText content_et;
+    private RecyclerView attachment_rv;
+    private GridAttachmentAdapter mAttachmentAdapter;
+    private final List<LocalMedia> mData = new ArrayList<>();
 
     public static PostArticleFragment newInstance() {
         return new PostArticleFragment();
@@ -107,8 +95,12 @@ public class PostArticleFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(PostArticleViewModel.class);
+        mArticleViewModel = new ViewModelProvider(this).get(PostArticleViewModel.class);
         mBoardViewModel = new ViewModelProvider(getActivity()).get(PostBoardViewModel.class);
+
+        title_et.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInput(title_et, InputMethodManager.SHOW_IMPLICIT);
 
         BaseBoard board = mBoardViewModel.boardMutableLiveData.getValue();
         if (board != null) {
@@ -119,7 +111,8 @@ public class PostArticleFragment extends Fragment {
             @Override
             public void onChanged(BaseBoard board) {
                 boardName_tv.setText(board.getName());
-                detectAttachment();
+                mArticleViewModel.attachmentState = 0;
+                detectAttachable(false);
             }
         });
 
@@ -131,7 +124,7 @@ public class PostArticleFragment extends Fragment {
         });
 
         FullyGridLayoutManager manager = new FullyGridLayoutManager(getContext(),
-                4, GridLayoutManager.VERTICAL, false);
+                3, GridLayoutManager.VERTICAL, false);
         attachment_rv.setLayoutManager(manager);
         RecyclerView.ItemAnimator itemAnimator = attachment_rv.getItemAnimator();
         if (itemAnimator != null) {
@@ -139,9 +132,9 @@ public class PostArticleFragment extends Fragment {
         }
         attachment_rv.addItemDecoration(new GridSpacingItemDecoration(3,
                 DensityUtil.dip2px(getContext(), 8), false));
-        attachmentAdapter = new GridAttachmentAdapter(getContext(), new ArrayList<>());
-        attachmentAdapter.setSelectMax(9);
-        attachment_rv.setAdapter(attachmentAdapter);
+        mAttachmentAdapter = new GridAttachmentAdapter(getContext(), mData);
+        mAttachmentAdapter.setSelectMax(9);
+        attachment_rv.setAdapter(mAttachmentAdapter);
 //        if (savedInstanceState != null && savedInstanceState.getParcelableArrayList("selectorList") != null) {
 //            mData.clear();
 //            mData.addAll(savedInstanceState.getParcelableArrayList("selectorList"));
@@ -149,61 +142,59 @@ public class PostArticleFragment extends Fragment {
 
 
         ImageEngine imageEngine = new GlideEngine();
-        attachmentAdapter.setOnItemClickListener(new GridAttachmentAdapter.OnItemClickListener() {
+        mAttachmentAdapter.setOnItemClickListener(new GridAttachmentAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 // 预览图片、视频、音频
                 PictureSelector.create(getContext())
                         .openPreview()
                         .setImageEngine(imageEngine)
-                        .startActivityPreview(position, true, attachmentAdapter.getData());
+                        .setExternalPreviewEventListener(new OnExternalPreviewEventListener() {
+                            @Override
+                            public void onPreviewDelete(int position) {
+                                mAttachmentAdapter.remove(position);
+                                mAttachmentAdapter.notifyItemRemoved(position);
+                            }
+
+                            @Override
+                            public boolean onLongPressDownload(LocalMedia media) {
+                                return false;
+                            }
+                        })
+                        .startActivityPreview(position, true, mAttachmentAdapter.getData());
             }
 
             @Override
             public void openPicture() {
-//                PictureSelectionModel selectionModel = PictureSelector.create(getContext())
-//                        .openGallery(SelectMimeType.ofImage())
-//                        .setImageEngine(imageEngine);
-//
-//                selectionModel.forResult(PictureConfig.CHOOSE_REQUEST);
-//                        .setCropEngine(getCropEngine())
-//                        .setCompressEngine(getCompressEngine())
-//                        .setSelectedData(mAdapter.getData());
 
-                PictureSelector.create(getContext())
-                        .openGallery(SelectMimeType.ofImage())
-                        .setImageEngine(GlideEngine.createGlideEngine())
-                        .isDisplayCamera(false)
-                        .forResult(new OnResultCallbackListener<LocalMedia>() {
-                            @Override
-                            public void onResult(ArrayList<LocalMedia> result) {
-                                analyticalSelectResults(result);
-                            }
-                            @Override
-                            public void onCancel() {
+                switch (mArticleViewModel.attachmentState) {
+                    case -1:
+                        Toast.makeText(getContext(), "该版块不可上传附件", Toast.LENGTH_SHORT).show();
+                        return;
+                    case 0:
+                        Toast.makeText(getContext(), "正在判断是否可以上传附件", Toast.LENGTH_SHORT).show();
+                        detectAttachable(true);
+                        return;
+                    case 1:
+                        PictureSelector.create(getContext())
+                                .openGallery(SelectMimeType.ofImage())
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .isDisplayCamera(false)
+                                .setSelectedData(mAttachmentAdapter.getData())
+                                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                                    @Override
+                                    public void onResult(ArrayList<LocalMedia> result) {
+                                        analyticalSelectResults(result);
+                                    }
+                                    @Override
+                                    public void onCancel() {
 
-                            }
-                        });
+                                    }
+                                });
+                }
             }
         });
 
-    }
-
-
-    private ActivityResultLauncher<Intent> createActivityResultLauncher() {
-        return registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        int resultCode = result.getResultCode();
-                        if (resultCode == RESULT_OK) {
-                            ArrayList<LocalMedia> selectList = PictureSelector.obtainSelectorList(result.getData());
-                            analyticalSelectResults(selectList);
-                        } else if (resultCode == RESULT_CANCELED) {
-//                            Log.i(TAG, "onActivityResult PictureSelector Cancel");
-                        }
-                    }
-                });
     }
 
     @Override
@@ -249,13 +240,13 @@ public class PostArticleFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                boolean isMaxSize = result.size() == attachmentAdapter.getSelectMax();
-                int oldSize = attachmentAdapter.getData().size();
-                attachmentAdapter.notifyItemRangeRemoved(0, isMaxSize ? oldSize + 1 : oldSize);
-                attachmentAdapter.getData().clear();
+                boolean isMaxSize = result.size() == mAttachmentAdapter.getSelectMax();
+                int oldSize = mAttachmentAdapter.getData().size();
+                mAttachmentAdapter.notifyItemRangeRemoved(0, isMaxSize ? oldSize + 1 : oldSize);
+                mAttachmentAdapter.getData().clear();
 
-                attachmentAdapter.getData().addAll(result);
-                attachmentAdapter.notifyItemRangeInserted(0, result.size());
+                mAttachmentAdapter.getData().addAll(result);
+                mAttachmentAdapter.notifyItemRangeInserted(0, result.size());
             }
         });
     }
@@ -319,16 +310,19 @@ public class PostArticleFragment extends Fragment {
         });
     }
 
-    private void detectAttachment() {
+    private void detectAttachable(boolean echoOnResponse) {
         Map<String, String> form = new HashMap<>();
         form.put("board", mBoardViewModel.boardMutableLiveData.getValue().getId());
         NetworkEntry.detectAttachment(form, new AttachmentDetectHandler() {
             @Override
             public void onResponseHandled(ContentResponse<Boolean> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(getContext(), "添加附件: " + Boolean.toString(response.getContent()), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "不可以添加附件", Toast.LENGTH_SHORT).show();
+                    boolean isAttachable = response.getContent();
+                    mArticleViewModel.attachmentState = isAttachable? 1: -1;
+                    if (echoOnResponse) {
+                        String info = isAttachable? "判断成功：该版块可以上传附件": "判断成功：该版块不可以上传附件";
+                        Toast.makeText(getContext(), info, Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
