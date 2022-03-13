@@ -66,14 +66,6 @@ public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPage
             holder.filename_tv.setText(attachment.getName());
         }
 
-        holder.download_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
-                mContext.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -85,14 +77,12 @@ public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPage
 
         ImageView face_iv;
         TextView filename_tv;
-        Button download_btn;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             face_iv = itemView.findViewById(R.id.attachment_face_imageView);
             filename_tv = itemView.findViewById(R.id.attachment_filename_textView);
-            download_btn = itemView.findViewById(R.id.attachment_download_button);
         }
     }
 }

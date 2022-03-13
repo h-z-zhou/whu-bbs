@@ -18,10 +18,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
+import com.luck.picture.lib.utils.DensityUtil;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.ui.article.ReplyActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
+import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.utils.network.NetConst;
 
 import java.util.ArrayList;
@@ -119,7 +122,10 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             if (!article.getAttachmentList().isEmpty()) {
 //                Toast.makeText(mContext, "附件", Toast.LENGTH_SHORT).show();
                 RecyclerView recyclerView = new RecyclerView(((ContentViewHolder) holder).root_cl.getContext());
-                recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+//                recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
+                recyclerView.setLayoutManager(new FullyGridLayoutManager(mContext, 3));
+                recyclerView.addItemDecoration(new GridSpacingItemDecoration(3,
+                        DensityUtil.dip2px(mContext, 4), false));
 //                recyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL));
 //                recyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
                 recyclerView.setAdapter(new AttachmentAdapter(mContext, mBoardId, article.getId(), article.getAttachmentList()));

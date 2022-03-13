@@ -45,6 +45,7 @@ import com.luck.picture.lib.utils.DensityUtil;
 import com.luck.picture.lib.utils.MediaUtils;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
+import com.wuda.bbs.logic.bean.Attachment;
 import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
@@ -53,12 +54,19 @@ import com.wuda.bbs.ui.base.NavigationHost;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.utils.GlideEngine;
 import com.wuda.bbs.utils.networkResponseHandler.AttachmentDetectHandler;
+import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.UploadAttachmentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class PostArticleFragment extends Fragment {
 
@@ -131,7 +139,7 @@ public class PostArticleFragment extends Fragment {
             ((SimpleItemAnimator) itemAnimator).setSupportsChangeAnimations(false);
         }
         attachment_rv.addItemDecoration(new GridSpacingItemDecoration(3,
-                DensityUtil.dip2px(getContext(), 8), false));
+                DensityUtil.dip2px(getContext(), 4), false));
         mAttachmentAdapter = new GridAttachmentAdapter(getContext(), mData);
         mAttachmentAdapter.setSelectMax(9);
         attachment_rv.setAdapter(mAttachmentAdapter);
@@ -261,7 +269,11 @@ public class PostArticleFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_post_article) {
-            postArticle();
+            if (mAttachmentAdapter.getData().isEmpty()) {
+                postArticle();
+            } else {
+                uploadPhotos();
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -323,6 +335,37 @@ public class PostArticleFragment extends Fragment {
                         String info = isAttachable? "判断成功：该版块可以上传附件": "判断成功：该版块不可以上传附件";
                         Toast.makeText(getContext(), info, Toast.LENGTH_LONG).show();
                     }
+                }
+            }
+        });
+    }
+
+    private void uploadPhotos() {
+
+        List<MultipartBody.Part> photos = new ArrayList<>();
+
+        List<LocalMedia> localMediaList = mAttachmentAdapter.getData();
+        for (int i=0; i<localMediaList.size(); i++) {
+            LocalMedia localMedia = localMediaList.get(i);
+            File file = new File(localMedia.getPath());
+            String fileName = localMedia.getFileName();
+            String formName = "attachfile" + Integer.toString(i);
+
+            RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part part = MultipartBody.Part.createFormData(formName, fileName, photoRequestBody);
+            photos.add(part);
+
+        }
+
+
+
+        NetworkEntry.uploadAttachments(photos, new UploadAttachmentHandler() {
+            @Override
+            public void onResponseHandled(ContentResponse<List<Attachment>> response) {
+                if (response.isSuccessful()) {
+                    postArticle();
+                } else {
+                    Toast.makeText(getContext(), response.getMassage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

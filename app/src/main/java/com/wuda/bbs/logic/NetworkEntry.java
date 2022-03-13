@@ -30,6 +30,7 @@ import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.TodayNewArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.TopicArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UpLoadAvatarHandler;
+import com.wuda.bbs.utils.networkResponseHandler.UploadAttachmentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebMailContentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
@@ -38,7 +39,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -242,6 +245,13 @@ public class NetworkEntry {
 
     public static void detectAttachment(Map<String, String> form, AttachmentDetectHandler handler) {
         mRootService.get("bbspst.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void uploadAttachments(List<MultipartBody.Part> attachments, UploadAttachmentHandler handler) {
+        Map<String, String> param = new HashMap<>();
+        param.put("act", "add");
+        RequestBody counterRequest = RequestBody.create(MediaType.parse("text/plain"), Integer.toString(attachments.size()));
+        mRootService.uploadFiles("bbsupload.php", param, counterRequest, attachments).enqueue(new AuthBBSCallback<>(handler));
     }
 
     // *******************************
