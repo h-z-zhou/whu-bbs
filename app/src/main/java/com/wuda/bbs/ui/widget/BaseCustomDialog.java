@@ -8,13 +8,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialog;
 
 import com.wuda.bbs.R;
 
-public class CustomDialog extends AppCompatDialog {
-
+public class BaseCustomDialog extends AppCompatDialog {
     protected TextView title_tv;
     protected FrameLayout content_fl;
     protected Button negative_btn, positive_btn;
@@ -27,7 +25,7 @@ public class CustomDialog extends AppCompatDialog {
     protected OnButtonClickListener nBtnLister;
 
 
-    public CustomDialog(Context context) {
+    public BaseCustomDialog(Context context) {
         super(context, R.style.CustomDialog);
     }
 
@@ -41,7 +39,6 @@ public class CustomDialog extends AppCompatDialog {
         content_fl = findViewById(R.id.dialog_content_frameLayout);
         negative_btn = findViewById(R.id.dialog_negtive_button);
         positive_btn = findViewById(R.id.dialog_positive_button);
-
     }
 
     protected void refreshView() {
@@ -70,69 +67,30 @@ public class CustomDialog extends AppCompatDialog {
         }
     }
 
-    public CustomDialog setOnPositiveButtonClickedListener(String text, OnButtonClickListener listener) {
+    public BaseCustomDialog setOnPositiveButtonClickedListener(String text, OnButtonClickListener listener) {
         this.pBtnText = text;
         if (listener != null)
             this.pBtnLister = listener;
         return this;
     }
 
-    public CustomDialog setOnNegativeButtonClickedLister(String text, OnButtonClickListener listener) {
+    public BaseCustomDialog setOnPositiveButtonClickedListener(OnButtonClickListener listener) {
+        if (listener != null)
+            this.pBtnLister = listener;
+        return this;
+    }
+
+    public BaseCustomDialog setOnNegativeButtonClickedLister(String text, OnButtonClickListener listener) {
         this.nBtnText = text;
         if (listener != null)
             this.nBtnLister = listener;
         return this;
     }
 
-    public CustomDialog setDialogTitle(String title) {
-        this.title = title;
+    public BaseCustomDialog setOnNegativeButtonClickedLister(OnButtonClickListener listener) {
+        if (listener != null)
+            this.nBtnLister = listener;
         return this;
-    }
-
-    public CustomDialog setCustomView(@NonNull View view) {
-        this.content_view = view;
-        return this;
-    }
-
-    public void show() {
-        super.show();
-        bindingBtnEvent();
-        refreshView();
-    }
-
-    private void bindingBtnEvent() {
-
-        if (this.pBtnLister == null) {
-            pBtnLister = new OnButtonClickListener() {
-                @Override
-                public void onButtonClick() {
-                }
-            };
-        }
-
-        if (this.nBtnLister == null) {
-            nBtnLister = new OnButtonClickListener() {
-                @Override
-                public void onButtonClick() {
-                }
-            };
-        }
-
-        positive_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pBtnLister.onButtonClick();
-//                dismiss();
-            }
-        });
-
-        negative_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nBtnLister.onButtonClick();
-                dismiss();
-            }
-        });
     }
 
     public interface OnButtonClickListener {

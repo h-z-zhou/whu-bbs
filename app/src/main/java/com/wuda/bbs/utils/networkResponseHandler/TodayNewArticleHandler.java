@@ -17,7 +17,7 @@ public abstract class TodayNewArticleHandler implements ContentResponseHandler<L
             return HtmlParser.parseNewsToday(new String(data, "GBK"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            return new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e);
         }
     }
 }

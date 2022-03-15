@@ -34,13 +34,13 @@ public class AuthBBSCallback<T> implements Callback<ResponseBody> {
             ResponseBody body = response.body();
             if (body == null ) {
                 mContentResponse = new ContentResponse<>();
-                mContentResponse.setResultCode(ResultCode.ERROR);
+                mContentResponse.setResultCode(ResultCode.EMPTY_DATA_ERR);
             } else {
                 try {
                     mContentResponse = mResponseHandler.handleNetworkResponse(body.bytes());
                 } catch (IOException e) {
                     e.printStackTrace();
-                    mContentResponse = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+                    mContentResponse = new ContentResponse<>(ResultCode.DATA_IO_ERR, e.getMessage());
                 }
             }
         }

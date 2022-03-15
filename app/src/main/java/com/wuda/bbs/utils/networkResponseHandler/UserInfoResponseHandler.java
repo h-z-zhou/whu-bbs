@@ -13,8 +13,4 @@ public abstract class UserInfoResponseHandler implements ContentResponseHandler<
         return XMLParser.parseUserInfo(new String(data));
     }
 
-//    public UserInfoResponse handleNetworkRespondse(@NonNull byte[] data) {
-//        String xmlData = new String(data);
-//        return XMLParser.parseUserInfo(xmlData);
-//    }
 }

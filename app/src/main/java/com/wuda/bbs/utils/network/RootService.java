@@ -24,9 +24,6 @@ public interface RootService {
     @GET("{page}")
     Call<ResponseBody> get(@Path("page") String page, @QueryMap Map<String, String> map);
 
-    @GET("{page}")
-    Call<ResponseBody> getWithEncoded(@Path("page") String page, @QueryMap(encoded = true) Map<String, String> map);
-
     @FormUrlEncoded
     @POST("{page}")
     Call<ResponseBody> post(@Path("page") String page, @FieldMap Map<String, String> formData);
@@ -38,10 +35,6 @@ public interface RootService {
     @Multipart
     @POST("{page}")
     Call<ResponseBody> uploadFile(@Path("page") String page, @Part MultipartBody.Part file);
-
-    @Multipart
-    @POST("{page}")
-    Call<ResponseBody> uploadFile(@Path("page") String page, @QueryMap Map<String, String> queryMap, @Part MultipartBody.Part file);
 
     @Multipart
     @POST("{page}")

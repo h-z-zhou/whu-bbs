@@ -24,8 +24,7 @@ public class HtmlParser {
         Document doc = Jsoup.parse(htmlData);
         Elements tables = doc.getElementsByTag("table");
         if (tables.size() != 2) {
-            briefArticleResponse.setResultCode(ResultCode.ERROR);
-            briefArticleResponse.setMassage("未定义错误");
+            briefArticleResponse.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
         } else {
             try {
                 Elements trs = tables.get(1).getElementsByTag("tr");
@@ -49,8 +48,8 @@ public class HtmlParser {
                     articleList.add(briefArticle);
                 }
             } catch (Exception e) {
-                briefArticleResponse.setResultCode(ResultCode.ERROR);
-                briefArticleResponse.setMassage(e.getMessage());
+                briefArticleResponse.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
+                briefArticleResponse.setException(e);
             }
 
             /*
@@ -94,8 +93,7 @@ public class HtmlParser {
             if (links.size() != 3)
                 continue;
 
-            Treasure treasure = null;
-            treasure = new Treasure();
+            Treasure treasure = new Treasure();
             treasure.setName(links.get(0).text());
             treasure.setSrcUrl(links.get(0).attr("href"));
             treasure.setDelUrl(links.get(2).attr("href"));
@@ -115,8 +113,7 @@ public class HtmlParser {
         Document doc = Jsoup.parse(htmlData);
         Elements infoTable = doc.getElementsByTag("table");
         if (infoTable.size() != 1) {
-            response.setResultCode(ResultCode.DATA_ERR);
-            response.setMassage("未知错误");
+            response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
         } else {
             response.setContent(infoTable.get(0).text());
         }
@@ -141,9 +138,9 @@ public class HtmlParser {
         Document doc = Jsoup.parse(htmlData);
         Elements infoTable = doc.getElementsByTag("table");
         if (infoTable.size() != 1) {
-            response.setMassage(doc.text());
+            response.setContent(doc.text());
         } else {
-            response.setMassage(infoTable.get(0).text());
+            response.setContent(infoTable.get(0).text());
         }
 
         return response;
@@ -163,20 +160,17 @@ public class HtmlParser {
         Document doc = Jsoup.parse(htmlData);
         Elements paramTable = doc.getElementsByTag("form");
         if (paramTable.isEmpty()) {
-            response.setResultCode(ResultCode.ERROR);
-            response.setMassage("未定义错误");
+            response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
         } else {
             Elements trs = paramTable.get(0).getElementsByTag("tr");
             if (trs.size() != 11) {
-                response.setResultCode(ResultCode.ERROR);
-                response.setMassage("未定义错误");
+                response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
             } else {
                 List<Boolean> paramValues = new ArrayList<>();
                 for (int i=1; i<10; i++) {
                     Elements tds = trs.get(i).getElementsByTag("td");
                     if (tds.size()!=2) {
-                        response.setResultCode(ResultCode.ERROR);
-                        response.setMassage("未定义错误");
+                        response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
                     }
                     Elements radios = tds.get(1).getElementsByTag("input");
                     for (Element radio: radios) {
@@ -186,8 +180,7 @@ public class HtmlParser {
                     }
                 }
                 if (paramValues.size() != 9) {
-                    response.setResultCode(ResultCode.ERROR);
-                    response.setMassage("未定义错误");
+                    response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
                 } else {
                     response.setContent(paramValues);
                 }
@@ -204,8 +197,7 @@ public class HtmlParser {
         Document doc = Jsoup.parse(htmlData);
         Elements tables = doc.getElementsByClass("TableBody1");
         if (tables.isEmpty()) {
-            response.setResultCode(ResultCode.DATA_ERR);
-            response.setMassage("未定义错误");
+            response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
         } else {
             String text = tables.get(0).text();
             response.setContent(text);
@@ -219,8 +211,7 @@ public class HtmlParser {
         Document doc = Jsoup.parse(htmlData);
         Elements tables = doc.getElementsByClass("TableBody1");
         if (tables.isEmpty()) {
-            response.setResultCode(ResultCode.DATA_ERR);
-            response.setMassage("未定义错误");
+            response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
         } else {
             String text = tables.get(0).text();
             response.setContent(text);

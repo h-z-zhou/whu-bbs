@@ -1,11 +1,12 @@
 package com.wuda.bbs.ui.home;
 
-import android.widget.Toast;
-
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BriefArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.board.ArticleContainerFragment;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.CustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.utils.networkResponseHandler.HotArticleHandler;
 
 import java.util.List;
@@ -27,7 +28,16 @@ public class HotArticleFragment extends ArticleContainerFragment {
                 if (response.isSuccessful()) {
                     mViewModel.articleResponse.postValue(response);
                 } else {
-                    Toast.makeText(getContext(), response.getMassage(), Toast.LENGTH_SHORT).show();
+                    new ResponseErrorHandlerDialog(getContext())
+                            .addErrorMsg(response.getResultCode(), null)
+                            .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                                @Override
+                                public void onButtonClick() {
+                                    requestArticleFromServer();
+                                }
+                            })
+                            .show();
+//                    Toast.makeText(getContext(), response.getMassage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });

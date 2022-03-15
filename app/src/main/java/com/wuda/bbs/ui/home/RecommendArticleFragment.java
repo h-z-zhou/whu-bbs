@@ -1,7 +1,5 @@
 package com.wuda.bbs.ui.home;
 
-import android.widget.Toast;
-
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BriefArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
@@ -18,17 +16,7 @@ public class RecommendArticleFragment extends ArticleContainerFragment {
         NetworkEntry.requestRecommendArticle(new RecommendArticleHandler() {
             @Override
             public void onResponseHandled(ContentResponse<List<BriefArticle>> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        article_srl.setRefreshing(false);
-                    }
-                });
-                if (response.isSuccessful()) {
-                    mViewModel.articleResponse.postValue(response);
-                } else {
-                    Toast.makeText(getContext(), response.getMassage(), Toast.LENGTH_SHORT).show();
-                }
+                mViewModel.articleResponse.postValue(response);
             }
         });
 

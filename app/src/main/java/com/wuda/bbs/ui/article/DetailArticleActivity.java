@@ -6,8 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,8 +25,10 @@ import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.HistoryDao;
-import com.wuda.bbs.ui.account.AccountActivity;
 import com.wuda.bbs.ui.adapter.DetailArticleRecyclerAdapter;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.CustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.ui.widget.TopicDecoration;
 import com.wuda.bbs.utils.networkResponseHandler.DetailArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
@@ -151,21 +151,15 @@ public class DetailArticleActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     ((DetailArticleRecyclerAdapter) article_rv.getAdapter()).updateDataSet(response.getContent());
                 } else {
-                    if (response.getResultCode() == ResultCode.LOGIN_ERR) {
-                        new AlertDialog.Builder(DetailArticleActivity.this)
-                                .setTitle("未登录")
-                                .setMessage("请先登录")
-                                .setPositiveButton("去登录", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(DetailArticleActivity.this, AccountActivity.class);
-                                        intent.putExtra("isLogin", true);
-                                        startActivity(intent);
-                                    }
-                                })
-                                .create()
-                                .show();
-                    }
+                    new ResponseErrorHandlerDialog(DetailArticleActivity.this)
+                            .addErrorMsg(response.getResultCode(), null)
+                            .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                                @Override
+                                public void onButtonClick() {
+                                    requestContentFromServer();
+                                }
+                            })
+                            .show();
                 }
             }
 

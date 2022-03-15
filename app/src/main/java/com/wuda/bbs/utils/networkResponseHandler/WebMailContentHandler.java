@@ -31,11 +31,11 @@ public abstract class WebMailContentHandler implements ContentResponseHandler<Ma
                 response = new ContentResponse<>();
                 response.setContent(new MailContent(content, delUrl));
             } else  {
-                response = new ContentResponse<>(ResultCode.DATA_ERR, "未知错误");
+                response = new ContentResponse<>(ResultCode.UNMATCHED_CONTENT_ERR);
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e);
         }
         return response;
     }

@@ -5,9 +5,6 @@ import androidx.annotation.NonNull;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,7 +24,7 @@ public abstract class AttachmentDetectHandler implements ContentResponseHandler<
             if (matcher.find()) {
                 String[] params = matcher.group().split(",");
                 if (params.length != 9) {
-                    response.setResultCode(ResultCode.DATA_ERR);
+                    response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
                     response.setMassage("未知数据错误");
                     response.setContent(false);
                 } else {
@@ -36,7 +33,7 @@ public abstract class AttachmentDetectHandler implements ContentResponseHandler<
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e.getMessage());
             response.setContent(false);
         }
 

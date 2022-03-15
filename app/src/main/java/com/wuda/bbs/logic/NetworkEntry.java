@@ -129,7 +129,7 @@ public class NetworkEntry {
                 if (cookies == null) {
                     handler.onResponseHandled(new ContentResponse<>(ResultCode.LOGIN_ERR, "退出成功"));
                 } else {
-                    handler.onResponseHandled(new ContentResponse<>(ResultCode.ERROR, "未知错误"));
+                    handler.onResponseHandled(new ContentResponse<>(ResultCode.UNMATCHED_CONTENT_ERR, "未知错误"));
                 }
             }
 

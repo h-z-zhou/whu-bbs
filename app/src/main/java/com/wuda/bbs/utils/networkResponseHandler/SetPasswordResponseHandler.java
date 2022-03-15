@@ -16,7 +16,7 @@ public abstract class SetPasswordResponseHandler implements ContentResponseHandl
         try {
             response = HtmlParser.parseSetPasswordResponse(new String(data, "GBK"));
         } catch (UnsupportedEncodingException e) {
-            response =new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response =new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e);
             e.printStackTrace();
         }
         return response;

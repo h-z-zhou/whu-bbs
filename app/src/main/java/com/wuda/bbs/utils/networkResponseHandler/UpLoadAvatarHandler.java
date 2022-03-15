@@ -29,7 +29,7 @@ public abstract class UpLoadAvatarHandler implements ContentResponseHandler<WebR
                 response.setContent(new WebResult(matcher.group()));
             } else {
                 response = new ContentResponse<>();
-                response.setResultCode(ResultCode.ERROR);
+                response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
                 Document doc = Jsoup.parse(html);
                 Elements tables = doc.getElementsByClass("TableBody1");
                 if (!tables.isEmpty()) {
@@ -45,7 +45,7 @@ public abstract class UpLoadAvatarHandler implements ContentResponseHandler<WebR
             }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e);
         }
         return response;
     }

@@ -56,7 +56,7 @@ public abstract class UploadAttachmentHandler implements ContentResponseHandler<
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e);
         }
         return response;
     }

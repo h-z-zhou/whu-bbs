@@ -175,9 +175,9 @@ public class MyInfoSettingFragment extends BaseFragment {
                 new CustomDialog(getContext())
                         .setDialogTitle("请输入昵称")
                         .setCustomView(view)
-                        .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickedListener() {
+                        .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickListener() {
                             @Override
-                            public void onButtonClicked() {
+                            public void onButtonClick() {
                                 if (content_et.getText() != null) {
                                     String nickname = content_et.getText().toString();
                                     nickname_tv.setText(nickname);
@@ -219,9 +219,9 @@ public class MyInfoSettingFragment extends BaseFragment {
                 new CustomDialog(getContext())
                         .setDialogTitle("请选择性别")
                         .setCustomView(gender_rg)
-                        .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickedListener() {
+                        .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickListener() {
                             @Override
-                            public void onButtonClicked() {
+                            public void onButtonClick() {
 
                                 String gender = boy_rb.isChecked()? "1": "2";
                                 gender_tv.setText(boy_rb.isChecked()? "男": "女");
@@ -264,9 +264,9 @@ public class MyInfoSettingFragment extends BaseFragment {
                 new CustomDialog(getContext())
                         .setDialogTitle("请输入个性签名")
                         .setCustomView(view)
-                        .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickedListener() {
+                        .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickListener() {
                             @Override
-                            public void onButtonClicked() {
+                            public void onButtonClick() {
                                 if (content_et.getText() != null) {
                                     String signature = content_et.getText().toString();
                                     signature_tv.setText(signature);

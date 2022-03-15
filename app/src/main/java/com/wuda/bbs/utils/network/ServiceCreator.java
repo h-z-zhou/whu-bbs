@@ -4,12 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import java.io.IOException;
-
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Response;
-import okhttp3.internal.http.BridgeInterceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 

@@ -74,7 +74,7 @@ public abstract class MyUserDataHandler implements ContentResponseHandler<Map<St
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response.setResultCode(ResultCode.DATA_ERR);
+            response.setResultCode(ResultCode.HANDLE_DATA_ERR);
             response.setMassage(e.getMessage());
         }
 

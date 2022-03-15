@@ -16,7 +16,7 @@ public abstract class RegisterResponseHandler implements ContentResponseHandler<
             response = HtmlParser.parseRegisterResponse(new String(data, "GBK"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e.getMessage());
         }
         return response;
     }

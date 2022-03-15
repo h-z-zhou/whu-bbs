@@ -16,12 +16,6 @@ import java.io.UnsupportedEncodingException;
 public abstract class SimpleResponseHandler implements ContentResponseHandler<Object> {
     @Override
     public ContentResponse<Object> handleNetworkResponse(@NonNull byte[] data) {
-        try {
-            String text = new String(data, "GBK");
-            Log.d("response", text);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         return new ContentResponse<>();
     }
 }

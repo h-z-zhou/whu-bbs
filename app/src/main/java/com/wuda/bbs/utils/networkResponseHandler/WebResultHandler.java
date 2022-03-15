@@ -34,8 +34,8 @@ public abstract class WebResultHandler implements ContentResponseHandler<WebResu
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response.setResultCode(ResultCode.DATA_ERR);
-            response.setMassage(e.getMessage());
+            response.setResultCode(ResultCode.HANDLE_DATA_ERR);
+            response.setException(e);
         }
 
         return response;

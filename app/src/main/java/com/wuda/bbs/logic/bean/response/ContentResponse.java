@@ -2,8 +2,9 @@ package com.wuda.bbs.logic.bean.response;
 
 public class ContentResponse<T> {
 
-    ResultCode resultCode = ResultCode.SUCCESS;
-    String massage;  // 附带信息，=> Error
+    protected ResultCode resultCode = ResultCode.SUCCESS;
+    protected Exception exception;
+    protected String massage;
 
     private T content;
     private int currentPage;
@@ -16,23 +17,24 @@ public class ContentResponse<T> {
         this.content = content;
     }
 
-    public ContentResponse(ResultCode resultCode, String massage) {
-        this.resultCode = resultCode;
-        this.massage = massage;
-    }
-
     public ContentResponse(T content, int currentPage, int totalPage) {
         this.content = content;
         this.currentPage = currentPage;
         this.totalPage = totalPage;
     }
 
-    public ContentResponse(ResultCode resultCode, String massage, T content, int currentPage, int totalPage) {
+    public ContentResponse(ResultCode resultCode) {
+        this.resultCode = resultCode;
+    }
+
+    public ContentResponse(ResultCode resultCode, Exception exception) {
+        this.resultCode = resultCode;
+        this.exception = exception;
+    }
+
+    public ContentResponse(ResultCode resultCode, String massage) {
         this.resultCode = resultCode;
         this.massage = massage;
-        this.content = content;
-        this.currentPage = currentPage;
-        this.totalPage = totalPage;
     }
 
     public boolean isSuccessful() {
@@ -45,6 +47,14 @@ public class ContentResponse<T> {
 
     public void setResultCode(ResultCode resultCode) {
         this.resultCode = resultCode;
+    }
+
+    public Exception getException() {
+        return exception;
+    }
+
+    public void setException(Exception exception) {
+        this.exception = exception;
     }
 
     public String getMassage() {

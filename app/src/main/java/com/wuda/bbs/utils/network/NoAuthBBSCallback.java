@@ -28,13 +28,13 @@ public class NoAuthBBSCallback<T> implements Callback<ResponseBody> {
         ResponseBody body = response.body();
         if (body == null ) {
             mContentResponse = new ContentResponse<>();
-            mContentResponse.setResultCode(ResultCode.ERROR);
+            mContentResponse.setResultCode(ResultCode.EMPTY_DATA_ERR);
         } else {
             try {
                 mContentResponse = mResponseHandler.handleNetworkResponse(body.bytes());
             } catch (IOException e) {
                 e.printStackTrace();
-                mContentResponse = new ContentResponse<>(ResultCode.ERROR, e.getMessage());
+                mContentResponse = new ContentResponse<>(ResultCode.DATA_IO_ERR, e.getMessage());
             }
         }
         mResponseHandler.onResponseHandled(mContentResponse);
@@ -43,5 +43,6 @@ public class NoAuthBBSCallback<T> implements Callback<ResponseBody> {
     @Override
     public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
         mContentResponse = new ContentResponse<>(ResultCode.CONNECT_ERR, t.getMessage());
+        mResponseHandler.onResponseHandled(mContentResponse);
     }
 }

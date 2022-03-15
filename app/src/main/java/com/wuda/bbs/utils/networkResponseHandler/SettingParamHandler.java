@@ -18,7 +18,7 @@ public abstract class SettingParamHandler implements ContentResponseHandler<List
             response = HtmlParser.parseUserParamResponse(new String(data, "GBK"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e.getMessage());
         }
         return response;
     }

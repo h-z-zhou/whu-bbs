@@ -19,6 +19,9 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.BriefArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.BriefArticleAdapter;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.CustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,16 +68,31 @@ public abstract class ArticleContainerFragment extends Fragment {
         mViewModel.articleResponse.observe(getViewLifecycleOwner(), new Observer<ContentResponse<List<BriefArticle>>>() {
             @Override
             public void onChanged(ContentResponse<List<BriefArticle>> listContentResponse) {
-                int currentPage = listContentResponse.getCurrentPage();
-                int totalPage = listContentResponse.getTotalPage();
-                if (currentPage != 0 && currentPage==totalPage) {
-                    adapter.setMore(false);
-                }
 
-                if (currentPage == 1) {
-                    adapter.setContents(listContentResponse.getContent());
+                article_srl.setRefreshing(false);
+
+                if (listContentResponse.isSuccessful()) {
+                    int currentPage = listContentResponse.getCurrentPage();
+                    int totalPage = listContentResponse.getTotalPage();
+                    if (currentPage != 0 && currentPage==totalPage) {
+                        adapter.setMore(false);
+                    }
+
+                    if (currentPage == 1) {
+                        adapter.setContents(listContentResponse.getContent());
+                    } else {
+                        adapter.appendContents(listContentResponse.getContent());
+                    }
                 } else {
-                    adapter.appendContents(listContentResponse.getContent());
+                    new ResponseErrorHandlerDialog(getContext())
+                            .addErrorMsg(listContentResponse.getResultCode(), null)
+                            .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                                @Override
+                                public void onButtonClick() {
+                                    requestArticleFromServer();
+                                }
+                            })
+                            .show();
                 }
             }
         });

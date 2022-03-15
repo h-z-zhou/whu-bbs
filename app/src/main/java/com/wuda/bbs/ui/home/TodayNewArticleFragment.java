@@ -1,7 +1,5 @@
 package com.wuda.bbs.ui.home;
 
-import android.widget.Toast;
-
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BriefArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
@@ -27,7 +25,8 @@ public class TodayNewArticleFragment extends ArticleContainerFragment {
                 if (response.isSuccessful()) {
                     mViewModel.articleResponse.postValue(response);
                 } else {
-                    Toast.makeText(getContext(), response.getMassage(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), response.getMassage(), Toast.LENGTH_SHORT).show();
+//                    new CustomDialog(getContext()).show();
                 }
             }
         });

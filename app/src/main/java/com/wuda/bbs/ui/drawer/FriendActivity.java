@@ -1,7 +1,6 @@
 package com.wuda.bbs.ui.drawer;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
@@ -9,10 +8,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -96,9 +93,9 @@ public class FriendActivity extends AppCompatActivity {
             new CustomDialog(FriendActivity.this)
                     .setDialogTitle("请输入用户ID")
                     .setCustomView(view)
-                    .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickedListener() {
+                    .setOnPositiveButtonClickedListener("确定", new CustomDialog.OnButtonClickListener() {
                         @Override
-                        public void onButtonClicked() {
+                        public void onButtonClick() {
                             if (content_et.getText() != null) {
                                 String id = content_et.getText().toString();
                                 if(!TextUtils.isEmpty(id)) {

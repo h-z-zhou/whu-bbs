@@ -47,7 +47,7 @@ public class XMLParser {
             response.setContent(boardHandler.getHandledResult());
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e.getMessage());
         }
         return response;
     }
@@ -101,7 +101,7 @@ public class XMLParser {
 
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            response.setResultCode(ResultCode.ERROR);
+            response.setResultCode(ResultCode.UNMATCHED_CONTENT_ERR);
             response.setMassage(e.getMessage());
         }
 
@@ -121,7 +121,7 @@ public class XMLParser {
             response = detailArticleHandler.getDetailArticleResponse();
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            response = new DetailArticleResponse(ResultCode.DATA_ERR, e.getMessage());
+            response = new DetailArticleResponse(ResultCode.HANDLE_DATA_ERR, e.getMessage());
         }
 
         return response;
@@ -142,7 +142,7 @@ public class XMLParser {
 //            response.setUserInfo(userInfoHandler.getUserInfo());
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e.getMessage());
         }
 
         return response;
@@ -177,7 +177,7 @@ public class XMLParser {
             mailResponse = mailHandler.getMailResponse();
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            mailResponse = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            mailResponse = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e.getMessage());
         }
 
         return mailResponse;
@@ -196,7 +196,7 @@ public class XMLParser {
             mailContentResponse = mailContentHandler.getMailContentResponse();
         } catch (IOException | SAXException e) {
             e.printStackTrace();
-            mailContentResponse = new ContentResponse<>(ResultCode.ERROR, e.getMessage());
+            mailContentResponse = new ContentResponse<>(ResultCode.UNMATCHED_CONTENT_ERR, e.getMessage());
         }
 
         return mailContentResponse;

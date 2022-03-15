@@ -30,7 +30,7 @@ public abstract class FavArticleHandler implements ContentResponseHandler<List<F
             response.setContent(parseSrcUrl(treasureList));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            response = new ContentResponse<>(ResultCode.DATA_ERR, e.getMessage());
+            response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e.getMessage());
         }
         return response;
     }
