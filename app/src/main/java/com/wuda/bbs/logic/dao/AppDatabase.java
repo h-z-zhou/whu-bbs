@@ -6,6 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.logic.bean.DetailBoard;
 import com.wuda.bbs.logic.bean.FavBoard;
@@ -21,8 +22,15 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract FriendDao getFriendDao();
 
     public static AppDatabase getDatabase(Context context) {
-        return Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "app_database")
+        return Room.databaseBuilder(context, AppDatabase.class, "app_database")
                 .allowMainThreadQueries()
                 .build();
     }
+
+    public static AppDatabase getDatabase() {
+        return Room.databaseBuilder(BBSApplication.getAppContext(), AppDatabase.class, "app_database")
+                .allowMainThreadQueries()
+                .build();
+    }
+
 }

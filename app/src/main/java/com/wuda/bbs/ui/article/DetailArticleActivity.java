@@ -1,19 +1,18 @@
 package com.wuda.bbs.ui.article;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
@@ -22,12 +21,10 @@ import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.logic.bean.History;
 import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.HistoryDao;
 import com.wuda.bbs.ui.adapter.DetailArticleRecyclerAdapter;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
-import com.wuda.bbs.ui.widget.CustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.ui.widget.TopicDecoration;
 import com.wuda.bbs.utils.networkResponseHandler.DetailArticleHandler;
@@ -89,7 +86,7 @@ public class DetailArticleActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.detail_article_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -143,7 +140,6 @@ public class DetailArticleActivity extends AppCompatActivity {
         form.put("GID", mBriefArticle.getGID());
         form.put("board", mBriefArticle.getBoardID());
         form.put("page", "1");
-        Log.d("article", form.toString());
 
         NetworkEntry.requestArticleContent(form, new DetailArticleHandler() {
             @Override

@@ -1,10 +1,5 @@
 package com.wuda.bbs.ui.user;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,21 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.Friend;
 import com.wuda.bbs.logic.bean.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.logic.dao.AppDatabase;
-import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.ui.mail.SendMailActivity;
 import com.wuda.bbs.utils.network.NetConst;
-import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
-import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserInfoActivity extends AppCompatActivity {
 
@@ -47,8 +38,7 @@ public class UserInfoActivity extends AppCompatActivity {
     private Button chat_btn;
 
     private UserInfoViewModel mViewModel;
-    private boolean isFriend;
-    FriendDao friendDao;
+    boolean isStartup = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,16 +63,47 @@ public class UserInfoActivity extends AppCompatActivity {
 
         eventBinding();
 
-        friendDao = AppDatabase.getDatabase(UserInfoActivity.this).getFriendDao();
-        isFriend = friendDao.loadFriend(mViewModel.userId) != null;
-        setFriendBtnText();
-
-        requestUserInfoFromServer();
+        mViewModel.queryFriendFromDB();
+        mViewModel.requestUserInfoFromServer();
 
     }
 
     private void eventBinding() {
-        mViewModel.userInfo.observe(this, new Observer<UserInfo>() {
+
+        mViewModel.getFriendStateMutableLiveData().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isFriend) {
+                if (isFriend) {
+                    friend_btn.setText("删除好友");
+                } else {
+                    friend_btn.setText("添加好友");
+                }
+                if (isStartup) {
+                    isStartup = false;
+                } else {
+                    Toast.makeText(UserInfoActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        mViewModel.getErrorResponseMutableLiveData().observe(this, new Observer<ContentResponse<UserInfo>>() {
+            @Override
+            public void onChanged(ContentResponse<UserInfo> userInfoContentResponse) {
+                new AlertDialog.Builder(UserInfoActivity.this)
+                        .setMessage("该用户不存在")
+                        .setCancelable(false)
+                        .setPositiveButton("退出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                UserInfoActivity.this.finish();
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        });
+
+        mViewModel.getUserInfoMutableLiveData().observe(this, new Observer<UserInfo>() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(UserInfo userInfo) {
@@ -111,7 +132,7 @@ public class UserInfoActivity extends AppCompatActivity {
         friend_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                operateFriend();
+                mViewModel.operateFriend();
             }
         });
 
@@ -123,68 +144,6 @@ public class UserInfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-
-
-    private void requestUserInfoFromServer() {
-
-        NetworkEntry.requestUserInfo(mViewModel.userId, new UserInfoResponseHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<UserInfo> response) {
-
-                if (response.isSuccessful()) {
-                    UserInfo userInfo = response.getContent();
-                    userInfo.setId(mViewModel.userId);
-                    mViewModel.userInfo.postValue(userInfo);
-                } else {
-                    new AlertDialog.Builder(UserInfoActivity.this)
-                            .setMessage("该用户不存在")
-                            .setCancelable(false)
-                            .setPositiveButton("退出", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    UserInfoActivity.this.finish();
-                                }
-                            })
-                            .create()
-                            .show();
-                }
-            }
-        });
-
-    }
-
-    private void operateFriend() {
-        Map<String, String> form = new HashMap<>();
-        form.put("app", "friend");
-        if (isFriend) {
-            form.put("delete", mViewModel.userId);
-        } else {
-            form.put("add", mViewModel.userId);
-        }
-
-        NetworkEntry.operateFriend(form, new SimpleResponseHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<Object> response) {
-                isFriend = !isFriend;
-                Friend friend = new Friend(mViewModel.userInfo.getValue().getId(), "", mViewModel.userInfo.getValue().getAvatar());
-                if (isFriend) {
-                    friendDao.insertFriend(friend);
-                } else {
-                    friendDao.deleteFriend(friend);
-                }
-                setFriendBtnText();
-                Toast.makeText(UserInfoActivity.this, "操作成功", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void setFriendBtnText() {
-        if (isFriend) {
-            friend_btn.setText("删除好友");
-        } else {
-            friend_btn.setText("添加好友");
-        }
     }
 
 }
