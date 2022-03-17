@@ -188,9 +188,10 @@ public class DetailArticleActivity extends AppCompatActivity {
         HistoryDao historyDao = AppDatabase.getDatabase(DetailArticleActivity.this).getHistoryDao();
         historyDao.insertHistory(
                 new History(
-                        mBriefArticle.getTitle(),
-                        mBriefArticle.getBoardID(),
                         mBriefArticle.getGID(),
+                        mBriefArticle.getTitle(),
+                        mBriefArticle.getAuthor(),
+                        mBriefArticle.getBoardID(),
                         Calendar.getInstance().getTimeInMillis()
                 )
         );

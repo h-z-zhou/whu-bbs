@@ -14,11 +14,11 @@ public interface HistoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertHistory(History history);
 
-    @Query("select * from History order by id DESC ")
+    @Query("select * from History order by readTime DESC ")
     List<History> loadAllHistories();
 
-    @Query("delete from History where id = :id")
-    void deleteHistory(long id);
+    @Query("delete from History where GID = :GID")
+    void deleteHistory(long GID);
 
     @Query("delete from History")
     void clearHistory();

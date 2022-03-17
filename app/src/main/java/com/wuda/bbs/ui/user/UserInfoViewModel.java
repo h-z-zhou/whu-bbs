@@ -1,7 +1,6 @@
 package com.wuda.bbs.ui.user;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Friend;
@@ -9,17 +8,17 @@ import com.wuda.bbs.logic.bean.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
+import com.wuda.bbs.ui.base.BaseResponseViewModel;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserInfoViewModel extends ViewModel {
+public class UserInfoViewModel extends BaseResponseViewModel {
     String userId = "";
 
     private MutableLiveData<Boolean> friendStateMutableLiveData;
-    private MutableLiveData<ContentResponse<UserInfo>> errorResponseMutableLiveData;
     private MutableLiveData<UserInfo> userInfoMutableLiveData;
 
     public MutableLiveData<Boolean> getFriendStateMutableLiveData() {
@@ -27,13 +26,6 @@ public class UserInfoViewModel extends ViewModel {
             friendStateMutableLiveData = new MutableLiveData<>();
         }
         return friendStateMutableLiveData;
-    }
-
-    public MutableLiveData<ContentResponse<UserInfo>> getErrorResponseMutableLiveData() {
-        if (errorResponseMutableLiveData == null) {
-            errorResponseMutableLiveData = new MutableLiveData<>();
-        }
-        return errorResponseMutableLiveData;
     }
 
     public MutableLiveData<UserInfo> getUserInfoMutableLiveData() {

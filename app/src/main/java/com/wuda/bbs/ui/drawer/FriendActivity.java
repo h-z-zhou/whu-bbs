@@ -1,5 +1,13 @@
 package com.wuda.bbs.ui.drawer;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -8,26 +16,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
-
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Friend;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.logic.dao.AppDatabase;
-import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
 import com.wuda.bbs.ui.user.UserInfoActivity;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.CustomDialog;
-import com.wuda.bbs.utils.networkResponseHandler.FriendResponseHandler;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,13 +68,12 @@ public class FriendActivity extends AppCompatActivity {
         });
         friend_rv.setAdapter(adapter);
 
-
         eventBinding();
-        requestAllFriendsFromServer();
+        mViewModel.requestAllFriendsFromServer();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.friend_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
@@ -112,31 +108,26 @@ public class FriendActivity extends AppCompatActivity {
     }
 
     private void eventBinding() {
-        mViewModel.friendList.observe(this, new Observer<List<Friend>>() {
+        mViewModel.getFriendListMutableLiveData().observe(this, new Observer<List<Friend>>() {
             @Override
             public void onChanged(List<Friend> friends) {
                 adapter.setMore(false);
                 adapter.setContents(friends);
-                FriendDao friendDao = AppDatabase.getDatabase(FriendActivity.this).getFriendDao();
-                friendDao.insertFriends(friends);
             }
         });
-    }
 
-
-    private void requestAllFriendsFromServer() {
-        NetworkEntry.requestFriend(new FriendResponseHandler() {
+        mViewModel.getErrorResponseMutableLiveData().observe(this, new Observer<ContentResponse<?>>() {
             @Override
-            public void onResponseHandled(ContentResponse<List<Friend>> response) {
-                if (response.isSuccessful()) {
-                    mViewModel.friendList.postValue(response.getContent());
-                } else {
-                    String text = response.getMassage();
-                    if (text == null) {
-                        text = response.getResultCode().getMsg();
-                    }
-                    Toast.makeText(FriendActivity.this, text, Toast.LENGTH_SHORT).show();
-                }
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(FriendActivity.this)
+                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                mViewModel.requestAllFriendsFromServer();
+                            }
+                        })
+                        .show();
             }
         });
     }

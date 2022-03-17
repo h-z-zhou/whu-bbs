@@ -2,31 +2,30 @@ package com.wuda.bbs.ui.drawer;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.FavArticle;
-import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.FavArticleAdapter;
-import com.wuda.bbs.utils.network.NetTool;
-import com.wuda.bbs.utils.networkResponseHandler.FavArticleHandler;
-import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FavArticleActivity extends AppCompatActivity {
+
+    FavArticleViewModel mViewModel;
 
     RecyclerView favArticle_rv;
     FavArticleAdapter adapter;
@@ -35,6 +34,8 @@ public class FavArticleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fav_article);
+
+        mViewModel = new ViewModelProvider(FavArticleActivity.this).get(FavArticleViewModel.class);
 
         Toolbar toolbar = findViewById(R.id.fav_article_toolbar);
         setSupportActionBar(toolbar);
@@ -55,7 +56,6 @@ public class FavArticleActivity extends AppCompatActivity {
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-//                return 0;
                 final int dragFlags = ItemTouchHelper.ACTION_STATE_IDLE;
                 final int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
                 return makeMovementFlags(dragFlags, swipeFlags);
@@ -68,13 +68,10 @@ public class FavArticleActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-//                FavArticleAdapter adapter = (FavArticleAdapter) favArticle_rv.getAdapter();
-//                if (adapter == null)
-//                    return;
+                int position = viewHolder.getAbsoluteAdapterPosition();
                 FavArticle favArticle = adapter.removeItem(position);
                 if (favArticle != null) {
-                    removeFavArticle(favArticle);
+                    mViewModel.removeFavArticle(favArticle);
                 }
                 // 防止 Footer 被移除
                 adapter.updateFooter();
@@ -82,32 +79,32 @@ public class FavArticleActivity extends AppCompatActivity {
         });
         mItemTouchHelper.attachToRecyclerView(favArticle_rv);
 
-        requestFavArticleFromServer();
+        eventBinding();
+
+        mViewModel.requestFavArticleFromServer();
 
     }
 
-    private void requestFavArticleFromServer() {
-
-        NetworkEntry.requestFavArticle(new FavArticleHandler() {
+    private void eventBinding() {
+        mViewModel.getFavArticleMutableLiveData().observe(FavArticleActivity.this, new Observer<List<FavArticle>>() {
             @Override
-            public void onResponseHandled(ContentResponse<List<FavArticle>> response) {
-                if (response.isSuccessful()) {
-                    adapter.setContents(response.getContent());
-                    adapter.setMore(false);
-                }
+            public void onChanged(List<FavArticle> favArticles) {
+                adapter.setContents(favArticles);
+                adapter.setMore(false);
             }
         });
-    }
 
-    public void removeFavArticle(FavArticle favArticle) {
-
-        Map<String, String> form = NetTool.extractUrlParam(favArticle.getDelUrl());
-        NetworkEntry.removeFavArticle(form, new WebResultHandler() {
+        mViewModel.getErrorResponseMutableLiveData().observe(FavArticleActivity.this, new Observer<ContentResponse<?>>() {
             @Override
-            public void onResponseHandled(ContentResponse<WebResult> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(FavArticleActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                }
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(FavArticleActivity.this)
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                mViewModel.requestFavArticleFromServer();
+                            }
+                        })
+                        .show();
             }
         });
     }

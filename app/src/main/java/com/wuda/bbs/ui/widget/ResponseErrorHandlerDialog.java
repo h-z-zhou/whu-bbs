@@ -82,6 +82,8 @@ public class ResponseErrorHandlerDialog extends BaseCustomDialog {
                     positive_btn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if (mRetryListener == null)
+                                return;
                             mRetryListener.onButtonClick();
                             dismiss();
                         }

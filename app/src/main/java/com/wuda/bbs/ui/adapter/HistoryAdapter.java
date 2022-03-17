@@ -1,7 +1,12 @@
 package com.wuda.bbs.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -13,6 +18,7 @@ import com.wuda.bbs.logic.bean.BriefArticle;
 import com.wuda.bbs.logic.bean.History;
 import com.wuda.bbs.ui.article.DetailArticleActivity;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class HistoryAdapter extends FooterAdapter<History> {
@@ -32,7 +38,7 @@ public class HistoryAdapter extends FooterAdapter<History> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                History history = mContents.get(holder.getAdapterPosition());
+                History history = mContents.get(holder.getAbsoluteAdapterPosition());
                 Intent intent = new Intent(mContext, DetailArticleActivity.class);
                 BriefArticle briefArticle = new BriefArticle();
                 briefArticle.setBoardID(history.getBoardID());
@@ -46,19 +52,29 @@ public class HistoryAdapter extends FooterAdapter<History> {
         return holder;
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Override
     protected void onBindContentViewHolder(ContentViewHolder holder, History content) {
         if (holder instanceof HistoryViewHolder) {
-            ((HistoryViewHolder) holder).title_tv.setText(content.getTitle());
+
+            SpannableStringBuilder builder = new SpannableStringBuilder();
+            builder.append(content.getTitle());
+            builder.append("\n");
+
+            String time = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(content.getReadTime());
+            String info = content.getAuthor() + " | " + time;
+            builder.append(info, new StyleSpan(Typeface.ITALIC), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            ((HistoryViewHolder) holder).history_tv.setText(builder);
         }
     }
 
     static class HistoryViewHolder extends ContentViewHolder {
-        TextView title_tv;
+        TextView history_tv;
 
         public HistoryViewHolder(@NonNull View itemView) {
             super(itemView);
-            title_tv = (TextView) itemView;
+            history_tv = (TextView) itemView;
         }
     }
 }

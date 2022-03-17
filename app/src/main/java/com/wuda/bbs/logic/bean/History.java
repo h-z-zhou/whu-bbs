@@ -1,24 +1,24 @@
 package com.wuda.bbs.logic.bean;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class History {
-    @PrimaryKey(autoGenerate = true)
-    public long id;
-    String title;
-    String boardID;
+    @NonNull
+    @PrimaryKey
     String GID;
+    String title;
+    String author;
+    String boardID;
     long readTime;
 
-    public History() {
-    }
-
-    public History(String title, String boardID, String GID, long readTime) {
-        this.title = title;
-        this.boardID = boardID;
+    public History(@NonNull String GID, String title, String author, String boardID, long readTime) {
         this.GID = GID;
+        this.title = title;
+        this.author = author;
+        this.boardID = boardID;
         this.readTime = readTime;
     }
 
@@ -30,6 +30,14 @@ public class History {
         this.title = title;
     }
 
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
     public String getBoardID() {
         return boardID;
     }
@@ -38,11 +46,12 @@ public class History {
         this.boardID = boardID;
     }
 
+    @NonNull
     public String getGID() {
         return GID;
     }
 
-    public void setGID(String GID) {
+    public void setGID(@NonNull String GID) {
         this.GID = GID;
     }
 

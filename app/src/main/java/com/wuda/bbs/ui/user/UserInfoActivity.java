@@ -86,9 +86,9 @@ public class UserInfoActivity extends AppCompatActivity {
             }
         });
 
-        mViewModel.getErrorResponseMutableLiveData().observe(this, new Observer<ContentResponse<UserInfo>>() {
+        mViewModel.getErrorResponseMutableLiveData().observe(this, new Observer<ContentResponse<?>>() {
             @Override
-            public void onChanged(ContentResponse<UserInfo> userInfoContentResponse) {
+            public void onChanged(ContentResponse<?> contentResponse) {
                 new AlertDialog.Builder(UserInfoActivity.this)
                         .setMessage("该用户不存在")
                         .setCancelable(false)

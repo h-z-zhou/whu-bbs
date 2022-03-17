@@ -44,13 +44,7 @@
             android:name=".ui.article.PostArticleActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.setting.SettingActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.drawer.FavArticleActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.drawer.TreasureBoxActivity"
             android:exported="false" />
         <activity
             android:name=".ui.mail.MailContentActivity"
