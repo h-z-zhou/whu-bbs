@@ -11,10 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleContainerViewModel extends ViewModel {
-    public MutableLiveData<BaseBoard> board;
+    private final MutableLiveData<BaseBoard> board;
 
     public MutableLiveData<ContentResponse<List<BriefArticle>>> articleResponse;
     public MutableLiveData<List<BriefArticle>> articleList;
+
+    public MutableLiveData<BaseBoard> getBoard() {
+        return board;
+    }
 
     public ArticleContainerViewModel() {
         articleResponse = new MutableLiveData<>();

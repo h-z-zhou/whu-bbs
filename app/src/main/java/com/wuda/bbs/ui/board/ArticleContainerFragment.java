@@ -20,7 +20,6 @@ import com.wuda.bbs.logic.bean.BriefArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.BriefArticleAdapter;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
-import com.wuda.bbs.ui.widget.CustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public abstract class ArticleContainerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(ArticleContainerViewModel.class);
         article_rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new BriefArticleAdapter(getContext(), mViewModel.articleResponse.getValue().getContent());
+        adapter = new BriefArticleAdapter(getContext(), new ArrayList<>());
         article_rv.setAdapter(adapter);
         eventBinding();
 
@@ -85,7 +84,7 @@ public abstract class ArticleContainerFragment extends Fragment {
                     }
                 } else {
                     new ResponseErrorHandlerDialog(getContext())
-                            .addErrorMsg(listContentResponse.getResultCode(), null)
+                            .addErrorMsg(listContentResponse.getResultCode(), listContentResponse.getMassage())
                             .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
                                 @Override
                                 public void onButtonClick() {
@@ -97,12 +96,16 @@ public abstract class ArticleContainerFragment extends Fragment {
             }
         });
 
+
+
         article_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 adapter.setContents(new ArrayList<>());
-                mViewModel.articleResponse.getValue().setCurrentPage(-1);
-                requestArticleFromServer();
+                if (mViewModel.articleResponse.getValue() != null) {
+                    mViewModel.articleResponse.getValue().setCurrentPage(-1);
+                    requestArticleFromServer();
+                }
             }
         });
 
@@ -111,13 +114,13 @@ public abstract class ArticleContainerFragment extends Fragment {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && manager!=null) {
                     int lastVisibleItem = manager.findLastCompletelyVisibleItemPosition();
                     int totalItem = manager.getItemCount();
                     // 最后一个
                     if (lastVisibleItem == totalItem-1) {
                         ContentResponse<List<BriefArticle>> briefArticleResponse = mViewModel.articleResponse.getValue();
-                        if (briefArticleResponse.getCurrentPage() < briefArticleResponse.getTotalPage()) {
+                        if (briefArticleResponse != null && briefArticleResponse.getCurrentPage() < briefArticleResponse.getTotalPage()) {
                             requestArticleFromServer();
                         }
                     }

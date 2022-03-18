@@ -16,18 +16,7 @@ public class TodayNewArticleFragment extends ArticleContainerFragment {
         NetworkEntry.requestTodayNewArticle(new TodayNewArticleHandler() {
             @Override
             public void onResponseHandled(ContentResponse<List<BriefArticle>> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        article_srl.setRefreshing(false);
-                    }
-                });
-                if (response.isSuccessful()) {
-                    mViewModel.articleResponse.postValue(response);
-                } else {
-//                    Toast.makeText(getContext(), response.getMassage(), Toast.LENGTH_SHORT).show();
-//                    new CustomDialog(getContext()).show();
-                }
+                mViewModel.articleResponse.postValue(response);
             }
         });
     }
