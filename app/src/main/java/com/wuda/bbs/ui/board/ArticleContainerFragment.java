@@ -82,6 +82,7 @@ public abstract class ArticleContainerFragment extends Fragment {
                     } else {
                         adapter.appendContents(listContentResponse.getContent());
                     }
+                    mViewModel.appendArticles(listContentResponse.getContent());
                 } else {
                     new ResponseErrorHandlerDialog(getContext())
                             .addErrorMsg(listContentResponse.getResultCode(), listContentResponse.getMassage())

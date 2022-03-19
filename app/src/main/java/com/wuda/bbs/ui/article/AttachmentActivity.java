@@ -3,12 +3,9 @@ package com.wuda.bbs.ui.article;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +16,6 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Attachment;
 import com.wuda.bbs.ui.adapter.AttachmentPager2Adapter;
 import com.wuda.bbs.utils.network.NetConst;
-import com.wuda.bbs.utils.validator.MimeValidator;
 
 import java.util.List;
 
@@ -44,6 +40,7 @@ public class AttachmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attachment);
 
         Toolbar toolbar = findViewById(R.id.back_toolbar);
+        toolbar.setTitle(position+1 + "/" + attachmentList.size());
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +48,6 @@ public class AttachmentActivity extends AppCompatActivity {
                 finish();
             }
         });
-        toolbar.setTitle(position+1 + "/" + attachmentList.size());
 
         attachment_vp2 = findViewById(R.id.attachment_viewPager2);
         attachment_vp2.setAdapter(new AttachmentPager2Adapter(AttachmentActivity.this, attachmentList, board, articleId));

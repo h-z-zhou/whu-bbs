@@ -1,10 +1,8 @@
 package com.wuda.bbs.ui.mail;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,15 +22,11 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.Friend;
 import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.logic.dao.AppDatabase;
-import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NewMailFragment extends Fragment {
@@ -55,8 +49,6 @@ public class NewMailFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.new_mail_fragment, container, false);
 
-
-
         userId_et = view.findViewById(R.id.newMail_userId_editText);
         title_et = view.findViewById(R.id.newMail_title_editText);
         content_et = view.findViewById(R.id.newMail_content_editText);
@@ -64,19 +56,7 @@ public class NewMailFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-//        String userId = getIntent().getStringExtra("userId");
-//        String title = getIntent().getStringExtra("title");
-
-//        if (userId != null) {
-//            userId_et.setText(userId);
-//        }
-//
-//        if (title != null) {
-//            title_et.setText(title);
-//        }
-
         friend_tv= view.findViewById(R.id.newMail_friend_textView);
-
 
         return view;
     }
@@ -86,22 +66,20 @@ public class NewMailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSendMailViewModel = new ViewModelProvider(getActivity()).get(SendMailViewModel.class);
+        mSendMailViewModel = new ViewModelProvider(requireActivity()).get(SendMailViewModel.class);
 
         if (mSendMailViewModel.userId != null) {
             userId_et.setText(mSendMailViewModel.userId);
         }
-
         if (mSendMailViewModel.title != null) {
             title_et.setText(mSendMailViewModel.title);
         }
 
         eventBinding();
-
     }
 
     private void eventBinding() {
-        mSendMailViewModel.userIdmLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
+        mSendMailViewModel.userIdMutableLiveData.observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
                 userId_et.setText(s);
@@ -111,23 +89,6 @@ public class NewMailFragment extends Fragment {
         friend_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                FriendDao friendDao = AppDatabase.getDatabase(getContext()).getFriendDao();
-//                List<Friend> friendList = friendDao.loadAllFriends();
-//                String[] ids = new String[friendList.size()];
-//                for (int i=0; i<friendList.size(); i++) {
-//                    ids[i] = friendList.get(i).getId();
-//                }
-//
-//                new AlertDialog.Builder(getContext())
-//                        .setTitle("请选择好友")
-//                        .setItems(ids, new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                userId_et.setText(ids[which]);
-//                            }
-//                        })
-//                        .create()
-//                        .show();
                 if (getActivity() instanceof SendMailActivity) {
                     ((SendMailActivity) getActivity()).navigationTo(new SelectFriendFragment(), true);
                 }
@@ -187,6 +148,5 @@ public class NewMailFragment extends Fragment {
                 }
             }
         });
-
     }
 }

@@ -4,31 +4,29 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.DetailArticle;
-import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 public class ReplyActivity extends AppCompatActivity {
 
-    private DetailArticle repliedArticle;
-    private String groupId;
-    private String boardId;
+    ReplyViewModel mViewModel;
 
     ImageView close_btn;
     ImageView send_btn;
@@ -38,11 +36,17 @@ public class ReplyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        repliedArticle = (DetailArticle) getIntent().getSerializableExtra("article");
-        groupId = getIntent().getStringExtra("groupId");
-        boardId = getIntent().getStringExtra("boardId");
+        DetailArticle repliedArticle = (DetailArticle) getIntent().getSerializableExtra("article");
+        String groupId = getIntent().getStringExtra("groupId");
+        String boardId = getIntent().getStringExtra("boardId");
         if (repliedArticle == null)
             finish();
+
+        mViewModel = new ViewModelProvider(ReplyActivity.this).get(ReplyViewModel.class);
+        mViewModel.repliedArticle = repliedArticle;
+        mViewModel.groupId = groupId;
+        mViewModel.boardId = boardId;
+
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_reply);
@@ -70,6 +74,40 @@ public class ReplyActivity extends AppCompatActivity {
     }
 
     private void eventBinding() {
+
+        content_et.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (content_et.getText() != null) {
+                    mViewModel.content = content_et.getText().toString();
+                }
+                return false;
+            }
+        });
+
+        mViewModel.getPostResultMutableLiveData().observe(ReplyActivity.this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+//                Toast.makeText(ReplyActivity.this, s, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
+        mViewModel.getErrorResponseMutableLiveData().observe(ReplyActivity.this, new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(ReplyActivity.this)
+                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                mViewModel.post();
+                            }
+                        })
+                        .show();
+            }
+        });
+
         close_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,32 +139,7 @@ public class ReplyActivity extends AppCompatActivity {
             return;
         }
 
-        String title = "@" + repliedArticle.getAuthor();
-        StringBuilder builder = new StringBuilder();
-        builder.append(content);
-        builder.append("\n【 在 ").append(repliedArticle.getAuthor()).append(" 的大作中提到: 】\n");
-        String[] replyContent = repliedArticle.getContent().split("\\\\n");
-        builder.append(": ").append(replyContent[0]);
+        mViewModel.post();
 
-
-        // board=&reID=0&font=&subject=&Content=&signature=
-        Map<String, String> form = new HashMap<>();
-        form.put("board", boardId);
-        form.put("reID", repliedArticle.getId());
-        form.put("groupID", groupId);
-        form.put("reToWho", repliedArticle.getAuthor());
-        form.put("font", "");
-        form.put("subject", title);
-        form.put("Content", builder.toString());
-        form.put("signature", "");
-
-        NetworkEntry.postArticle(form, new WebResultHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<WebResult> response) {
-                if (response.isSuccessful()) {
-                    finish();
-                }
-            }
-        });
     }
 }

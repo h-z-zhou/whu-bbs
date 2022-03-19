@@ -1,35 +1,17 @@
 package com.wuda.bbs.ui.article;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.os.Bundle;
-import android.text.Editable;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-
-import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.WebResult;
-import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.ui.base.NavigationHost;
-import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class PostArticleActivity extends AppCompatActivity implements NavigationHost {
 

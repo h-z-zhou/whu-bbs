@@ -30,20 +30,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Mail;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.MainActivity;
 import com.wuda.bbs.ui.adapter.AdapterListener;
 import com.wuda.bbs.ui.adapter.MailAdapter;
-import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MailFragment extends Fragment {
 
@@ -59,7 +57,6 @@ public class MailFragment extends Fragment {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        // There are no request codes
                         Intent data = result.getData();
                         if (data != null) {
                             boolean deleted = data.getBooleanExtra("deleted", false);
@@ -85,21 +82,19 @@ public class MailFragment extends Fragment {
 
         mail_rv = view.findViewById(R.id.recyclerView);
 
-
         if (getActivity() != null) {
             Toolbar toolbar = ((MainActivity) getActivity()).getToolbar();
             for (int i=0; i<toolbar.getChildCount(); i++) {
                 View childView = toolbar.getChildAt(i);
                 if (childView instanceof TextView) {
                     toolbar_tv = (TextView) childView;
-                    Drawable arrow = getContext().getDrawable(R.drawable.ic_arrow_drop_down);
+                    @SuppressLint("UseCompatLoadingForDrawables") Drawable arrow = getActivity().getDrawable(R.drawable.ic_arrow_drop_down);
                     arrow.setBounds(0, 0, arrow.getMinimumWidth(), arrow.getMinimumHeight());
                     toolbar_tv.setCompoundDrawables(null, null, arrow, null);
                     break;
                 }
             }
         }
-
         return view;
     }
 
@@ -114,7 +109,6 @@ public class MailFragment extends Fragment {
                 Intent intent = new Intent(getContext(), MailContentActivity.class);
                 intent.putExtra("mail", data);
                 intent.putExtra("boxName", mViewModel.box.getValue().first);
-//                startActivity(intent);
                 mViewModel.selectedPosition = position;
                 mailContentActivityLauncher.launch(intent);
             }
@@ -123,7 +117,6 @@ public class MailFragment extends Fragment {
         mail_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         eventBinding();
-//        requestMailsFromServer();
     }
 
     @Override
@@ -149,21 +142,32 @@ public class MailFragment extends Fragment {
 
     private void eventBinding() {
 
-
-        mViewModel.mailResponse.observe(getViewLifecycleOwner(), new Observer<ContentResponse<List<Mail>>>() {
+        mViewModel.getErrorResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<?>>() {
             @Override
-            public void onChanged(ContentResponse<List<Mail>> listContentResponse) {
-                int currentPage = listContentResponse.getCurrentPage();
-                int totalPage = listContentResponse.getTotalPage();
-                if (currentPage != 0 && currentPage==totalPage) {
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(getContext())
+                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                mViewModel.requestMailsFromServer();
+                            }
+                        })
+                        .show();
+            }
+        });
+
+        mViewModel.getMailListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<Mail>>() {
+            @Override
+            public void onChanged(List<Mail> mailList) {
+                if (mViewModel.currentPage!=0 && mViewModel.totalPage== mViewModel.currentPage) {
                     adapter.setMore(false);
-                }
-                List<Mail> mailList = listContentResponse.getContent();
-                Collections.reverse(mailList);
-                if (currentPage == 1) {
-                    adapter.setContents(mailList);
-                } else {
-                    adapter.appendContents(mailList);
+                    Collections.reverse(mailList);
+                    if (mViewModel.currentPage == 1) {
+                        adapter.setContents(mailList);
+                    } else {
+                        adapter.appendContents(mailList);
+                    }
                 }
             }
         });
@@ -181,7 +185,9 @@ public class MailFragment extends Fragment {
                         Field field = popupMenu.getClass().getDeclaredField("mPopup");
                         field.setAccessible(true);
                         MenuPopupHelper mHelper = (MenuPopupHelper) field.get(popupMenu);
-                        mHelper.setForceShowIcon(true);
+                        if (mHelper != null) {
+                            mHelper.setForceShowIcon(true);
+                        }
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
@@ -209,26 +215,10 @@ public class MailFragment extends Fragment {
                 public void onChanged(Pair<String, String> box) {
                     toolbar_tv.setText(box.second);
                     adapter.changeBox(box.first);
-                    requestMailsFromServer();
-
+                    mViewModel.requestMailsFromServer();
                 }
             });
         }
     }
 
-    private void requestMailsFromServer() {
-        Map<String, String> form = new HashMap<>();
-        form.put("list", "1");
-        form.put("boxname", mViewModel.box.getValue().first);
-
-        NetworkEntry.requestMailList(form, new MailListHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<List<Mail>> response) {
-                if (response.isSuccessful()) {
-                    mViewModel.mailResponse.postValue(response);
-                }
-            }
-        });
-
-    }
 }

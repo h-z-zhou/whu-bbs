@@ -30,6 +30,8 @@ public class ArticleContainerViewModel extends ViewModel {
 
     public void appendArticles(List<BriefArticle> briefArticleList) {
         List<BriefArticle> preBriefArticleList = this.articleList.getValue();
+        if (preBriefArticleList == null)
+            return;
         preBriefArticleList.addAll(briefArticleList);
         this.articleList.postValue(preBriefArticleList);
     }

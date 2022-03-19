@@ -126,5 +126,6 @@ public class BoardEntranceFragment extends Fragment {
         });
 
         mViewModel.queryAllBoardFromDB();
+        entrance_srl.setRefreshing(true);
     }
 }

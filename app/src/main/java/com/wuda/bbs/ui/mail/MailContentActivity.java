@@ -16,12 +16,11 @@ import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Mail;
 import com.wuda.bbs.logic.bean.MailContent;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.utils.network.NetTool;
-import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
-import com.wuda.bbs.utils.networkResponseHandler.WebMailContentHandler;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class MailContentActivity extends AppCompatActivity {
@@ -60,25 +59,40 @@ public class MailContentActivity extends AppCompatActivity {
         reply_iv = findViewById(R.id.mailContent_reply_imageView);
         delete_iv = findViewById(R.id.mailContent_delete_imageView);
 
-        mViewModel = new ViewModelProvider(this).get(MailContentViewModel.class);
-
         mail = (Mail) getIntent().getSerializableExtra("mail");
         boxName = getIntent().getStringExtra("boxName");
 
-        eventBinding();
+        mViewModel = new ViewModelProvider(this).get(MailContentViewModel.class);
+        mViewModel.mail = mail;
+        mViewModel.boxName = boxName;
 
-//        requestMailContent();
-        requestMailContentFromWeb();
+        eventBinding();
+        mViewModel.requestMailContentFromWeb();
     }
 
     private void eventBinding() {
-        mViewModel.mailContent.observe(this, new Observer<MailContent>() {
+        mViewModel.getMailContent().observe(this, new Observer<MailContent>() {
             @Override
             public void onChanged(MailContent mailContent) {
                 content_tv.setText(mailContent.getContent());
                 subject_tv.append(mail.getSubject());
                 sender_tv.append(mail.getSender());
                 time_tv.append(mail.getTime());
+            }
+        });
+
+        mViewModel.getErrorResponseMutableLiveData().observe(MailContentActivity.this, new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(MailContentActivity.this)
+                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                mViewModel.requestMailContentFromWeb();
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -95,7 +109,10 @@ public class MailContentActivity extends AppCompatActivity {
         delete_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Map<String, String> form = NetTool.extractUrlParam(mViewModel.mailContent.getValue().getDelUrl());
+                if (mViewModel.getMailContent().getValue() == null) {
+                    return;
+                }
+                Map<String, String> form = NetTool.extractUrlParam(mViewModel.getMailContent().getValue().getDelUrl());
                 NetworkEntry.deleteMail(form, new SimpleResponseHandler() {
                     @Override
                     public void onResponseHandled(ContentResponse<Object> response) {
@@ -107,35 +124,6 @@ public class MailContentActivity extends AppCompatActivity {
                         }
                     }
                 });
-            }
-        });
-    }
-
-//    private void requestMailContent() {
-//        Map<String, String> form = new HashMap<>();
-//        form.put("read", mail.getNum());
-//        form.put("boxname", boxName);
-//
-//        NetworkEntry.requestMailContent(form, new MailContentHandler() {
-//            @Override
-//            public void onResponseHandled(ContentResponse<String> response) {
-//                mViewModel.mailContent.postValue(response.getContent());
-//            }
-//        });
-//    }
-
-    private void requestMailContentFromWeb() {
-        Map<String, String> form = new HashMap<>();
-
-        form.put("dir", mViewModel.box2dir(boxName));
-        form.put("num", mail.getNum());
-
-        NetworkEntry.requestMailContent(form, new WebMailContentHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<MailContent> response) {
-                if (response.isSuccessful()) {
-                    mViewModel.mailContent.postValue(response.getContent());
-                }
             }
         });
     }

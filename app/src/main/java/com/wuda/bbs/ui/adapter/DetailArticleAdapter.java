@@ -30,7 +30,7 @@ import com.wuda.bbs.utils.network.NetConst;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context mContext;
     List<DetailArticle> mDetailArticleList;
@@ -41,7 +41,7 @@ public class DetailArticleRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     private final int TYPE_CONTENT = 0;
     private final int TYPE_REPLY = 1;
 
-    public DetailArticleRecyclerAdapter(Context context, String groupId, String boardId) {
+    public DetailArticleAdapter(Context context, String groupId, String boardId) {
         mContext = context;
         mGroupId = groupId;
         mBoardId = boardId;

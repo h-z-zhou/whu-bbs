@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class SendMailViewModel extends ViewModel {
-    MutableLiveData<String> userIdmLiveData = new MutableLiveData<>();
+    MutableLiveData<String> userIdMutableLiveData = new MutableLiveData<>();
     String userId;
     String title;
     String content;

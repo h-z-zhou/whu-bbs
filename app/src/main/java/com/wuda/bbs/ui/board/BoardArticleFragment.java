@@ -1,7 +1,5 @@
 package com.wuda.bbs.ui.board;
 
-import android.widget.Toast;
-
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.BriefArticle;
@@ -24,6 +22,8 @@ public class BoardArticleFragment extends ArticleContainerFragment {
         }
 
         Map<String, String> form = new HashMap<>();
+        if (mViewModel.articleResponse.getValue() == null)
+            return;
         int requestPage = mViewModel.articleResponse.getValue().getCurrentPage() + 1;
         form.put("page", Integer.toString(requestPage));
         form.put("board", board.getId());
@@ -31,18 +31,7 @@ public class BoardArticleFragment extends ArticleContainerFragment {
         NetworkEntry.requestTopicArticle(form, new TopicArticleHandler() {
             @Override
             public void onResponseHandled(ContentResponse<List<BriefArticle>> response) {
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        article_srl.setRefreshing(false);
-                    }
-                });
-
-                if (response.isSuccessful()) {
-                    mViewModel.articleResponse.postValue(response);
-                } else {
-                    Toast.makeText(getContext(), response.getMassage(), Toast.LENGTH_SHORT).show();
-                }
+                mViewModel.articleResponse.postValue(response);
             }
         });
     }

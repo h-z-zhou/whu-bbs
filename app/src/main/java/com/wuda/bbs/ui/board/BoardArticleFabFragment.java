@@ -1,5 +1,6 @@
 package com.wuda.bbs.ui.board;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -18,11 +19,12 @@ import com.wuda.bbs.ui.article.PostArticleActivity;
 public class BoardArticleFabFragment extends BoardArticleFragment {
 
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        FloatingActionButton writeArticle_fab = new FloatingActionButton(view.getContext());
-        writeArticle_fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_create));
+        FloatingActionButton writeArticle_fab = new FloatingActionButton(requireContext());
+        writeArticle_fab.setImageDrawable(requireContext().getDrawable(R.drawable.ic_create));
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.BOTTOM | Gravity.END;
         params.bottomMargin = 32;

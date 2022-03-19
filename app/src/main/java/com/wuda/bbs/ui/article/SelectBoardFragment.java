@@ -50,7 +50,7 @@ public class SelectBoardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mPostBoardViewModel = new ViewModelProvider(getActivity()).get(PostBoardViewModel.class);
+        mPostBoardViewModel = new ViewModelProvider(requireActivity()).get(PostBoardViewModel.class);
         LinkedHashMap<String, List<BaseBoard>> allBoardGroupMap = new LinkedHashMap<>();
 
         AppDatabase database = AppDatabase.getDatabase(getContext());
@@ -63,21 +63,20 @@ public class SelectBoardFragment extends Fragment {
             if (!allBoardGroupMap.containsKey(section)) {
                 allBoardGroupMap.put(section, new ArrayList<>());
             }
+
             allBoardGroupMap.get(section).add(detailBoard);
         }
         database.close();
 
-        List<String> sectionList = new ArrayList<>();
-        sectionList.addAll(allBoardGroupMap.keySet());
-        List<List<BaseBoard>> allBoardGroupList = new ArrayList<>();
-        allBoardGroupList.addAll(allBoardGroupMap.values());
+        List<String> sectionList = new ArrayList<>(allBoardGroupMap.keySet());
+        List<List<BaseBoard>> allBoardGroupList = new ArrayList<>(allBoardGroupMap.values());
 
         BoardListAdapter adapter = new BoardListAdapter(getContext(), sectionList, allBoardGroupList);
         adapter.setOnBoardSelectedListener(new BoardListAdapter.OnBoardSelectedListener() {
             @Override
             public void onBoardSelected(BaseBoard board) {
                 mPostBoardViewModel.boardMutableLiveData.postValue(board);
-                getActivity().onBackPressed();
+                requireActivity().onBackPressed();
             }
         });
 

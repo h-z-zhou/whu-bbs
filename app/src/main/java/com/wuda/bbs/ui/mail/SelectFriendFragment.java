@@ -40,7 +40,7 @@ public class SelectFriendFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSendMailViewModel = new ViewModelProvider(getActivity()).get(SendMailViewModel.class);
+        mSendMailViewModel = new ViewModelProvider(requireActivity()).get(SendMailViewModel.class);
 
         FriendDao friendDao = AppDatabase.getDatabase(getContext()).getFriendDao();
         List<Friend> friendList = friendDao.loadAllFriends();
@@ -51,8 +51,8 @@ public class SelectFriendFragment extends Fragment {
         adapter.setOnFriendSelectedListener(new FriendAdapter.OnFriendSelectedListener() {
             @Override
             public void oFriendSelected(Friend friend) {
-                mSendMailViewModel.userIdmLiveData.postValue(friend.getId());
-                getActivity().onBackPressed();
+                mSendMailViewModel.userIdMutableLiveData.postValue(friend.getId());
+                requireActivity().onBackPressed();
             }
         });
         friend_rv.setAdapter(adapter);
