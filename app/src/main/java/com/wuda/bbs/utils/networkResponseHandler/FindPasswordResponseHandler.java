@@ -5,6 +5,8 @@ import androidx.annotation.NonNull;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.utils.parser.JsonParser;
 
+import java.io.UnsupportedEncodingException;
+
 public abstract class FindPasswordResponseHandler implements ContentResponseHandler<String> {
     @Override
     public ContentResponse<String> handleNetworkResponse(@NonNull byte[] data) {

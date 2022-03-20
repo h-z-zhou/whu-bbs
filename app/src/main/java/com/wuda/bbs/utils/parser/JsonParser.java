@@ -19,7 +19,7 @@ public class JsonParser {
                 response.setContent(responseJson.getString("success"));
             } else if (responseJson.has("error")) {
                 response = new ContentResponse<>(ResultCode.SERVER_HANDLE_ERR);
-                response.setContent(responseJson.getString("error"));
+                response.setMassage(responseJson.getString("error"));
             } else {
                 response = new ContentResponse<>(ResultCode.UNMATCHED_CONTENT_ERR);
             }

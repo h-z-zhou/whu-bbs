@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == RESULT_OK) {
                             Intent data = result.getData();
+                            if (data == null)
+                                return;
                             boolean accountChanged = data.getBooleanExtra("accountChanged", false);
                             if (accountChanged) {
                                 initDrawerHeader();
@@ -138,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (!BBSApplication.getAccountAvatar().isEmpty()) {
             Glide.with(MainActivity.this).load(NetConst.BASE +BBSApplication.getAccountAvatar()).into(drawer_userAvatar_iv);
+        } else {
+            Glide.with(MainActivity.this).load(R.drawable.ic_face).into(drawer_userAvatar_iv);
         }
         drawer_userId_tv.setText(BBSApplication.getAccountId());
     }

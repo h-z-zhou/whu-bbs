@@ -1,9 +1,7 @@
 package com.wuda.bbs.ui.article;
 
-import static android.app.Activity.RESULT_OK;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.KeyEvent;
@@ -30,7 +28,6 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.luck.picture.lib.app.PictureAppMaster;
 import com.luck.picture.lib.basic.PictureSelector;
-import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
@@ -220,7 +217,7 @@ public class PostArticleFragment extends Fragment {
             @Override
             public void onChanged(ContentResponse<?> contentResponse) {
                 new ResponseErrorHandlerDialog(getContext())
-                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .addErrorResponse(contentResponse)
                         .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
                             @Override
                             public void onButtonClick() {

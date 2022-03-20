@@ -79,7 +79,7 @@ public class BoardEntranceFragment extends Fragment {
             public void onChanged(ContentResponse<?> contentResponse) {
                 entrance_srl.setRefreshing(false);
                 new ResponseErrorHandlerDialog(getContext())
-                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .addErrorResponse(contentResponse)
                         .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
                             @Override
                             public void onButtonClick() {

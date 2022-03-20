@@ -14,8 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Account;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.AccountRecyclerAdapter;
 import com.wuda.bbs.ui.base.BaseFragment;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,7 @@ public class AccountSwitchFragment extends BaseFragment {
 
     RecyclerView account_rv;
     AccountRecyclerAdapter adapter;
+    Account account;
 
     public static AccountSwitchFragment newInstance() {
         return new AccountSwitchFragment();
@@ -45,7 +49,7 @@ public class AccountSwitchFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSharedViewModel = new ViewModelProvider(getActivity()).get(AccountSharedViewModel.class);
+        mSharedViewModel = new ViewModelProvider(requireActivity()).get(AccountSharedViewModel.class);
 
         account_rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -59,8 +63,8 @@ public class AccountSwitchFragment extends BaseFragment {
         adapter.setAccountHelper(new AccountRecyclerAdapter.AccountHelper() {
             @Override
             public void onLogin(Account account) {
+                AccountSwitchFragment.this.account = account;
                 mSharedViewModel.login(account);
-
             }
 
             @Override
@@ -77,6 +81,21 @@ public class AccountSwitchFragment extends BaseFragment {
             @Override
             public void onChanged(List<Account> accountList) {
                 adapter.updateAccounts(accountList);
+            }
+        });
+
+        mSharedViewModel.getErrorResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(getContext())
+                        .addErrorResponse(contentResponse)
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                mSharedViewModel.login(AccountSwitchFragment.this.account);
+                            }
+                        })
+                        .show();
             }
         });
     }

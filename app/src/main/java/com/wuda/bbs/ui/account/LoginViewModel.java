@@ -1,14 +1,14 @@
 package com.wuda.bbs.ui.account;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.ui.base.BaseResponseViewModel;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
 
-public class LoginViewModel extends ViewModel {
+public class LoginViewModel extends BaseResponseViewModel {
     // keep the text of EditTextView
     String id = "";
     String pwd = "";
@@ -25,7 +25,11 @@ public class LoginViewModel extends ViewModel {
         NetworkEntry.login(account, new AccountResponseHandler() {
             @Override
             public void onResponseHandled(ContentResponse<Account> response) {
-                accountResponseLiveData.postValue(response);
+                if (response.isSuccessful()) {
+                    accountResponseLiveData.postValue(response);
+                } else {
+                    errorResponseMutableLiveData.postValue(response);
+                }
             }
         });
     }

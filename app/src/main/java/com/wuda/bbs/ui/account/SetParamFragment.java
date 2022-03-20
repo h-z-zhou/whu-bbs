@@ -1,39 +1,26 @@
 package com.wuda.bbs.ui.account;
 
-import androidx.lifecycle.ViewModelProvider;
-
-import android.app.ProgressDialog;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
-import com.wuda.bbs.utils.network.RootService;
-import com.wuda.bbs.utils.network.ServiceCreator;
-import com.wuda.bbs.utils.networkResponseHandler.SettingParamHandler;
-import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SetParamFragment extends BaseFragment {
 
@@ -42,7 +29,6 @@ public class SetParamFragment extends BaseFragment {
     Switch[] switches;
     private boolean[] choices;
     private String[] paramNames;
-    boolean initialed = false;
 
     public static SetParamFragment newInstance() {
         return new SetParamFragment();
@@ -64,7 +50,6 @@ public class SetParamFragment extends BaseFragment {
                 R.id.param_toSendBox_switch,
                 R.id.param_toDustbin_switch
         };
-
 
         switches = new Switch[switchIds.length];
         choices = new boolean[switchIds.length];
@@ -93,8 +78,6 @@ public class SetParamFragment extends BaseFragment {
             });
         }
 
-        requestChoicesFromServer();
-
         return view;
     }
 
@@ -103,13 +86,38 @@ public class SetParamFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(SetParamViewModel.class);
 
+        mViewModel.getUserParamMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<Boolean>>() {
+            @Override
+            public void onChanged(List<Boolean> userParam) {
+                for (int i=0; i<userParam.size(); i++) {
+                    switches[i].setChecked(userParam.get(i));
+                }
+            }
+        });
+
+        mViewModel.getErrorResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(getContext())
+                        .addErrorResponse(contentResponse)
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                mViewModel.requestChoicesFromServer();
+                            }
+                        })
+                        .show();
+            }
+        });
+
         showActionBar("隐私参数");
+
+        mViewModel.requestChoicesFromServer();
     }
 
     private void submit() {
-        if (!initialed)
+        if (mViewModel.getUserParamMutableLiveData().getValue() == null)
             return;
-
         // user_define_6=1&user_define_15=1&user_define_16=1&user_define_17=1&user_define_29=1&user_define_30=0&user_define1_0=1&mailbox_prop_0=1&mailbox_prop_1=0&Submit=%B8%FC+%D0%C2
         Map<String, String> form = new HashMap<>();
         for (int i=0; i<choices.length; i++) {
@@ -117,41 +125,6 @@ public class SetParamFragment extends BaseFragment {
         }
         form.put("Submit", "");
 
-        NetworkEntry.setSettingParam(form, new WebResultHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<WebResult> response) {
-                String text = response.getContent().getResult();
-                Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void requestChoicesFromServer() {
-        // bug: 不能检测到登出
-        ProgressDialog progressDialog = new ProgressDialog(getContext());
-        progressDialog.setMessage("请求中");
-        progressDialog.show();
-
-        NetworkEntry.requestSettingParam(new SettingParamHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<List<Boolean>> response) {
-                if (response.isSuccessful()) {
-                    if (getActivity()!=null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                List<Boolean> userParam = response.getContent();
-                                for (int i=0; i<userParam.size(); i++) {
-                                    switches[i].setChecked(userParam.get(i));
-                                }
-                                initialed = true;
-                            }
-                        });
-                    }
-                }
-                progressDialog.dismiss();
-            }
-        });
-
+        mViewModel.setParam(form);
     }
 }

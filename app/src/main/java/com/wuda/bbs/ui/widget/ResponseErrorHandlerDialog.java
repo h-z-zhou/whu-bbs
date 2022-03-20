@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.ui.account.AccountActivity;
 
@@ -24,10 +25,18 @@ public class ResponseErrorHandlerDialog extends BaseCustomDialog {
         content_view = massage_tv;
     }
 
-    public ResponseErrorHandlerDialog addErrorMsg(ResultCode resultCode, String massage) {
-        this.resultCode = resultCode;
+    public ResponseErrorHandlerDialog addErrorResponse(ContentResponse<?> response) {
 
-        String msg = massage!=null? massage: resultCode.getMsg();
+        this.resultCode = response.getResultCode();
+
+        String msg;
+        if (response.getMassage() != null) {
+            msg = response.getMassage();
+        } else if (response.getException() != null) {
+            msg = response.getResultCode().getMsg() + response.getException().getMessage();
+        } else {
+            msg = response.getResultCode().getMsg();
+        }
         this.massage_tv.setText(msg);
 
         return this;

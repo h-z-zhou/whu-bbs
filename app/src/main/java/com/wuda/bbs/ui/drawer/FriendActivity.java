@@ -120,7 +120,7 @@ public class FriendActivity extends AppCompatActivity {
             @Override
             public void onChanged(ContentResponse<?> contentResponse) {
                 new ResponseErrorHandlerDialog(FriendActivity.this)
-                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .addErrorResponse(contentResponse)
                         .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
                             @Override
                             public void onButtonClick() {

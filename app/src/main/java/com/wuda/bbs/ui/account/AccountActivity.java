@@ -62,7 +62,6 @@ public class AccountActivity extends AppCompatActivity implements NavigationHost
                 BBSApplication.setAccount(account);
             }
         });
-
     }
 
     @Override

@@ -1,21 +1,19 @@
 package com.wuda.bbs.ui.account;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
@@ -24,7 +22,6 @@ import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.ui.adapter.AccountManagerFragmentAdapter;
-import com.wuda.bbs.ui.adapter.AccountRecyclerAdapter;
 import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
@@ -39,8 +36,6 @@ public class AccountFragment extends BaseFragment {
     RecyclerView manager_rv;
     Button switch_btn;
     Button logout_btn;
-
-    private AccountRecyclerAdapter adapter;
 
     public static AccountFragment newInstance() {
         return new AccountFragment();
@@ -62,7 +57,7 @@ public class AccountFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSharedViewModel = new ViewModelProvider(getActivity()).get(AccountSharedViewModel.class);
+        mSharedViewModel = new ViewModelProvider(requireActivity()).get(AccountSharedViewModel.class);
 
         manager_rv.setLayoutManager(new LinearLayoutManager(getContext()));
         manager_rv.setAdapter(new AccountManagerFragmentAdapter(accountActivity));
@@ -105,11 +100,12 @@ public class AccountFragment extends BaseFragment {
                     @Override
                     public void onResponseHandled(ContentResponse<Object> response) {
                         if (response.getResultCode() == ResultCode.LOGIN_ERR) {
+                            BBSApplication.setAccount(Account.GUEST);
+                            // 不改变登录页面数据
+//                            mSharedViewModel.updateCurrentAccount(Account.GUEST);
                             if (getActivity() !=null) {
                                 getActivity().onBackPressed();
-                                BBSApplication.setAccount(Account.GUEST);
                             }
-
                         }
                     }
                 });

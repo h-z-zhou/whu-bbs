@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -19,10 +19,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.utils.validator.TextValidator;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SetPasswordFragment extends BaseFragment {
 
@@ -67,20 +66,28 @@ public class SetPasswordFragment extends BaseFragment {
 
     private void eventBinding() {
 
-        mViewModel.getResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<String>>() {
+        mViewModel.getResultMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
-            public void onChanged(ContentResponse<String> stringContentResponse) {
-                String msg;
-                if (stringContentResponse.isSuccessful()) {
-                    msg = stringContentResponse.getMassage();
-                } else {
-                    msg = stringContentResponse.getResultCode().getMsg();
+            public void onChanged(Boolean aBoolean) {
+                Toast.makeText(getContext(), "修改成功，请重新登录", Toast.LENGTH_SHORT).show();
+                if (getActivity() instanceof AccountActivity) {
+                    ((AccountActivity) getActivity()).navigationTo(new LoginFragment(), false);
                 }
-                new AlertDialog.Builder(getContext())
-                        .setMessage(msg)
-                        .setPositiveButton("确定", null)
-                        .create().
-                        show();
+            }
+        });
+
+        mViewModel.getErrorResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(getContext())
+                        .addErrorResponse(contentResponse)
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+//                                mViewModel.setPassword();
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -89,6 +96,7 @@ public class SetPasswordFragment extends BaseFragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (oldPassword_et.getText()!=null && TextValidator.isPasswordValid(oldPassword_et.getText().toString())) {
                     oldPassword_tl.setError(null);
+                    mViewModel.oldPassword = oldPassword_et.getText().toString();
                 }
                 return false;
             }
@@ -99,6 +107,7 @@ public class SetPasswordFragment extends BaseFragment {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (new1Password_et.getText()!=null && TextValidator.isPasswordValid(new1Password_et.getText().toString())) {
                     new1Password_tl.setError(null);
+                    mViewModel.new1Password = new1Password_et.getText().toString();
                 }
                 return false;
             }
@@ -113,6 +122,7 @@ public class SetPasswordFragment extends BaseFragment {
                     if (new1Password.toString().equals(new2Password.toString())) {
                         new2Password_tl.setError(null);
                     }
+                    mViewModel.new2Password = new2Password_et.getText().toString();
                 }
 
                 return false;
@@ -144,14 +154,7 @@ public class SetPasswordFragment extends BaseFragment {
                     return;
                 }
 
-                Map<String, String> form = new HashMap<>();
-                // pw1=&pw2=&pw3=
-                form.put("pw1", oldPassword.toString());
-                form.put("pw2", new1Password.toString());
-                form.put("pw3", new2Password.toString());
-
-                mViewModel.setPassword(form);
-
+                mViewModel.setPassword();
             }
         });
 

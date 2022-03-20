@@ -24,6 +24,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.utils.validator.TextValidator;
 
 import java.text.SimpleDateFormat;
@@ -107,21 +109,33 @@ public class RegisterFragment extends BaseFragment {
 
     private void eventBinding() {
 
-        mViewModel.getResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<Object>>() {
+
+        mViewModel.getResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<String>>() {
             @Override
-            public void onChanged(ContentResponse<Object> objectContentResponse) {
+            public void onChanged(ContentResponse<String> contentResponse) {
                 new AlertDialog.Builder(getContext())
-                        .setMessage(objectContentResponse.getMassage())
+                        .setMessage(contentResponse.getContent())
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if (objectContentResponse.isSuccessful()) {
-                                    if (getActivity() != null)
-                                        getActivity().onBackPressed();
-                                }
                             }
                         })
                         .create()
+                        .show();
+            }
+        });
+
+        mViewModel.getErrorResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(getContext())
+                        .addErrorResponse(contentResponse)
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                register();
+                            }
+                        })
                         .show();
             }
         });
@@ -221,95 +235,98 @@ public class RegisterFragment extends BaseFragment {
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Editable uid = uid_et.getText();
-                if (uid==null || !TextValidator.isUidValid(uid.toString())) {
-                    uid_tl.setError("请填写符合要求的ID");
-                    return;
-                }
-
-                Editable password = password_et.getText();
-                if (password==null || !TextValidator.isPasswordValid(password.toString())) {
-                    password_tl.setError("请填写符合要求的密码");
-                    return;
-                }
-
-                Editable password2 = password2_et.getText();
-                if (password2==null || !password2.toString().equals(password.toString())) {
-                    password2_tl.setError("两次密码不匹配");
-                    return;
-                }
-
-                Editable nickname = nickname_et.getText();
-
-                Editable realName = realName_et.getText();
-                if (realName==null || realName.length()<2) {
-                    realName_tl.setError("请输入真实姓名");
-                    return;
-                }
-
-                Editable campusId = campusId_et.getText();
-                if (campusId==null || !TextValidator.isCampusIdValid(campusId.toString())) {
-                    campusId_tl.setError("请输入有效的凭证");
-                    return;
-                }
-
-                Editable idNumber = idNumber_et.getText();
-                if (idNumber==null || !TextValidator.isIdNumberValid(idNumber.toString())) {
-                    idNumber_tl.setError("请输入正确的身份证号");
-                    return;
-                }
-
-                Editable email = email_et.getText();
-                if (email==null || !TextValidator.isEmailValid(email.toString())) {
-                    email_tl.setError("请输入有效邮箱");
-                    return;
-                }
-
-                Editable phoneNumber = phoneNumber_et.getText();
-                if (phoneNumber==null || !TextValidator.isPhoneNumberValid(phoneNumber.toString())) {
-                    phoneNumber_tl.setError("请输入联系电话");
-                    return;
-                }
-
-                String gender;
-                if (gender_man_btn.isChecked()) {
-                    gender = "男";
-                } else {
-                    gender = "女";
-                }
-
-                Editable birthday = birthday_et.getText();
-                String birthday_year = "";
-                String birthday_month = "";
-                String birthday_day = "";
-                if (birthday!=null) {
-                    String[] date = birthday.toString().split("-");
-                    if (date.length == 3) {
-                        birthday_year = date[0];
-                        birthday_month = date[1];
-                        birthday_day = date[2];
-                    }
-                }
-
-                // userid=abc&pass1=x57805zhz&pass2=x57805zhz&username=&realname=%D6%DC%BA%A3%D6%F9&xh=2020202020084&sfzh=450921199802240811&gender=%C4%D0&year=&month=&day=&reg_email=1758925946%40qq.com&phone=15927210933
-                Map<String, String> form = new HashMap<>();
-                form.put("userid", uid.toString());
-                form.put("pass1", password.toString());
-                form.put("pass2", password2.toString());
-                form.put("username", nickname==null? "": nickname.toString());
-                form.put("realname", realName.toString());
-                form.put("xh", campusId.toString());
-                form.put("sfzh", idNumber.toString());
-                form.put("gender", gender);
-                form.put("year", birthday_year);
-                form.put("month", birthday_month);
-                form.put("day", birthday_day);
-                form.put("reg_email", email.toString());
-                form.put("phone", phoneNumber.toString());
-
-                mViewModel.register(form);
-
+                register();
             }
         });
+    }
+
+    private void register() {
+        Editable uid = uid_et.getText();
+        if (uid==null || !TextValidator.isUidValid(uid.toString())) {
+            uid_tl.setError("请填写符合要求的ID");
+            return;
+        }
+
+        Editable password = password_et.getText();
+        if (password==null || !TextValidator.isPasswordValid(password.toString())) {
+            password_tl.setError("请填写符合要求的密码");
+            return;
+        }
+
+        Editable password2 = password2_et.getText();
+        if (password2==null || !password2.toString().equals(password.toString())) {
+            password2_tl.setError("两次密码不匹配");
+            return;
+        }
+
+        Editable nickname = nickname_et.getText();
+
+        Editable realName = realName_et.getText();
+        if (realName==null || realName.length()<2) {
+            realName_tl.setError("请输入真实姓名");
+            return;
+        }
+
+        Editable campusId = campusId_et.getText();
+        if (campusId==null || !TextValidator.isCampusIdValid(campusId.toString())) {
+            campusId_tl.setError("请输入有效的凭证");
+            return;
+        }
+
+        Editable idNumber = idNumber_et.getText();
+        if (idNumber==null || !TextValidator.isIdNumberValid(idNumber.toString())) {
+            idNumber_tl.setError("请输入正确的身份证号");
+            return;
+        }
+
+        Editable email = email_et.getText();
+        if (email==null || !TextValidator.isEmailValid(email.toString())) {
+            email_tl.setError("请输入有效邮箱");
+            return;
+        }
+
+        Editable phoneNumber = phoneNumber_et.getText();
+        if (phoneNumber==null || !TextValidator.isPhoneNumberValid(phoneNumber.toString())) {
+            phoneNumber_tl.setError("请输入联系电话");
+            return;
+        }
+
+        String gender;
+        if (gender_man_btn.isChecked()) {
+            gender = "男";
+        } else {
+            gender = "女";
+        }
+
+        Editable birthday = birthday_et.getText();
+        String birthday_year = "";
+        String birthday_month = "";
+        String birthday_day = "";
+        if (birthday!=null) {
+            String[] date = birthday.toString().split("-");
+            if (date.length == 3) {
+                birthday_year = date[0];
+                birthday_month = date[1];
+                birthday_day = date[2];
+            }
+        }
+
+        // userid=abc&pass1=&pass2=&username=&realname=&xh=&sfzh=&gender=&year=&month=&day=&reg_email=&phone=
+        Map<String, String> form = new HashMap<>();
+        form.put("userid", uid.toString());
+        form.put("pass1", password.toString());
+        form.put("pass2", password2.toString());
+        form.put("username", nickname==null? "": nickname.toString());
+        form.put("realname", realName.toString());
+        form.put("xh", campusId.toString());
+        form.put("sfzh", idNumber.toString());
+        form.put("gender", gender);
+        form.put("year", birthday_year);
+        form.put("month", birthday_month);
+        form.put("day", birthday_day);
+        form.put("reg_email", email.toString());
+        form.put("phone", phoneNumber.toString());
+
+        mViewModel.register(form);
     }
 }

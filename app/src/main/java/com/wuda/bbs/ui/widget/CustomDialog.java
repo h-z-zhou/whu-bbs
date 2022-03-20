@@ -122,7 +122,7 @@ public class CustomDialog extends AppCompatDialog {
             @Override
             public void onClick(View v) {
                 pBtnLister.onButtonClick();
-//                dismiss();
+                dismiss();
             }
         });
 

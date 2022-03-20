@@ -1,19 +1,20 @@
 package com.wuda.bbs.ui.account;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.ui.base.BaseResponseViewModel;
+import com.wuda.bbs.utils.networkResponseHandler.FindPasswordResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 
 import java.util.Map;
 
-public class FindPasswordViewModel extends ViewModel {
+public class FindPasswordViewModel extends BaseResponseViewModel {
 
-    protected MutableLiveData<ContentResponse<Object>> responseLiveData;
+    protected MutableLiveData<ContentResponse<String>> responseLiveData;
 
-    public MutableLiveData<ContentResponse<Object>> getResponseLiveData() {
+    public MutableLiveData<ContentResponse<String>> getResponseLiveData() {
         if (responseLiveData == null) {
             responseLiveData = new MutableLiveData<>();
         }
@@ -22,10 +23,14 @@ public class FindPasswordViewModel extends ViewModel {
 
     public void findPassword(Map<String, String> form) {
 
-        NetworkEntry.findPassword(form, new SimpleResponseHandler() {
+        NetworkEntry.findPassword(form, new FindPasswordResponseHandler() {
             @Override
-            public void onResponseHandled(ContentResponse<Object> response) {
-                responseLiveData.postValue(response);
+            public void onResponseHandled(ContentResponse<String> response) {
+                if (response.isSuccessful()) {
+                    responseLiveData.postValue(response);
+                } else {
+                    errorResponseMutableLiveData.postValue(response);
+                }
             }
         });
     }

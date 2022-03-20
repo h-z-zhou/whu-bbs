@@ -98,6 +98,7 @@ public class FavArticleActivity extends AppCompatActivity {
             @Override
             public void onChanged(ContentResponse<?> contentResponse) {
                 new ResponseErrorHandlerDialog(FavArticleActivity.this)
+                        .addErrorResponse(contentResponse)
                         .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
                             @Override
                             public void onButtonClick() {

@@ -18,9 +18,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
+import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 import java.util.List;
 
@@ -72,7 +75,7 @@ public class LoginFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         mViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        mSharedViewModel = new ViewModelProvider(getActivity()).get(AccountSharedViewModel.class);
+        mSharedViewModel = new ViewModelProvider(requireActivity()).get(AccountSharedViewModel.class);
 
         if (!mViewModel.id.isEmpty() || !mViewModel.pwd.isEmpty()) {
             userId_et.setText(mViewModel.id);
@@ -103,6 +106,7 @@ public class LoginFragment extends BaseFragment {
             }
         });
 
+
         mViewModel.getAccountResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<Account>>() {
             @Override
             public void onChanged(ContentResponse<Account> accountContentResponse) {
@@ -114,6 +118,21 @@ public class LoginFragment extends BaseFragment {
                 } else {
                     Toast.makeText(getContext(), accountContentResponse.getMassage(), Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        mViewModel.getErrorResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(getContext())
+                        .addErrorResponse(contentResponse)
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                login();
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -185,8 +204,9 @@ public class LoginFragment extends BaseFragment {
                     ((AccountActivity) getActivity()).navigationTo(new RegisterFragment(), true);
                 }
             }
-
         });
+
+
     }
 
     @Override
@@ -194,6 +214,11 @@ public class LoginFragment extends BaseFragment {
         super.onPause();
         mViewModel.id = userId_et.getText().toString();
         mViewModel.pwd = passwd_et.getText().toString();
+
+        // 没有成功登录（SharedViewMode初始化时会改变当前用户）
+        if (mViewModel.getAccountResponseLiveData().getValue() == null) {
+            BBSApplication.setAccount(Account.GUEST);
+        }
     }
 
     private void login() {

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -97,7 +96,7 @@ public class ReplyActivity extends AppCompatActivity {
             @Override
             public void onChanged(ContentResponse<?> contentResponse) {
                 new ResponseErrorHandlerDialog(ReplyActivity.this)
-                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .addErrorResponse(contentResponse)
                         .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
                             @Override
                             public void onButtonClick() {

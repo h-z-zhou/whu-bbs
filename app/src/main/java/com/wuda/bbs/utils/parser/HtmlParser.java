@@ -140,7 +140,8 @@ public class HtmlParser {
         if (infoTable.size() != 1) {
             response.setContent(doc.text());
         } else {
-            response.setContent(infoTable.get(0).text());
+            response.setResultCode(ResultCode.PASSWORD);
+            response.setMassage(infoTable.get(0).text());
         }
 
         return response;

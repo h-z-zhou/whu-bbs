@@ -1,7 +1,5 @@
 package com.wuda.bbs.ui.account;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.KeyEvent;
@@ -20,6 +18,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.utils.validator.TextValidator;
 
 import java.util.HashMap;
@@ -81,22 +81,10 @@ public class FindPasswordByArtificialFragment extends BaseFragment {
 
     private void eventBinding() {
 
-        mViewModel.getResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<Object>>() {
+        mViewModel.getResponseLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<String>>() {
             @Override
-            public void onChanged(ContentResponse<Object> objectContentResponse) {
-                new AlertDialog.Builder(getContext())
-                        .setMessage(objectContentResponse.getMassage())
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if (objectContentResponse.isSuccessful()) {
-                                    if (getActivity() != null)
-                                        getActivity().onBackPressed();
-                                }
-                            }
-                        })
-                        .create()
-                        .show();
+            public void onChanged(ContentResponse<String> stringContentResponse) {
+                requireActivity().onBackPressed();
             }
         });
 
@@ -133,38 +121,57 @@ public class FindPasswordByArtificialFragment extends BaseFragment {
         submit_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Editable uid = uid_et.getText();
-                if (uid==null || uid.length()<2) {
-                    uid_tl.setError("请填写正确的ID");
-                    return;
-                }
-
-                Editable name = name_et.getText();
-                Editable idNumber = idNumber_et.getText();
-                Editable studentNumber = studentNumber_et.getText();
-
-                Editable email = email_et.getText();
-                if (email==null || !TextValidator.isEmailValid(email.toString())) {
-                    email_tl.setError("请填写有效的邮箱地址");
-                    return;
-                }
-
-                Editable comment = comment_et.getText();
-
-                // tgt=reqpwd&uid=abc&name=&sfzh=&xh=&email=abc%40abc.abc&bz=
-                Map<String, String> form = new HashMap<>();
-
-                form.put("tgt", "reqpwd");
-                form.put("uid", uid.toString());
-                form.put("name", name==null? "": name.toString());
-                form.put("sfzh", idNumber==null? "": idNumber.toString());
-                form.put("xh", studentNumber==null? "": studentNumber.toString());
-                form.put("email", email.toString());
-                form.put("bz", comment==null? "": comment.toString());
-
-//                submit(form);
-                mViewModel.findPassword(form);
+                submit();
             }
         });
+
+        mViewModel.getErrorResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(getContext())
+                        .addErrorResponse(contentResponse)
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+//                                submit();
+                            }
+                        })
+                        .show();
+            }
+        });
+    }
+
+    private void submit() {
+        Editable uid = uid_et.getText();
+        if (uid==null || uid.length()<2) {
+            uid_tl.setError("请填写正确的ID");
+            return;
+        }
+
+        Editable name = name_et.getText();
+        Editable idNumber = idNumber_et.getText();
+        Editable studentNumber = studentNumber_et.getText();
+
+        Editable email = email_et.getText();
+        if (email==null || !TextValidator.isEmailValid(email.toString())) {
+            email_tl.setError("请填写有效的邮箱地址");
+            return;
+        }
+
+        Editable comment = comment_et.getText();
+
+        // tgt=reqpwd&uid=abc&name=&sfzh=&xh=&email=abc%40abc.abc&bz=
+        Map<String, String> form = new HashMap<>();
+
+        form.put("tgt", "reqpwd");
+        form.put("uid", uid.toString());
+        form.put("name", name==null? "": name.toString());
+        form.put("sfzh", idNumber==null? "": idNumber.toString());
+        form.put("xh", studentNumber==null? "": studentNumber.toString());
+        form.put("email", email.toString());
+        form.put("bz", comment==null? "": comment.toString());
+
+//                submit(form);
+        mViewModel.findPassword(form);
     }
 }

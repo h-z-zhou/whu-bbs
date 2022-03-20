@@ -1,7 +1,6 @@
 package com.wuda.bbs.ui.account;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.NetworkEntry;
@@ -10,13 +9,14 @@ import com.wuda.bbs.logic.bean.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AccountDao;
 import com.wuda.bbs.logic.dao.AppDatabase;
+import com.wuda.bbs.ui.base.BaseResponseViewModel;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.UserInfoResponseHandler;
 
 import java.util.List;
 
-public class AccountSharedViewModel extends ViewModel {
+public class AccountSharedViewModel extends BaseResponseViewModel {
     private MutableLiveData<Account> currentAccount;
     private MutableLiveData<List<Account>> allAccounts;
     private MutableLiveData<UserInfo> userInfo;
@@ -105,7 +105,11 @@ public class AccountSharedViewModel extends ViewModel {
         NetworkEntry.login(account, new AccountResponseHandler() {
             @Override
             public void onResponseHandled(ContentResponse<Account> response) {
-                updateCurrentAccount(response.getContent());
+                if (response.isSuccessful()) {
+                    updateCurrentAccount(response.getContent());
+                } else {
+                    errorResponseMutableLiveData.postValue(response);
+                }
             }
         });
     }
@@ -115,18 +119,25 @@ public class AccountSharedViewModel extends ViewModel {
     }
 
     public void requestUserInfo() {
+        if (currentAccount.getValue() == null)
+            return;
         String userId = currentAccount.getValue().getId();
         NetworkEntry.requestUserInfo(userId, new UserInfoResponseHandler() {
             @Override
             public void onResponseHandled(ContentResponse<UserInfo> response) {
-                UserInfo userInfo = response.getContent();
-                userInfo.setId(userId);
-                AccountSharedViewModel.this.userInfo.postValue(userInfo);
 
-                Account account = currentAccount.getValue();
-                if (!account.getAvatar().equals(userInfo.getAvatar())) {
-                    account.setAvatar(userInfo.getAvatar());
-                    updateCurrentAccount(account);
+                if (response.isSuccessful()) {
+                    UserInfo userInfo = response.getContent();
+                    userInfo.setId(userId);
+                    AccountSharedViewModel.this.userInfo.postValue(userInfo);
+
+                    Account account = currentAccount.getValue();
+                    if (!account.getAvatar().equals(userInfo.getAvatar())) {
+                        account.setAvatar(userInfo.getAvatar());
+                        updateCurrentAccount(account);
+                    }
+                } else {
+                    errorResponseMutableLiveData.postValue(response);
                 }
             }
         });

@@ -120,7 +120,7 @@ public class DetailArticleActivity extends AppCompatActivity {
             @Override
             public void onChanged(ContentResponse<?> contentResponse) {
                 new ResponseErrorHandlerDialog(DetailArticleActivity.this)
-                        .addErrorMsg(contentResponse.getResultCode(), contentResponse.getMassage())
+                        .addErrorResponse(contentResponse)
                         .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
                             @Override
                             public void onButtonClick() {

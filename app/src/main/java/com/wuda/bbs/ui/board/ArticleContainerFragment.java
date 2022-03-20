@@ -85,7 +85,7 @@ public abstract class ArticleContainerFragment extends Fragment {
                     mViewModel.appendArticles(listContentResponse.getContent());
                 } else {
                     new ResponseErrorHandlerDialog(getContext())
-                            .addErrorMsg(listContentResponse.getResultCode(), listContentResponse.getMassage())
+                            .addErrorResponse(listContentResponse)
                             .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
                                 @Override
                                 public void onButtonClick() {

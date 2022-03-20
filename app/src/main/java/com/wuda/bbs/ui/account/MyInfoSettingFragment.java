@@ -4,7 +4,6 @@ import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
@@ -39,9 +39,6 @@ import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.ui.widget.CustomDialog;
 import com.wuda.bbs.utils.GlideEngine;
 import com.wuda.bbs.utils.network.NetConst;
-import com.wuda.bbs.utils.networkResponseHandler.MyUserDataHandler;
-import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
-import com.wuda.bbs.utils.networkResponseHandler.UpLoadAvatarHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 import com.yalantis.ucrop.UCrop;
 
@@ -50,10 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 
 public class MyInfoSettingFragment extends BaseFragment {
 
@@ -103,18 +96,17 @@ public class MyInfoSettingFragment extends BaseFragment {
         showActionBar("个人信息");
 
         mViewModel = new ViewModelProvider(this).get(MyInfoSettingViewModel.class);
-//        mInfoViewModel = new ViewModelProvider(getActivity()).get(MyInfoViewModel.class);
-        mSharedViewModel = new ViewModelProvider(getActivity()).get(AccountSharedViewModel.class);
+        mSharedViewModel = new ViewModelProvider(requireActivity()).get(AccountSharedViewModel.class);
 
         UserInfo info = mSharedViewModel.getUserInfo().getValue();
         if (info != null) {
-            Glide.with(getContext()).load(NetConst.BASE + info.getAvatar()).into(avatar_iv);
+            Glide.with(requireContext()).load(NetConst.BASE + info.getAvatar()).into(avatar_iv);
             nickname_tv.setText(info.getNickname());
             gender_tv.setText(info.getGender());
             signature_tv.setText(info.getSignature());
         }
 
-        requestMyUserInfo();
+        mViewModel.requestMyUserInfo();
 
         eventBinding(info);
 
@@ -124,12 +116,34 @@ public class MyInfoSettingFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            if (data == null) return;
             final Uri resultUri = UCrop.getOutput(data);
-            uploadAvatar(resultUri.getPath());
+            if (resultUri != null) {
+                mViewModel.uploadAvatar(resultUri.getPath());
+            }
         }
     }
 
     private void eventBinding(UserInfo info) {
+
+        mSharedViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInfo>() {
+            @Override
+            public void onChanged(UserInfo info) {
+                Glide.with(requireContext()).load(NetConst.BASE + info.getAvatar()).into(avatar_iv);
+                nickname_tv.setText(info.getNickname());
+                gender_tv.setText(info.getGender());
+                signature_tv.setText(info.getSignature());
+            }
+        });
+
+        mViewModel.getSetInfoResultMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean) {
+                    mSharedViewModel.requestUserInfo();
+                }
+            }
+        });
 
         avatar_ll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,13 +163,13 @@ public class MyInfoSettingFragment extends BaseFragment {
                                 String path = result.get(0).getPath();
 
                                 Uri srcUri = Uri.fromFile(new File(path));
-                                String dstPath = getContext().getCacheDir() + "/cropImage_" + result.get(0).getFileName();
+                                String dstPath = requireContext().getCacheDir() + "/cropImage_" + result.get(0).getFileName();
                                 Uri dstUri = Uri.fromFile(new File(dstPath));
 
                                 UCrop.of(srcUri, dstUri)
                                         .withAspectRatio(1, 1)
                                         .withMaxResultSize(80, 80)
-                                        .start(getContext(), MyInfoSettingFragment.this);
+                                        .start(requireContext(), MyInfoSettingFragment.this);
                             }
                             @Override
                             public void onCancel() {
@@ -209,8 +223,12 @@ public class MyInfoSettingFragment extends BaseFragment {
                 girl_rb.setText("女");
                 gender_rg.addView(boy_rb);
                 gender_rg.addView(girl_rb);
+                if (mSharedViewModel.getUserInfo().getValue() == null) {
+                    Toast.makeText(getContext(), "未知错误", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                if (info.getGenderValue() == 1) {
+                if (mSharedViewModel.getUserInfo().getValue().getGenderValue() == 1) {
                     boy_rb.setChecked(true);
                 } else {
                     girl_rb.setChecked(true);
@@ -228,7 +246,7 @@ public class MyInfoSettingFragment extends BaseFragment {
 
                                 Map<String, String> form = mViewModel.form;
                                 form.put("gender", gender);
-                                setMyUserInfo(form);
+                                mViewModel.setMyUserInfo(form);
                             }
                         })
                         .show();
@@ -273,56 +291,12 @@ public class MyInfoSettingFragment extends BaseFragment {
 
                                     Map<String, String> form = mViewModel.form;
                                     form.put("Signature", signature);
-                                    setMyUserInfo(form);
+                                    mViewModel.setMyUserInfo(form);
 
                                 }
                             }
                         })
                         .show();
-            }
-        });
-    }
-
-    private void requestMyUserInfo() {
-        NetworkEntry.requestMyUserData(new MyUserDataHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<Map<String, String>> response) {
-                mViewModel.form = response.getContent();
-            }
-        });
-    }
-
-    private void setMyUserInfo(Map<String, String> form) {
-        NetworkEntry.setMyUserInfo(form, new SimpleResponseHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<Object> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "发生未知错误", Toast.LENGTH_SHORT).show();
-                } else {
-                    mSharedViewModel.requestUserInfo();
-                }
-            }
-        });
-    }
-
-    private void uploadAvatar(String path) {
-
-        File file = new File(path);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("image/*"), file);
-        MultipartBody.Part part = MultipartBody.Part.createFormData("upfile", file.getName(), requestBody);
-        NetworkEntry.uploadAvatar(part, new UpLoadAvatarHandler() {
-            @Override
-            public void onResponseHandled(ContentResponse<WebResult> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), response.getContent().getResult(), Toast.LENGTH_SHORT).show();
-                } else {
-                    avatar_iv.setImageBitmap(BitmapFactory.decodeFile(path));
-                    String newAvatar = response.getContent().getResult();
-                    mViewModel.form.put("myface", newAvatar);
-                    mViewModel.form.put("width", "80");
-                    mViewModel.form.put("height", "80");
-                    setMyUserInfo(mViewModel.form);
-                }
             }
         });
     }

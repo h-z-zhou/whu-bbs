@@ -18,12 +18,14 @@ import com.wuda.bbs.utils.networkResponseHandler.DetailArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FavArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FavBoardHandler;
+import com.wuda.bbs.utils.networkResponseHandler.FindPasswordResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.FriendResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.HotArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.MailContentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
 import com.wuda.bbs.utils.networkResponseHandler.RecommendArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.MyUserDataHandler;
+import com.wuda.bbs.utils.networkResponseHandler.RegisterHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SetPasswordResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SettingParamHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
@@ -140,7 +142,7 @@ public class NetworkEntry {
         });
     }
 
-    public static void register(Map<String, String> form, SimpleResponseHandler handler) {
+    public static void register(Map<String, String> form, RegisterHandler handler) {
         mRootServiceGBKWrapper.post("bbsreg.php", form).enqueue(new NoAuthBBSCallback<>(handler));
     }
 
@@ -151,7 +153,7 @@ public class NetworkEntry {
         mRootService.post("bbspwd.php", queryMap, form).enqueue(new AuthBBSCallback<>(handler));
     }
 
-    public static void findPassword(Map<String, String> form, SimpleResponseHandler handler) {
+    public static void findPassword(Map<String, String> form, FindPasswordResponseHandler handler) {
 
         mRootService.post("r/doreset.php", form).enqueue(new NoAuthBBSCallback<>(handler));
     }

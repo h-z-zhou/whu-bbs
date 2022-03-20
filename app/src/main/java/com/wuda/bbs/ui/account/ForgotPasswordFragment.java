@@ -6,11 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Account;
 import com.wuda.bbs.ui.base.BaseFragment;
 
 public class ForgotPasswordFragment extends BaseFragment {

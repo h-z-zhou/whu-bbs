@@ -3,6 +3,7 @@ package com.wuda.bbs.ui.account;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,7 +23,10 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.UserInfo;
+import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
+import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.utils.network.NetConst;
 
 public class MyInfoFragment extends BaseFragment {
@@ -63,9 +67,10 @@ public class MyInfoFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mSharedViewModel = new ViewModelProvider(getActivity()).get(AccountSharedViewModel.class);
+        mSharedViewModel = new ViewModelProvider(requireActivity()).get(AccountSharedViewModel.class);
 
         mSharedViewModel.getUserInfo().observe(getViewLifecycleOwner(), new Observer<UserInfo>() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onChanged(UserInfo userInfo) {
                 if (getContext() != null) {
@@ -85,6 +90,21 @@ public class MyInfoFragment extends BaseFragment {
             }
         });
 
+        mSharedViewModel.getErrorResponseMutableLiveData().observe(getViewLifecycleOwner(), new Observer<ContentResponse<?>>() {
+            @Override
+            public void onChanged(ContentResponse<?> contentResponse) {
+                new ResponseErrorHandlerDialog(getContext())
+                        .addErrorResponse(contentResponse)
+                        .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                mSharedViewModel.requestUserInfo();
+                            }
+                        })
+                        .show();
+            }
+        });
+
     }
 
     @Override
@@ -96,7 +116,7 @@ public class MyInfoFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.edit_info) {
-            ((AccountActivity) getActivity()).navigationTo(new MyInfoSettingFragment(), true);
+            ((AccountActivity) requireActivity()).navigationTo(new MyInfoSettingFragment(), true);
         }
         return super.onOptionsItemSelected(item);
     }
