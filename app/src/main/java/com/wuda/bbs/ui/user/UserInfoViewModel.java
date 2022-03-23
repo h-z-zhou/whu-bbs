@@ -40,7 +40,9 @@ public class UserInfoViewModel extends BaseResponseViewModel {
             @Override
             public void onResponseHandled(ContentResponse<UserInfo> response) {
                 if (response.isSuccessful()) {
-                    userInfoMutableLiveData.postValue(response.getContent());
+                    UserInfo userInfo = response.getContent();
+                    userInfo.setId(userId);
+                    userInfoMutableLiveData.postValue(userInfo);
                 } else {
                     errorResponseMutableLiveData.postValue(response);
                 }
