@@ -8,4 +8,5 @@
     android:minHeight="?attr/actionBarSize"
     android:theme="?attr/actionBarTheme"
     app:contentInsetStartWithNavigation="0dp"
-    app:navigationIcon="@drawable/ic_arrow_back"></androidx.appcompat.widget.Toolbar>
+    app:navigationIcon="@drawable/ic_arrow_back">
+</androidx.appcompat.widget.Toolbar>

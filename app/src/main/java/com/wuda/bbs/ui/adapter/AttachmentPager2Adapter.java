@@ -1,13 +1,9 @@
 package com.wuda.bbs.ui.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.luck.picture.lib.photoview.PhotoView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Attachment;
 import com.wuda.bbs.utils.network.NetConst;
@@ -40,8 +37,7 @@ public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPage
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.attachment_pager2_item, parent, false);
-        ViewHolder holder = new ViewHolder(view);
-        return holder;
+        return new ViewHolder(view);
     }
 
     @Override
@@ -53,7 +49,8 @@ public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPage
         String url = NetConst.ATTACHMENT + "?board=" + board + "&id=" + articleId + "&ap=" + attachment.getId();
 
         if (mime.type == MimeValidator.Mime.Type.IMAGE) {
-            Glide.with(mContext).load(url).into(holder.face_iv);
+            Glide.with(mContext).load(url).into(holder.photoView);
+            holder.photoView.setZoomable(true);
         } else {
             ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(500, 500);
             // 0 => parent id
@@ -61,8 +58,8 @@ public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPage
             params.bottomToBottom = 0;
             params.startToStart = 0;
             params.endToEnd = 0;
-            holder.face_iv.setLayoutParams(params);
-            Glide.with(mContext).load(mime.icon).into(holder.face_iv);
+            holder.photoView.setLayoutParams(params);
+            Glide.with(mContext).load(mime.icon).into(holder.photoView);
             holder.filename_tv.setText(attachment.getName());
         }
 
@@ -75,13 +72,13 @@ public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPage
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView face_iv;
+        PhotoView photoView;
         TextView filename_tv;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
-            face_iv = itemView.findViewById(R.id.attachment_face_imageView);
+            photoView = itemView.findViewById(R.id.attachment_photoView);
+            photoView.setZoomable(false);
             filename_tv = itemView.findViewById(R.id.attachment_filename_textView);
         }
     }

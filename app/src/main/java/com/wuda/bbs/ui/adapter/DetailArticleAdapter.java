@@ -1,9 +1,11 @@
 package com.wuda.bbs.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +16,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -24,7 +25,9 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.ui.article.ReplyActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
+import com.wuda.bbs.ui.widget.ArticleTextView;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
+import com.wuda.bbs.utils.ContentTextUtil;
 import com.wuda.bbs.utils.network.NetConst;
 
 import java.util.ArrayList;
@@ -72,7 +75,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         if (holder instanceof ReplyViewHolder) {
             ((ReplyViewHolder) holder).replierUsername_tv.setText(article.getAuthor());
             ((ReplyViewHolder) holder).replyTime_tv.setText(article.getTime());
-            ((ReplyViewHolder) holder).replyContent_tv.setText(replyContentBuilder(article));
+            ((ReplyViewHolder) holder).replyContent_tv.setText(replyContentBuilder(((ReplyViewHolder) holder).replyContent_tv, article));
             if (!article.getUserFaceImg().equals("wForum/")) {
                 Glide.with(mContext)
                         .load(NetConst.BASE + "/" + article.getUserFaceImg())
@@ -102,7 +105,8 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 //            ((ContentViewHolder) holder).authorAvatar_iv
             ((ContentViewHolder) holder).authorUsername_tv.setText(article.getAuthor());
             ((ContentViewHolder) holder).postTime_tv.setText(article.getTime());
-            ((ContentViewHolder) holder).postContent_tv.setText(article.getContent());
+            ((ContentViewHolder) holder).postContent_tv.setContentText(article.getContent(), article.getAttachmentList(), mBoardId, article.getId());
+//            ((ContentViewHolder) holder).postContent_tv.setText(ContentTextUtil.getSpannableString(mContext, ((ContentViewHolder) holder).postContent_tv, article.getContent()));
             if (!article.getUserFaceImg().equals("wForum/")) {
                 Glide.with(mContext)
                         .load(NetConst.BASE + "/" + article.getUserFaceImg())
@@ -145,6 +149,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         return mDetailArticleList.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateDataSet(List<DetailArticle> detailArticles) {
         this.mDetailArticleList = detailArticles;
         this.notifyDataSetChanged();
@@ -155,15 +160,14 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.notifyItemRangeInserted(this.mDetailArticleList.size()-detailArticles.size(), this.mDetailArticleList.size());
     }
 
-    private SpannableStringBuilder replyContentBuilder(DetailArticle detailArticle) {
+    private SpannableStringBuilder replyContentBuilder(TextView textView, DetailArticle detailArticle) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
         builder.append("@").append(detailArticle.getReply2username()).append(detailArticle.getReply2content());
         builder.setSpan(new RelativeSizeSpan(0.8f), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         builder.append("\n");
-        builder.append(detailArticle.getContent());
-
-        Log.d("reply", builder.toString());
+//        builder.append(detailArticle.getContent());
+        builder.append(ContentTextUtil.getSpannableString(mContext, textView, detailArticle.getContent()));
 
         return builder;
     }
@@ -173,7 +177,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         ImageView authorAvatar_iv;
         TextView authorUsername_tv;
         TextView postTime_tv;
-        TextView postContent_tv;
+        ArticleTextView postContent_tv;
         TextView replyNum_tv;
 
         public ContentViewHolder(@NonNull View itemView) {
@@ -183,6 +187,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             authorUsername_tv = itemView.findViewById(R.id.authorUsername_textView);
             postTime_tv = itemView.findViewById(R.id.postTime_textView);
             postContent_tv = itemView.findViewById(R.id.postContent_textView);
+            postContent_tv.setMovementMethod(LinkMovementMethod.getInstance());
             replyNum_tv = itemView.findViewById(R.id.replyNum_textView);
         }
     }
@@ -200,6 +205,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             replierUsername_tv = itemView.findViewById(R.id.authorUsername_textView);
             replyTime_tv = itemView.findViewById(R.id.postTime_textView);
             replyContent_tv = itemView.findViewById(R.id.postContent_textView);
+            replyContent_tv.setMovementMethod(LinkMovementMethod.getInstance());
         }
     }
 

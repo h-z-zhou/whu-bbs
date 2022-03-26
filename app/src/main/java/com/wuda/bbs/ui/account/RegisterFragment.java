@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,7 +115,7 @@ public class RegisterFragment extends BaseFragment {
             @Override
             public void onChanged(ContentResponse<String> contentResponse) {
                 new AlertDialog.Builder(getContext())
-                        .setMessage(contentResponse.getContent())
+                        .setMessage(Html.fromHtml(contentResponse.getContent()))
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -74,16 +73,6 @@ public class ReplyActivity extends AppCompatActivity {
 
     private void eventBinding() {
 
-        content_et.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (content_et.getText() != null) {
-                    mViewModel.content = content_et.getText().toString();
-                }
-                return false;
-            }
-        });
-
         mViewModel.getPostResultMutableLiveData().observe(ReplyActivity.this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -117,6 +106,7 @@ public class ReplyActivity extends AppCompatActivity {
         send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mViewModel.content = content_et.getText().toString();
                 reply();
             }
         });

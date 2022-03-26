@@ -27,8 +27,8 @@ public class MimeValidator {
     }
 
     static final Mime[] mimes = new Mime[] {
-            new Mime(".jpg|.gif|.png|.bmp|.svg", Mime.Type.IMAGE, R.drawable.mimetype_image),
-            new Mime(".wav|.mp3", Mime.Type.AUDIO, R.drawable.mimetype_audio),
+            new Mime(".jpg|.jpeg|.gif|.png|.bmp|.svg", Mime.Type.IMAGE, R.drawable.mimetype_image),
+            new Mime(".wav|.mp3|.flac", Mime.Type.AUDIO, R.drawable.mimetype_audio),
             new Mime(".mp4|.wmv|.avi|.mov", Mime.Type.VIDEO, R.drawable.mimetype_video),
             new Mime(".zip|.rar|.7z|.gz|.exe|.iso", Mime.Type.ARCHIVE, R.drawable.mimetype_archive),
             new Mime(".apk", Mime.Type.APK, R.drawable.mimetype_apk),

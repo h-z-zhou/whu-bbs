@@ -3,8 +3,8 @@
     package="com.wuda.bbs">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".application.BBSApplication"
@@ -15,9 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BBS">
         <activity
+            android:name=".ui.article.ImageActivity"
+            android:exported="false" />
+        <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/><!-- optional (needed if default theme has no action bar) -->
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" /> <!-- optional (needed if default theme has no action bar) -->
         <activity
             android:name=".ui.account.AccountActivity"
             android:exported="false" />
