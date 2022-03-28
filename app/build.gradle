@@ -58,6 +58,9 @@ dependencies {
     // gif
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
 //    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+//    implementation 'com.wkp:SoftLinearLayout:1.0.3'
+    // https://mvnrepository.com/artifact/cn.dreamtobe.kpswitch/library
+    implementation 'cn.dreamtobe.kpswitch:library:1.6.2'
 
 
     implementation 'androidx.room:room-common:2.4.2'

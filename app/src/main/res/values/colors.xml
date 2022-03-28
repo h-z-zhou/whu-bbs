@@ -5,6 +5,7 @@
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">@android:color/transparent</color>
 
     <color name="colorPrimary">#c5cae9</color>
     <color name="colorPrimaryDark">#9499b7</color>

@@ -67,7 +67,9 @@ public class FavorBoardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(FavorBoardViewModel.class);
 
-        mViewModel.queryFavorBoardsFromDB();
+        if (mViewModel.currentBoardIdx.getValue() == null) {
+            mViewModel.queryFavorBoardsFromDB();
+        }
 
         eventBinding();
 
