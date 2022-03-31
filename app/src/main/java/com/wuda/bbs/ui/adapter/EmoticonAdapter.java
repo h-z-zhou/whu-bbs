@@ -1,6 +1,7 @@
 package com.wuda.bbs.ui.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.wuda.bbs.utils.EmoticonUtil;
 
 import java.util.List;
@@ -26,13 +28,15 @@ public class EmoticonAdapter extends RecyclerView.Adapter<EmoticonAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ImageView iv = new ImageView(parent.getContext());
-        iv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        iv.setLayoutParams(new ViewGroup.LayoutParams(128, 128));
         return new ViewHolder(iv);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.em_iv.setImageDrawable(EmoticonUtil.getDrawable(mContext, emoticons.get(position)));
+        Drawable drawable = EmoticonUtil.getDrawable(mContext, emoticons.get(position));
+        holder.em_iv.setLayoutParams(new ViewGroup.LayoutParams(drawable.getBounds().width(), drawable.getBounds().height()));
+        Glide.with(mContext).load(drawable).into(holder.em_iv);
         if (mOnItemSelectListener != null) {
             holder.em_iv.setOnClickListener(new View.OnClickListener() {
                 @Override

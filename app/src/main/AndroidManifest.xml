@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BBS">
         <activity
+            android:name=".ui.article.SelectContentActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.article.ImageActivity"
             android:exported="false" />
         <activity
@@ -46,7 +49,8 @@
             android:exported="false" />
         <activity
             android:name=".ui.article.PostArticleActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.drawer.FavArticleActivity"
             android:exported="false" />

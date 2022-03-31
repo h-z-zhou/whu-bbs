@@ -15,7 +15,7 @@ import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReplyViewModel extends BaseResponseViewModel {
+public class ReplyViewModel extends PostArticleViewModel {
 
     DetailArticle repliedArticle;
     String groupId;
@@ -32,7 +32,16 @@ public class ReplyViewModel extends BaseResponseViewModel {
         return postResultMutableLiveData;
     }
 
-    public void post(){
+    public void post() {
+        if (localMediaList != null) {
+            uploadPhotos();
+        } else {
+            postArticle();
+        }
+    }
+
+    @Override
+    protected void postArticle(){
 
         String title = "@" + repliedArticle.getAuthor();
         StringBuilder builder = new StringBuilder();

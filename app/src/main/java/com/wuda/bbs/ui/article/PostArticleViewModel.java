@@ -52,7 +52,7 @@ public class PostArticleViewModel extends BaseResponseViewModel {
         }
     }
 
-    private void postArticle() {
+    protected void postArticle() {
         // board=&relID=0&font=&subject=&Content=&signature=
         Map<String, String> form = new HashMap<>();
         form.put("board", board);

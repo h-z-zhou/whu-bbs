@@ -11,21 +11,41 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.luck.picture.lib.app.PictureAppMaster;
+import com.luck.picture.lib.basic.PictureSelector;
+import com.luck.picture.lib.config.PictureMimeType;
+import com.luck.picture.lib.config.SelectMimeType;
+import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
+import com.luck.picture.lib.engine.ImageEngine;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.entity.MediaExtraInfo;
+import com.luck.picture.lib.interfaces.OnExternalPreviewEventListener;
+import com.luck.picture.lib.interfaces.OnResultCallbackListener;
+import com.luck.picture.lib.utils.DensityUtil;
+import com.luck.picture.lib.utils.MediaUtils;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.EmoticonAdapter;
+import com.wuda.bbs.ui.adapter.GridAttachmentAdapter;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
+import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.utils.EmoticonUtil;
+import com.wuda.bbs.utils.GlideEngine;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.dreamtobe.kpswitch.util.KPSwitchConflictUtil;
 import cn.dreamtobe.kpswitch.util.KeyboardUtil;
@@ -43,6 +63,8 @@ public class ReplyActivity extends AppCompatActivity {
     KPSwitchPanelFrameLayout panelFrameLayout;
     RecyclerView insertEmoticon_rv;
     RecyclerView insertPhoto_rv;
+    private GridAttachmentAdapter mAttachmentAdapter;
+    private final List<LocalMedia> mData = new ArrayList<>();
 
     EmoticonAdapter mEmoticonAdapter;
 
@@ -58,10 +80,12 @@ public class ReplyActivity extends AppCompatActivity {
             finish();
 
         mViewModel = new ViewModelProvider(ReplyActivity.this).get(ReplyViewModel.class);
+
         mViewModel.repliedArticle = repliedArticle;
         mViewModel.groupId = groupId;
         mViewModel.boardId = boardId;
 
+        mViewModel.board = boardId;
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_reply);
@@ -103,8 +127,74 @@ public class ReplyActivity extends AppCompatActivity {
                 new KPSwitchConflictUtil.SubPanelAndTrigger(insertPhoto_rv, photo_iv)
         );
 
-        insertEmoticon_rv.setLayoutManager(new GridLayoutManager(ReplyActivity.this, 6));
+        insertEmoticon_rv.setLayoutManager(new FullyGridLayoutManager(ReplyActivity.this, 6));
+        insertEmoticon_rv.addItemDecoration(new GridSpacingItemDecoration(3,
+                DensityUtil.dip2px(ReplyActivity.this, 8), false));
         insertEmoticon_rv.setAdapter(new EmoticonAdapter(ReplyActivity.this));
+
+//        LinearLayoutManager insertPhotoLayoutManager = new LinearLayoutManager(ReplyActivity.this);
+//        insertPhotoLayoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        insertPhoto_rv.setLayoutManager(new FullyGridLayoutManager(ReplyActivity.this, 3, RecyclerView.VERTICAL, false));
+//        insertPhoto_rv.setAdapter(new GridAttachmentAdapter(ReplyActivity.this, new ArrayList<>()));
+        mAttachmentAdapter = new GridAttachmentAdapter(ReplyActivity.this, mData);
+        mAttachmentAdapter.setSelectMax(9);
+        insertPhoto_rv.setAdapter(mAttachmentAdapter);
+
+        ImageEngine imageEngine = new GlideEngine();
+        mAttachmentAdapter.setOnItemClickListener(new GridAttachmentAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                // 预览图片、视频、音频
+                PictureSelector.create(ReplyActivity.this)
+                        .openPreview()
+                        .setImageEngine(imageEngine)
+                        .setExternalPreviewEventListener(new OnExternalPreviewEventListener() {
+                            @Override
+                            public void onPreviewDelete(int position) {
+                                mAttachmentAdapter.remove(position);
+                                mAttachmentAdapter.notifyItemRemoved(position);
+                            }
+
+                            @Override
+                            public boolean onLongPressDownload(LocalMedia media) {
+                                return false;
+                            }
+                        })
+                        .startActivityPreview(position, true, mAttachmentAdapter.getData());
+            }
+
+            @Override
+            public void openPicture() {
+
+                switch (mViewModel.attachmentState) {
+                    case -1:
+                        Toast.makeText(ReplyActivity.this, "该版块不可上传附件", Toast.LENGTH_SHORT).show();
+                        return;
+                    case 0:
+                        Toast.makeText(ReplyActivity.this, "正在判断是否可以上传附件", Toast.LENGTH_SHORT).show();
+                        mViewModel.detectAttachable();
+                        return;
+                    case 1:
+                        PictureSelector.create(ReplyActivity.this)
+                                .openGallery(SelectMimeType.ofImage())
+                                .setImageEngine(GlideEngine.createGlideEngine())
+                                .isDisplayCamera(false)
+                                .setSelectedData(mAttachmentAdapter.getData())
+                                .forResult(new OnResultCallbackListener<LocalMedia>() {
+                                    @Override
+                                    public void onResult(ArrayList<LocalMedia> result) {
+                                        mViewModel.localMediaList = result;
+                                        analyticalSelectResults(result);
+                                    }
+                                    @Override
+                                    public void onCancel() {
+
+                                    }
+                                });
+                }
+            }
+        });
+
 
         eventBinding();
     }
@@ -182,5 +272,33 @@ public class ReplyActivity extends AppCompatActivity {
 
         mViewModel.post();
 
+    }
+
+    private void analyticalSelectResults(ArrayList<LocalMedia> result) {
+        for (LocalMedia media : result) {
+            if (media.getWidth() == 0 || media.getHeight() == 0) {
+                if (PictureMimeType.isHasImage(media.getMimeType())) {
+                    MediaExtraInfo imageExtraInfo = MediaUtils.getImageSize(media.getPath());
+                    media.setWidth(imageExtraInfo.getWidth());
+                    media.setHeight(imageExtraInfo.getHeight());
+                } else if (PictureMimeType.isHasVideo(media.getMimeType())) {
+                    MediaExtraInfo videoExtraInfo = MediaUtils.getVideoSize(PictureAppMaster.getInstance().getAppContext(), media.getPath());
+                    media.setWidth(videoExtraInfo.getWidth());
+                    media.setHeight(videoExtraInfo.getHeight());
+                }
+            }
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                boolean isMaxSize = result.size() == mAttachmentAdapter.getSelectMax();
+                int oldSize = mAttachmentAdapter.getData().size();
+                mAttachmentAdapter.notifyItemRangeRemoved(0, isMaxSize ? oldSize + 1 : oldSize);
+                mAttachmentAdapter.getData().clear();
+
+                mAttachmentAdapter.getData().addAll(result);
+                mAttachmentAdapter.notifyItemRangeInserted(0, result.size());
+            }
+        });
     }
 }

@@ -9,10 +9,14 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -23,13 +27,17 @@ import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.luck.picture.lib.utils.DensityUtil;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.DetailArticle;
+import com.wuda.bbs.ui.article.AttachmentActivity;
 import com.wuda.bbs.ui.article.ReplyActivity;
+import com.wuda.bbs.ui.article.SelectContentActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.ui.widget.ArticleTextView;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
+import com.wuda.bbs.ui.widget.MaskedAttachmentImageView;
 import com.wuda.bbs.utils.ContentTextUtil;
 import com.wuda.bbs.utils.network.NetConst;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +48,8 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
     Intent userInfoIntent;
     String mGroupId;
     String mBoardId;
+
+    View.OnLongClickListener mOnLongClickListener;
 
     private final int TYPE_CONTENT = 0;
     private final int TYPE_REPLY = 1;
@@ -82,6 +92,29 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .error(R.drawable.ic_face)
                         .into(((ReplyViewHolder) holder).replierAvatar_iv);
             }
+            if (!article.getAttachmentList().isEmpty()) {
+                MaskedAttachmentImageView attachmentImageView = new MaskedAttachmentImageView(mContext);
+                attachmentImageView.addAttachments(article.getAttachmentList(), mBoardId, article.getId());
+                ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.startToStart = 0;
+                params.endToEnd = 0;
+                params.topToBottom = ((ReplyViewHolder) holder).replyContent_tv.getId();
+                params.bottomToBottom = 0;
+                attachmentImageView.setLayoutParams(params);
+                attachmentImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(mContext, AttachmentActivity.class);
+                        intent.putExtra("attachments", (Serializable) article.getAttachmentList());
+                        intent.putExtra("board", mBoardId);
+                        intent.putExtra("articleId", article.getId());
+                        intent.putExtra("position", 0);
+                        mContext.startActivity(intent);
+                    }
+                });
+                ((ReplyViewHolder) holder).root_cl.addView(attachmentImageView);
+            }
+
             ((ReplyViewHolder) holder).replierAvatar_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -99,6 +132,29 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                     intent.putExtra("groupId", mGroupId);
                     intent.putExtra("boardId", mBoardId);
                     mContext.startActivity(intent);
+                }
+            });
+
+            ((ReplyViewHolder) holder).replyContent_tv.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(mContext, ((ReplyViewHolder) holder).replyContent_tv);
+                    popupMenu.getMenu().add(0, Menu.NONE, 0, "自由复制");
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getOrder() == 0) {
+//                                Toast.makeText(mContext, item.getTitle(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(mContext, SelectContentActivity.class);
+                                intent.putExtra("content", article.getContent());
+                                mContext.startActivity(intent);
+                            }
+                            return false;
+                        }
+                    });
+                    popupMenu.show();
+
+                    return true;
                 }
             });
         } else if (holder instanceof ContentViewHolder) {
@@ -141,6 +197,29 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                 recyclerView.setLayoutParams(params);
                 ((ContentViewHolder) holder).root_cl.addView(recyclerView);
             }
+
+            ((ContentViewHolder) holder).postContent_tv.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    PopupMenu popupMenu = new PopupMenu(mContext, ((ContentViewHolder) holder).postContent_tv);
+                    popupMenu.getMenu().add(0, Menu.NONE, 0, "自由复制");
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getOrder() == 0) {
+//                                Toast.makeText(mContext, item.getTitle(), Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(mContext, SelectContentActivity.class);
+                                intent.putExtra("content", article.getContent());
+                                mContext.startActivity(intent);
+                            }
+                            return false;
+                        }
+                    });
+                    popupMenu.show();
+
+                    return true;
+                }
+            });
         }
     }
 
@@ -194,6 +273,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     static class ReplyViewHolder extends RecyclerView.ViewHolder {
 
+        ConstraintLayout root_cl;
         ImageView replierAvatar_iv;
         TextView replierUsername_tv;
         TextView replyTime_tv;
@@ -201,6 +281,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         public ReplyViewHolder(@NonNull View itemView) {
             super(itemView);
+            root_cl = itemView.findViewById(R.id.root_contraintLayout);
             replierAvatar_iv = itemView.findViewById(R.id.author_avatar_imageView);
             replierUsername_tv = itemView.findViewById(R.id.authorUsername_textView);
             replyTime_tv = itemView.findViewById(R.id.postTime_textView);
