@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.wuda.bbs">
+    package="com.wuda.bbs" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -13,7 +13,14 @@
         android:networkSecurityConfig="@xml/network_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BBS">
+        android:theme="@style/Theme.BBS" >
+        <activity
+            android:name=".ui.article.ReplyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BBS.ReplyDialog" />
+        <activity
+            android:name=".ui.article.NewArticleActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.article.SelectContentActivity"
             android:exported="false" />
@@ -40,7 +47,7 @@
             android:name=".ui.drawer.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.article.ReplyActivity"
+            android:name=".ui.article.Reply2Activity"
             android:exported="false"
             android:theme="@style/Theme.BBS.Floating"
             android:windowSoftInputMode="adjustResize" />
@@ -68,7 +75,7 @@
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

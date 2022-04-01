@@ -110,6 +110,8 @@ public class PostArticleViewModel extends BaseResponseViewModel {
                 if (response.isSuccessful()) {
                     boolean isAttachable = response.getContent();
                     attachmentState = isAttachable? 1: -1;
+                } else {
+                    errorResponseMutableLiveData.postValue(response);
                 }
             }
         });

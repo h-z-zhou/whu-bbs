@@ -3,6 +3,7 @@ package com.wuda.bbs.ui.user;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -110,12 +111,13 @@ public class UserInfoActivity extends AppCompatActivity {
 
                 if (!userInfo.getPhoto().equals("")) {
                     Glide.with(UserInfoActivity.this)
-                            .load(NetConst.BASE + userInfo.getPhoto())
-                            .error(R.mipmap.default_user_photo)
+                            .load(userInfo.getPhoto())
+                            .error(R.drawable.ic_login_bg)
                             .into(photo_iv);
                 } else {
+                    photo_iv.setColorFilter(Color.LTGRAY);
                     Glide.with(UserInfoActivity.this)
-                            .load(R.mipmap.default_user_photo)
+                            .load(R.drawable.ic_login_bg)
                             .into(photo_iv);
                 }
 

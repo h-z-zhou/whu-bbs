@@ -11,7 +11,7 @@ android {
         minSdk 23
         targetSdk 31
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,6 +28,10 @@ android {
     }
     buildFeatures {
         viewBinding true
+    }
+
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -61,6 +65,7 @@ dependencies {
 //    implementation 'com.wkp:SoftLinearLayout:1.0.3'
     // https://mvnrepository.com/artifact/cn.dreamtobe.kpswitch/library
     implementation 'cn.dreamtobe.kpswitch:library:1.6.2'
+    implementation 'com.github.YummyLau:PanelSwitchHelper:1.4.0'
 
 
     implementation 'androidx.room:room-common:2.4.2'

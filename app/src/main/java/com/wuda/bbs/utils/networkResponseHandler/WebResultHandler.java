@@ -23,7 +23,13 @@ public abstract class WebResultHandler implements ContentResponseHandler<WebResu
             Elements tables = doc.getElementsByClass("TableBody1");
             if (!tables.isEmpty()) {
                 Element tb = tables.get(tables.size()-1);
-                response.setContent(new WebResult(tb.text()));
+                String text = tb.text();
+                if (text.contains("错误")) {
+                    response.setResultCode(ResultCode.SERVER_HANDLE_ERR);
+                    response.setMassage(text);
+                } else{
+                    response.setContent(new WebResult(tb.text()));
+                }
             } else {
                 tables = doc.getElementsByClass("TableBody2");
                 if (!tables.isEmpty()) {

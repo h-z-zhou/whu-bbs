@@ -50,7 +50,7 @@
                 android:background="?android:attr/listDivider" />
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/postArticle_content_editText"
+                android:id="@+id/newArticle_content_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"

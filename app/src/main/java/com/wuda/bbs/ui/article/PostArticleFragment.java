@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +41,6 @@ import com.luck.picture.lib.utils.MediaUtils;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.ui.adapter.EmoticonAdapter;
 import com.wuda.bbs.ui.adapter.GridAttachmentAdapter;
 import com.wuda.bbs.ui.base.NavigationHost;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
@@ -52,10 +50,6 @@ import com.wuda.bbs.utils.GlideEngine;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.dreamtobe.kpswitch.util.KPSwitchConflictUtil;
-import cn.dreamtobe.kpswitch.util.KeyboardUtil;
-import cn.dreamtobe.kpswitch.widget.KPSwitchPanelFrameLayout;
 
 public class PostArticleFragment extends Fragment {
 
@@ -80,7 +74,7 @@ public class PostArticleFragment extends Fragment {
 
         boardName_tv = view.findViewById(R.id.postArticle_boardName_TextView);
         title_et = view.findViewById(R.id.postArticle_title_editText);
-        content_et = view.findViewById(R.id.postArticle_content_editText);
+        content_et = view.findViewById(R.id.newArticle_content_editText);
         attachment_rv = view.findViewById(R.id.postArticle_attachment_recyclerView);
 
         title_et.setOnKeyListener(new View.OnKeyListener() {
@@ -230,12 +224,21 @@ public class PostArticleFragment extends Fragment {
                                 postArticle();
                             }
                         })
+                        .setOnNegativeButtonClickedLister(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                getActivity().onBackPressed();
+                            }
+                        })
                         .show();
             }
         });
     }
 
     private void analyticalSelectResults(ArrayList<LocalMedia> result) {
+        long size = 5*1024*1024;
+        ArrayList<LocalMedia> medias = new ArrayList<>();
+
         for (LocalMedia media : result) {
             if (media.getWidth() == 0 || media.getHeight() == 0) {
                 if (PictureMimeType.isHasImage(media.getMimeType())) {
@@ -249,16 +252,27 @@ public class PostArticleFragment extends Fragment {
                 }
             }
         }
+
+        for (LocalMedia media: result) {
+            size -= media.getSize();
+            if (size > 0) {
+                medias.add(media);
+            } else {
+                Toast.makeText(getContext(), "文件总大小不得超过5M", Toast.LENGTH_LONG).show();
+                break;
+            }
+        }
+
         requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                boolean isMaxSize = result.size() == mAttachmentAdapter.getSelectMax();
+                boolean isMaxSize = medias.size() == mAttachmentAdapter.getSelectMax();
                 int oldSize = mAttachmentAdapter.getData().size();
                 mAttachmentAdapter.notifyItemRangeRemoved(0, isMaxSize ? oldSize + 1 : oldSize);
                 mAttachmentAdapter.getData().clear();
 
-                mAttachmentAdapter.getData().addAll(result);
-                mAttachmentAdapter.notifyItemRangeInserted(0, result.size());
+                mAttachmentAdapter.getData().addAll(medias);
+                mAttachmentAdapter.notifyItemRangeInserted(0, medias.size());
             }
         });
     }

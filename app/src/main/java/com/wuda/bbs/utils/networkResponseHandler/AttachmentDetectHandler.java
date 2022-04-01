@@ -30,7 +30,11 @@ public abstract class AttachmentDetectHandler implements ContentResponseHandler<
                 } else {
                     response.setContent(params[3].equals("1"));
                 }
+            } else {
+                response.setResultCode(ResultCode.PERMISSION_DENIED);
+                response.setMassage("您无权在该版块发表文章（可能原因为您没有实名认证）");
             }
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             response = new ContentResponse<>(ResultCode.HANDLE_DATA_ERR, e.getMessage());

@@ -127,6 +127,12 @@ public class FriendActivity extends AppCompatActivity {
                                 mViewModel.requestAllFriendsFromServer();
                             }
                         })
+                        .setOnNegativeButtonClickedLister(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                finish();
+                            }
+                        })
                         .show();
             }
         });

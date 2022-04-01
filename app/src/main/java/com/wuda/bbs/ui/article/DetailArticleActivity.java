@@ -127,6 +127,12 @@ public class DetailArticleActivity extends AppCompatActivity {
                                 mViewModel.requestContentFromServer();
                             }
                         })
+                        .setOnNegativeButtonClickedLister(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                finish();
+                            }
+                        })
                         .show();
             }
         });
@@ -163,6 +169,7 @@ public class DetailArticleActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
+
 
     }
 }

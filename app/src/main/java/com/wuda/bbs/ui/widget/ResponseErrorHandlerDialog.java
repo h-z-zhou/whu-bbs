@@ -69,37 +69,41 @@ public class ResponseErrorHandlerDialog extends BaseCustomDialog {
     public void show() {
         super.show();
 
-        if (resultCode != ResultCode.LOGIN_ERR) {
-            this.pBtnText = "重试";
-            this.positive_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mRetryListener.onButtonClick();
-                    dismiss();
-                }
-            });
-        } else {
-            this.pBtnText = "去登录";
-            this.positive_btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent loginIntent = new Intent(getContext(), AccountActivity.class);
-                    loginIntent.putExtra("isLogin", true);
-                    mContext.startActivity(loginIntent);
-                    content_fl.removeAllViews();
-                    pBtnText = "重试";
-                    positive_btn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (mRetryListener == null)
-                                return;
-                            mRetryListener.onButtonClick();
-                            dismiss();
-                        }
-                    });
-                    refreshView();
-                }
-            });
+        switch (resultCode) {
+            case PERMISSION_DENIED:
+                this.positive_btn.setVisibility(View.GONE);
+                break;
+            case LOGIN_ERR:
+                this.pBtnText = "去登录";
+                this.positive_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent loginIntent = new Intent(getContext(), AccountActivity.class);
+                        loginIntent.putExtra("isLogin", true);
+                        mContext.startActivity(loginIntent);
+                        pBtnText = "重试";
+                        positive_btn.setText(pBtnText);
+                        positive_btn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (mRetryListener == null)
+                                    return;
+                                mRetryListener.onButtonClick();
+                                dismiss();
+                            }
+                        });
+                    }
+                });
+                break;
+            default:
+                this.pBtnText = "重试";
+                this.positive_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mRetryListener.onButtonClick();
+                        dismiss();
+                    }
+                });
         }
 
         refreshView();

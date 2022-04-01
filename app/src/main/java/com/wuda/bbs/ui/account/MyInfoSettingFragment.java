@@ -168,7 +168,7 @@ public class MyInfoSettingFragment extends BaseFragment {
 
                                 UCrop.of(srcUri, dstUri)
                                         .withAspectRatio(1, 1)
-                                        .withMaxResultSize(80, 80)
+                                        .withMaxResultSize(120, 120)
                                         .start(requireContext(), MyInfoSettingFragment.this);
                             }
                             @Override

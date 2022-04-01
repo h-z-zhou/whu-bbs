@@ -65,6 +65,22 @@ public class BaseCustomDialog extends AppCompatDialog {
         }else {
             negative_btn.setText("取消");
         }
+
+        if (nBtnLister != null) {
+            negative_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    nBtnLister.onButtonClick();
+                }
+            });
+        } else {
+            negative_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+        }
     }
 
     public BaseCustomDialog setOnPositiveButtonClickedListener(String text, OnButtonClickListener listener) {

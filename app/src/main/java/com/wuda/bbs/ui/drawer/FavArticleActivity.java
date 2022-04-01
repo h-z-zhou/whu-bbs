@@ -105,6 +105,12 @@ public class FavArticleActivity extends AppCompatActivity {
                                 mViewModel.requestFavArticleFromServer();
                             }
                         })
+                        .setOnNegativeButtonClickedLister(new BaseCustomDialog.OnButtonClickListener() {
+                            @Override
+                            public void onButtonClick() {
+                                finish();
+                            }
+                        })
                         .show();
             }
         });

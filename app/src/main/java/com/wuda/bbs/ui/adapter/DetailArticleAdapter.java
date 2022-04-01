@@ -7,7 +7,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -122,20 +120,21 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                     mContext.startActivity(userInfoIntent);
                 }
             });
-            ((ReplyViewHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
+
+            View.OnClickListener clickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    ReplyDialog replyDialog = new ReplyDialog(mContext);
-//                    replyDialog.show();
                     Intent intent = new Intent(mContext, ReplyActivity.class);
                     intent.putExtra("article", article);
                     intent.putExtra("groupId", mGroupId);
                     intent.putExtra("boardId", mBoardId);
                     mContext.startActivity(intent);
                 }
-            });
+            };
+            ((ReplyViewHolder) holder).itemView.setOnClickListener(clickListener);
+            ((ReplyViewHolder) holder).replyContent_tv.setOnClickListener(clickListener);
 
-            ((ReplyViewHolder) holder).replyContent_tv.setOnLongClickListener(new View.OnLongClickListener() {
+            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     PopupMenu popupMenu = new PopupMenu(mContext, ((ReplyViewHolder) holder).replyContent_tv);
@@ -156,7 +155,10 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     return true;
                 }
-            });
+            };
+
+            ((ReplyViewHolder) holder).itemView.setOnLongClickListener(longClickListener);
+            ((ReplyViewHolder) holder).replyContent_tv.setOnLongClickListener(longClickListener);
         } else if (holder instanceof ContentViewHolder) {
 //            ((ContentViewHolder) holder).authorAvatar_iv
             ((ContentViewHolder) holder).authorUsername_tv.setText(article.getAuthor());
@@ -198,7 +200,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                 ((ContentViewHolder) holder).root_cl.addView(recyclerView);
             }
 
-            ((ContentViewHolder) holder).postContent_tv.setOnLongClickListener(new View.OnLongClickListener() {
+            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     PopupMenu popupMenu = new PopupMenu(mContext, ((ContentViewHolder) holder).postContent_tv);
@@ -219,7 +221,10 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
                     return true;
                 }
-            });
+            };
+
+            ((ContentViewHolder) holder).postContent_tv.setOnLongClickListener(longClickListener);
+            ((ContentViewHolder) holder).itemView.setOnLongClickListener(longClickListener);
         }
     }
 
@@ -290,7 +295,4 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    public interface OnItemClickListener {
-        public void onItemClicked(DetailArticle detailArticle);
-    }
 }

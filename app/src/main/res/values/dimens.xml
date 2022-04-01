@@ -9,4 +9,6 @@
     <dimen name="topic_decoration_height_content">8dp</dimen>
     <dimen name="topic_decoration_height_reply">1dp</dimen>
     <dimen name="topic_decoration_replyIndentWidth">72dp</dimen>
+
+    <dimen name="panel_height">200dp</dimen>
 </resources>

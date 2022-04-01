@@ -12,7 +12,8 @@ public enum ResultCode {
     EMPTY_DATA_ERR(6, "返回空数据"),
     HANDLE_DATA_ERR(7, "数据处理错误"),
     DATA_IO_ERR(8, "数据IO错误"),
-    SERVER_HANDLE_ERR(9, "服务器处理错误");  // 修改密码不通过等
+    SERVER_HANDLE_ERR(9, "服务器处理错误"),  // 修改密码不通过等
+    PERMISSION_DENIED(10, "没有权限");
 
     private final int code;
     private final String msg;

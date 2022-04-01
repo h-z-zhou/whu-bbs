@@ -160,7 +160,7 @@ public class MailFragment extends Fragment {
         mViewModel.getMailListMutableLiveData().observe(getViewLifecycleOwner(), new Observer<List<Mail>>() {
             @Override
             public void onChanged(List<Mail> mailList) {
-                if (mViewModel.currentPage!=0 && mViewModel.totalPage== mViewModel.currentPage) {
+                if (mViewModel.currentPage!=0 && mViewModel.totalPage>= mViewModel.currentPage) {
                     adapter.setMore(false);
                     Collections.reverse(mailList);
                     if (mViewModel.currentPage == 1) {

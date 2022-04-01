@@ -4,6 +4,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -75,9 +76,10 @@ public class MyInfoFragment extends BaseFragment {
             public void onChanged(UserInfo userInfo) {
                 if (getContext() != null) {
                     if (TextUtils.isEmpty(userInfo.getPhoto())) {
-                        Glide.with(getContext()).load(R.mipmap.default_user_photo).into(photo_iv);
+                        Glide.with(getContext()).load(R.drawable.ic_login_bg).into(photo_iv);
+                        photo_iv.setColorFilter(Color.LTGRAY);
                     } else {
-                        Glide.with(getContext()).load(NetConst.BASE + userInfo.getPhoto()).into(photo_iv);
+                        Glide.with(getContext()).load(userInfo.getPhoto()).into(photo_iv);
                     }
 
                     Glide.with(getContext()).load(NetConst.BASE + userInfo.getAvatar()).into(avatar_iv);
