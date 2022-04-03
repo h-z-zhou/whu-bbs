@@ -1,13 +1,11 @@
 package com.wuda.bbs.ui.article;
 
-import android.os.Trace;
-import android.widget.Toast;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.luck.picture.lib.entity.LocalMedia;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.Attachment;
+import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseResponseViewModel;
@@ -25,9 +23,9 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class PostArticleViewModel extends BaseResponseViewModel {
+public class NewArticleViewModel extends BaseResponseViewModel {
 
-    String board;
+    private MutableLiveData<BaseBoard> boardMutableLiveData;
 
     String title;
     String content;
@@ -37,6 +35,13 @@ public class PostArticleViewModel extends BaseResponseViewModel {
     List<LocalMedia> localMediaList;
 
     private MutableLiveData<String> postedResultMutableLiveData;
+
+    public MutableLiveData<BaseBoard> getBoardMutableLiveData() {
+        if (boardMutableLiveData == null) {
+            boardMutableLiveData = new MutableLiveData<>();
+        }
+        return boardMutableLiveData;
+    }
 
     public MutableLiveData<String> getPostedResultMutableLiveData() {
         if (postedResultMutableLiveData == null) {
@@ -56,7 +61,7 @@ public class PostArticleViewModel extends BaseResponseViewModel {
     protected void postArticle() {
         // board=&relID=0&font=&subject=&Content=&signature=
         Map<String, String> form = new HashMap<>();
-        form.put("board", board);
+        form.put("board", boardMutableLiveData.getValue().getId());
         form.put("relID", "0");
         form.put("font", "");
         form.put("subject", title);
@@ -104,7 +109,7 @@ public class PostArticleViewModel extends BaseResponseViewModel {
 
     public void detectAttachable() {
         Map<String, String> form = new HashMap<>();
-        form.put("board", board);
+        form.put("board", boardMutableLiveData.getValue().getId());
         NetworkEntry.detectAttachment(form, new AttachmentDetectHandler() {
             @Override
             public void onResponseHandled(ContentResponse<Boolean> response) {

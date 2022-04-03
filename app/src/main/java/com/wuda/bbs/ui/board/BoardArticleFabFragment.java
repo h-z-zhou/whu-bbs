@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.wuda.bbs.R;
-import com.wuda.bbs.ui.article.PostArticleActivity;
+import com.wuda.bbs.ui.article.NewArticleActivity;
 
 public class BoardArticleFabFragment extends BoardArticleFragment {
 
@@ -34,7 +34,7 @@ public class BoardArticleFabFragment extends BoardArticleFragment {
         writeArticle_fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), PostArticleActivity.class);
+                Intent intent = new Intent(getContext(), NewArticleActivity.class);
                 intent.putExtra("board", board);
                 startActivity(intent);
             }

@@ -18,7 +18,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/postArticle_boardName_TextView"
+                android:id="@+id/newArticle_boardName_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableStart="@drawable/ic_menu_dashboard"
@@ -36,7 +36,7 @@
                 android:background="?android:attr/listDivider" />
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/postArticle_title_editText"
+                android:id="@+id/newArticle_title_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -61,7 +61,7 @@
                 android:padding="8dp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/postArticle_attachment_recyclerView"
+                android:id="@+id/newArticle_attachment_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom" />

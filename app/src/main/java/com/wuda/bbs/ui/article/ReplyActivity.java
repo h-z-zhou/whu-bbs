@@ -1,6 +1,5 @@
 package com.wuda.bbs.ui.article;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -58,7 +57,7 @@ public class ReplyActivity extends AppCompatActivity {
         close_btn = findViewById(R.id.reply_close_imageButton);
         send_btn = findViewById(R.id.reply_send_imageButton);
 
-        content_et = findViewById(R.id.reply_content_inputEditText);
+        content_et = findViewById(R.id.newArticle_content_inputEditText);
 
         // 需要加延时，不然无法弹出
         new Handler().postDelayed(new Runnable(){

@@ -1,17 +1,12 @@
 package com.wuda.bbs.ui.article;
 
-import androidx.lifecycle.ViewModelProvider;
-
-import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.view.LayoutInflater;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.BaseBoard;
@@ -26,35 +21,30 @@ import java.util.List;
 
 import pokercc.android.expandablerecyclerview.ExpandableRecyclerView;
 
-public class SelectBoardFragment extends Fragment {
+public class SelectBoardActivity extends AppCompatActivity {
 
     ExpandableRecyclerView board_erv;
 
-    private PostBoardViewModel mPostBoardViewModel;
-
-    public static SelectBoardFragment newInstance() {
-        return new SelectBoardFragment();
-    }
-
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.select_board_fragment, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_select_board);
 
-        board_erv = view.findViewById(R.id.selectBoard_expandableRecyclerView);
+        Toolbar toolbar = findViewById(R.id.back_toolbar);
+        toolbar.setTitle("版块选择");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
-        return view;
-    }
+        board_erv = findViewById(R.id.selectBoard_expandableRecyclerView);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mPostBoardViewModel = new ViewModelProvider(requireActivity()).get(PostBoardViewModel.class);
         LinkedHashMap<String, List<BaseBoard>> allBoardGroupMap = new LinkedHashMap<>();
 
-        AppDatabase database = AppDatabase.getDatabase(getContext());
-        DetailBoardDao detailBoardDao = database.getDetailBoardDao();
+        DetailBoardDao detailBoardDao = AppDatabase.getDatabase().getDetailBoardDao();
 //        room group by ??
 //        List<DetailBoard> detailBoardList = detailBoardDao.loadBoardsGroupBySection();
         List<DetailBoard> detailBoardList = detailBoardDao.loadAllBoards();
@@ -66,22 +56,22 @@ public class SelectBoardFragment extends Fragment {
 
             allBoardGroupMap.get(section).add(detailBoard);
         }
-        database.close();
 
         List<String> sectionList = new ArrayList<>(allBoardGroupMap.keySet());
         List<List<BaseBoard>> allBoardGroupList = new ArrayList<>(allBoardGroupMap.values());
 
-        BoardListAdapter adapter = new BoardListAdapter(getContext(), sectionList, allBoardGroupList);
+        BoardListAdapter adapter = new BoardListAdapter(SelectBoardActivity.this, sectionList, allBoardGroupList);
         adapter.setOnBoardSelectedListener(new BoardListAdapter.OnBoardSelectedListener() {
             @Override
             public void onBoardSelected(BaseBoard board) {
-                mPostBoardViewModel.boardMutableLiveData.postValue(board);
-                requireActivity().onBackPressed();
+                Intent intent = new Intent();
+                intent.putExtra("board", board);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
 
         board_erv.setAdapter(adapter);
-        board_erv.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        board_erv.setLayoutManager(new LinearLayoutManager(SelectBoardActivity.this));
     }
 }

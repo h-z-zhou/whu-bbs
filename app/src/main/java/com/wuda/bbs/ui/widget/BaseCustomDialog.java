@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatDialog;
 
 import com.wuda.bbs.R;
 
-public class BaseCustomDialog extends AppCompatDialog {
+public abstract class BaseCustomDialog extends AppCompatDialog {
     protected TextView title_tv;
     protected FrameLayout content_fl;
     protected Button negative_btn, positive_btn;

@@ -43,7 +43,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
-            android:id="@+id/reply_content_inputEditText"
+            android:id="@+id/newArticle_content_inputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
@@ -58,7 +58,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/reply_content_inputEditText">
+            app:layout_constraintTop_toBottomOf="@+id/newArticle_content_inputEditText">
 
             <ImageView
                 android:id="@+id/reply_emoticon_imageView"
@@ -76,13 +76,13 @@
         </LinearLayout>
 
         <cn.dreamtobe.kpswitch.widget.KPSwitchPanelFrameLayout
-            android:id="@+id/new_panel_root"
+            android:id="@+id/keyboard_panel_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/new_insert_emotion_recyclerView"
+                android:id="@+id/newArticle_emotion_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

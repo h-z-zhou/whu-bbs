@@ -45,7 +45,6 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-//    implementation 'com.squareup.retrofit2:converter-simplexml:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
     implementation 'org.jsoup:jsoup:1.14.3'
 
@@ -61,11 +60,8 @@ dependencies {
 //    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     // gif
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
-//    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
-//    implementation 'com.wkp:SoftLinearLayout:1.0.3'
     // https://mvnrepository.com/artifact/cn.dreamtobe.kpswitch/library
     implementation 'cn.dreamtobe.kpswitch:library:1.6.2'
-    implementation 'com.github.YummyLau:PanelSwitchHelper:1.4.0'
 
 
     implementation 'androidx.room:room-common:2.4.2'
@@ -75,7 +71,7 @@ dependencies {
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     annotationProcessor 'androidx.room:room-compiler:2.4.2'
 
-    testImplementation 'junit:junit:4.+'
+    testImplementation 'junit:junit:'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }

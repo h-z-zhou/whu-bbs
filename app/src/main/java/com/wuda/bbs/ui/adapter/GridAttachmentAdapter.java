@@ -215,6 +215,12 @@ public class GridAttachmentAdapter extends RecyclerView.Adapter<GridAttachmentAd
         }
     }
 
+    public void clear() {
+        // board change
+        notifyItemRangeRemoved(0, list.size());
+        list.clear();
+    }
+
     private OnItemClickListener mItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener l) {

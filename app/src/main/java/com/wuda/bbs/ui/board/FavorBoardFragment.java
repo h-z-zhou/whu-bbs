@@ -26,7 +26,7 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.FavBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.MainActivity;
-import com.wuda.bbs.ui.article.PostArticleActivity;
+import com.wuda.bbs.ui.article.NewArticleActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
@@ -162,7 +162,7 @@ public class FavorBoardFragment extends Fragment {
             public void onClick(View v) {
                 if (mViewModel.getFavBoardListMutableLiveData().getValue() != null && mViewModel.currentBoardIdx.getValue() != null) {
                     FavBoard favBoard = mViewModel.getFavBoardListMutableLiveData().getValue().get(mViewModel.currentBoardIdx.getValue());
-                    Intent intent = new Intent(getContext(), PostArticleActivity.class);
+                    Intent intent = new Intent(getContext(), NewArticleActivity.class);
                     intent.putExtra("board", favBoard);
                     startActivity(intent);
                 }

@@ -99,7 +99,7 @@ public class Reply2Activity extends AppCompatActivity {
         close_btn = findViewById(R.id.reply_close_imageButton);
         send_btn = findViewById(R.id.reply_send_imageButton);
 
-        content_et = findViewById(R.id.reply_content_inputEditText);
+        content_et = findViewById(R.id.newArticle_content_inputEditText);
 
         // 需要加延时，不然无法弹出
 //        new Handler().postDelayed(new Runnable(){
@@ -112,8 +112,8 @@ public class Reply2Activity extends AppCompatActivity {
 
         emoticon_iv = findViewById(R.id.reply_emoticon_imageView);
         photo_iv = findViewById(R.id.reply_photo_imageView);
-        panelFrameLayout = findViewById(R.id.new_panel_root);
-        insertEmoticon_rv = findViewById(R.id.new_insert_emotion_recyclerView);
+        panelFrameLayout = findViewById(R.id.keyboard_panel_root);
+        insertEmoticon_rv = findViewById(R.id.newArticle_emotion_recyclerView);
         insertPhoto_rv = findViewById(R.id.new_insert_photo_recyclerView);
 
         KeyboardUtil.attach(this, panelFrameLayout);

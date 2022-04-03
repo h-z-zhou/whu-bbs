@@ -69,6 +69,7 @@
         <entry key="app/src/main/res/layout/activity_post_article.xml" value="0.28379629629629627" />
         <entry key="app/src/main/res/layout/activity_reply.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_reply2.xml" value="0.18070652173913043" />
+        <entry key="app/src/main/res/layout/activity_select_board.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_select_content.xml" value="0.33541666666666664" />
         <entry key="app/src/main/res/layout/activity_send_mail.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.31927083333333334" />
@@ -135,6 +136,7 @@
         <entry key="app/src/main/res/layout/new_mail_fragment.xml" value="0.329417773237998" />
         <entry key="app/src/main/res/layout/news_today_fragment.xml" value="0.2682291666666667" />
         <entry key="app/src/main/res/layout/param_setting_fragment.xml" value="0.284375" />
+        <entry key="app/src/main/res/layout/post_action_bar.xml" value="0.32083333333333336" />
         <entry key="app/src/main/res/layout/post_article_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/recommend_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/recycler_view.xml" value="0.3359375" />
