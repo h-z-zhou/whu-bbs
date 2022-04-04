@@ -18,10 +18,6 @@
             android:name=".ui.article.SelectBoardActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.article.ReplyActivity"
-            android:exported="false"
-            android:theme="@style/Theme.BBS.ReplyDialog" />
-        <activity
             android:name=".ui.article.NewArticleActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -50,7 +46,7 @@
             android:name=".ui.drawer.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.article.Reply2Activity"
+            android:name=".ui.article.ReplyActivity"
             android:exported="false"
             android:theme="@style/Theme.BBS.Floating"
             android:windowSoftInputMode="adjustResize" />

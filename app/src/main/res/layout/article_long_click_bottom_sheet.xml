@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_round"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/articleLongClick_copy_id_button"
+        style="@style/Widget.BBS.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_perm_identity"
+        android:gravity="start|center_vertical"
+        android:text="复制用户" />
+
+    <Button
+        android:id="@+id/articleLongClick_copy_all_button"
+        style="@style/Widget.BBS.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_copy_all"
+        android:gravity="start|center_vertical"
+        android:text="全部复制" />
+
+    <Button
+        android:id="@+id/articleLongClick_copy_any_button"
+        style="@style/Widget.BBS.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_content_copy"
+        android:gravity="start|center_vertical"
+        android:text="自由复制" />
+
+</LinearLayout>

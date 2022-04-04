@@ -47,7 +47,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
     String mGroupId;
     String mBoardId;
 
-    View.OnLongClickListener mOnLongClickListener;
+    AdapterItemListener<DetailArticle> mItemListener;
 
     private final int TYPE_CONTENT = 0;
     private final int TYPE_REPLY = 1;
@@ -78,7 +78,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         DetailArticle article = mDetailArticleList.get(position);
         if (holder instanceof ReplyViewHolder) {
             ((ReplyViewHolder) holder).replierUsername_tv.setText(article.getAuthor());
@@ -137,22 +137,9 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    PopupMenu popupMenu = new PopupMenu(mContext, ((ReplyViewHolder) holder).replyContent_tv);
-                    popupMenu.getMenu().add(0, Menu.NONE, 0, "自由复制");
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if (item.getOrder() == 0) {
-//                                Toast.makeText(mContext, item.getTitle(), Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(mContext, SelectContentActivity.class);
-                                intent.putExtra("content", article.getContent());
-                                mContext.startActivity(intent);
-                            }
-                            return false;
-                        }
-                    });
-                    popupMenu.show();
-
+                    if (mItemListener != null) {
+                        mItemListener.onItemLongClick(article, position);
+                    }
                     return true;
                 }
             };
@@ -203,22 +190,9 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    PopupMenu popupMenu = new PopupMenu(mContext, ((ContentViewHolder) holder).postContent_tv);
-                    popupMenu.getMenu().add(0, Menu.NONE, 0, "自由复制");
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if (item.getOrder() == 0) {
-//                                Toast.makeText(mContext, item.getTitle(), Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(mContext, SelectContentActivity.class);
-                                intent.putExtra("content", article.getContent());
-                                mContext.startActivity(intent);
-                            }
-                            return false;
-                        }
-                    });
-                    popupMenu.show();
-
+                    if (mItemListener != null) {
+                        mItemListener.onItemLongClick(article, position);
+                    }
                     return true;
                 }
             };
@@ -254,6 +228,10 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         builder.append(ContentTextUtil.getSpannableString(mContext, textView, detailArticle.getContent()));
 
         return builder;
+    }
+
+    public void setItemListener(AdapterItemListener<DetailArticle> itemListener) {
+        this.mItemListener = itemListener;
     }
 
     static class ContentViewHolder extends RecyclerView.ViewHolder {

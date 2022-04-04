@@ -33,7 +33,7 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Mail;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.MainActivity;
-import com.wuda.bbs.ui.adapter.AdapterListener;
+import com.wuda.bbs.ui.adapter.AdapterItemListener;
 import com.wuda.bbs.ui.adapter.MailAdapter;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
@@ -103,14 +103,19 @@ public class MailFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MailViewModel.class);
         adapter = new MailAdapter(getContext(), new ArrayList<>(), mViewModel.box.getValue().first);
-        adapter.setAdapterListener(new AdapterListener<Mail>() {
+        adapter.setAdapterListener(new AdapterItemListener<Mail>() {
             @Override
-            public void onItemClicked(Mail data, int position) {
+            public void onItemClick(Mail data, int position) {
                 Intent intent = new Intent(getContext(), MailContentActivity.class);
                 intent.putExtra("mail", data);
                 intent.putExtra("boxName", mViewModel.box.getValue().first);
                 mViewModel.selectedPosition = position;
                 mailContentActivityLauncher.launch(intent);
+            }
+
+            @Override
+            public void onItemLongClick(Mail data, int position) {
+
             }
         });
         mail_rv.setAdapter(adapter);

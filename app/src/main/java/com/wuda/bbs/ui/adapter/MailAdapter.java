@@ -2,7 +2,6 @@ package com.wuda.bbs.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +12,14 @@ import androidx.annotation.NonNull;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.ui.mail.MailContentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MailAdapter extends FooterAdapter<Mail> {
 
     String mBoxName;
-    AdapterListener<Mail> mAdapterListener;
+    AdapterItemListener<Mail> mAdapterItemListener;
 
     public MailAdapter(Context mContext, List<Mail> mContents, String mBoxName) {
         super(mContext, mContents);
@@ -44,8 +41,8 @@ public class MailAdapter extends FooterAdapter<Mail> {
                     notifyItemChanged(holder.getBindingAdapterPosition());
                 }
 
-                if (mAdapterListener != null) {
-                    mAdapterListener.onItemClicked(mail, holder.getBindingAdapterPosition());
+                if (mAdapterItemListener != null) {
+                    mAdapterItemListener.onItemClick(mail, holder.getBindingAdapterPosition());
                 }
 
 //                Intent intent = new Intent(mContext, MailContentActivity.class);
@@ -71,8 +68,8 @@ public class MailAdapter extends FooterAdapter<Mail> {
         }
     }
 
-    public void setAdapterListener(AdapterListener<Mail> mAdapterListener) {
-        this.mAdapterListener = mAdapterListener;
+    public void setAdapterListener(AdapterItemListener<Mail> mAdapterItemListener) {
+        this.mAdapterItemListener = mAdapterItemListener;
     }
 
     public void changeBox(String boxName) {

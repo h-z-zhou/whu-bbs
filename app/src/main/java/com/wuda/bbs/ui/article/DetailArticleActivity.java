@@ -2,8 +2,10 @@ package com.wuda.bbs.ui.article;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.BriefArticle;
 import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.ui.adapter.AdapterItemListener;
 import com.wuda.bbs.ui.adapter.DetailArticleAdapter;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
@@ -37,6 +40,7 @@ public class DetailArticleActivity extends AppCompatActivity {
 
     TextView reply_tv;
 //    ImageView favor_iv;
+    MotionEvent mTouchEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,7 @@ public class DetailArticleActivity extends AppCompatActivity {
                 mViewModel.getBriefArticle().getGID(),
                 mViewModel.getBriefArticle().getBoardID()
         );
+
         article_rv.setAdapter(articleAdapter);
         article_rv.addItemDecoration(new TopicDecoration(DetailArticleActivity.this));
 
@@ -137,6 +142,20 @@ public class DetailArticleActivity extends AppCompatActivity {
             }
         });
 
+        articleAdapter.setItemListener(new AdapterItemListener<DetailArticle>() {
+            @Override
+            public void onItemClick(DetailArticle data, int position) {
+
+            }
+
+            @Override
+            public void onItemLongClick(DetailArticle data, int position) {
+                ArticleLongClickBottomSheet articleLongClickBottomSheet = new ArticleLongClickBottomSheet();
+                articleLongClickBottomSheet.setArticle(data);
+                articleLongClickBottomSheet.show(getSupportFragmentManager(), ArticleLongClickBottomSheet.class.getSimpleName());
+            }
+        });
+
         reply_tv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -171,5 +190,13 @@ public class DetailArticleActivity extends AppCompatActivity {
 //        });
 
 
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            mTouchEvent = ev;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

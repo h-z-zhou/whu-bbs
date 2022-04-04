@@ -83,6 +83,7 @@
         <entry key="app/src/main/res/layout/article_detail_main_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/article_detail_reply_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/article_item.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/article_long_click_bottom_sheet.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/article_view.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/attachment_item.xml" value="0.2890625" />
         <entry key="app/src/main/res/layout/attachment_pager2_item.xml" value="0.3359375" />
