@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:descendantFocusability="blocksDescendants"
         android:padding="8dp">
 
         <de.hdodenhof.circleimageview.CircleImageView

@@ -31,6 +31,7 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 import com.luck.picture.lib.utils.DensityUtil;
 import com.luck.picture.lib.utils.MediaUtils;
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.bean.BaseBoard;
 import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.EmoticonAdapter;
@@ -66,8 +67,6 @@ public class ReplyActivity extends AppCompatActivity {
     private GridAttachmentAdapter mAttachmentAdapter;
     private final List<LocalMedia> mData = new ArrayList<>();
 
-    EmoticonAdapter mEmoticonAdapter;
-
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +83,7 @@ public class ReplyActivity extends AppCompatActivity {
         mViewModel.repliedArticle = repliedArticle;
         mViewModel.groupId = groupId;
         mViewModel.boardId = boardId;
-
-        mViewModel.board = boardId;
+        mViewModel.getBoardMutableLiveData().postValue(new BaseBoard(boardId, ""));
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_reply);

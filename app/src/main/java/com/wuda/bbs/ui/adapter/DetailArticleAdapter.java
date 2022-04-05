@@ -8,12 +8,9 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,10 +23,9 @@ import com.luck.picture.lib.utils.DensityUtil;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.ui.article.AttachmentActivity;
-import com.wuda.bbs.ui.article.ReplyActivity;
-import com.wuda.bbs.ui.article.SelectContentActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.ui.widget.ArticleTextView;
+import com.wuda.bbs.ui.widget.FixedMovementTextView;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.ui.widget.MaskedAttachmentImageView;
 import com.wuda.bbs.utils.ContentTextUtil;
@@ -69,12 +65,37 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder holder;
         if (viewType == TYPE_CONTENT) {
-            return new ContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_detail_content_item, parent, false));
+            holder =  new ContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_detail_content_item, parent, false));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = holder.getAbsoluteAdapterPosition();
+                    mItemListener.onItemClick(mDetailArticleList.get(position), position);
+                }
+            });
         } else {
-            return new ReplyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_detail_reply_item, parent, false));
+            holder = new ReplyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_detail_reply_item, parent, false));
+            // 仅恢复部分使用ClickListener
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = holder.getAbsoluteAdapterPosition();
+                    mItemListener.onItemClick(mDetailArticleList.get(position), position);
+                }
+            });
         }
 
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int position = holder.getAbsoluteAdapterPosition();
+                mItemListener.onItemLongClick(mDetailArticleList.get(position), position);
+                return true;
+            }
+        });
+        return holder;
     }
 
     @Override
@@ -91,25 +112,12 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .into(((ReplyViewHolder) holder).replierAvatar_iv);
             }
             if (!article.getAttachmentList().isEmpty()) {
-                MaskedAttachmentImageView attachmentImageView = new MaskedAttachmentImageView(mContext);
+                MaskedAttachmentImageView attachmentImageView = new MaskedAttachmentImageView(((ReplyViewHolder) holder).root_cl.getContext());
                 attachmentImageView.addAttachments(article.getAttachmentList(), mBoardId, article.getId());
-                ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                params.startToStart = 0;
-                params.endToEnd = 0;
+                ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(DensityUtil.dip2px(mContext, 100), ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.startToStart = ((ReplyViewHolder) holder).replyContent_tv.getId();
                 params.topToBottom = ((ReplyViewHolder) holder).replyContent_tv.getId();
-                params.bottomToBottom = 0;
                 attachmentImageView.setLayoutParams(params);
-                attachmentImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(mContext, AttachmentActivity.class);
-                        intent.putExtra("attachments", (Serializable) article.getAttachmentList());
-                        intent.putExtra("board", mBoardId);
-                        intent.putExtra("articleId", article.getId());
-                        intent.putExtra("position", 0);
-                        mContext.startActivity(intent);
-                    }
-                });
                 ((ReplyViewHolder) holder).root_cl.addView(attachmentImageView);
             }
 
@@ -121,37 +129,10 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             });
 
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ReplyActivity.class);
-                    intent.putExtra("article", article);
-                    intent.putExtra("groupId", mGroupId);
-                    intent.putExtra("boardId", mBoardId);
-                    mContext.startActivity(intent);
-                }
-            };
-            ((ReplyViewHolder) holder).itemView.setOnClickListener(clickListener);
-            ((ReplyViewHolder) holder).replyContent_tv.setOnClickListener(clickListener);
-
-            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (mItemListener != null) {
-                        mItemListener.onItemLongClick(article, position);
-                    }
-                    return true;
-                }
-            };
-
-            ((ReplyViewHolder) holder).itemView.setOnLongClickListener(longClickListener);
-            ((ReplyViewHolder) holder).replyContent_tv.setOnLongClickListener(longClickListener);
         } else if (holder instanceof ContentViewHolder) {
-//            ((ContentViewHolder) holder).authorAvatar_iv
             ((ContentViewHolder) holder).authorUsername_tv.setText(article.getAuthor());
             ((ContentViewHolder) holder).postTime_tv.setText(article.getTime());
             ((ContentViewHolder) holder).postContent_tv.setContentText(article.getContent(), article.getAttachmentList(), mBoardId, article.getId());
-//            ((ContentViewHolder) holder).postContent_tv.setText(ContentTextUtil.getSpannableString(mContext, ((ContentViewHolder) holder).postContent_tv, article.getContent()));
             if (!article.getUserFaceImg().equals("wForum/")) {
                 Glide.with(mContext)
                         .load(NetConst.BASE + "/" + article.getUserFaceImg())
@@ -159,7 +140,6 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .into(((ContentViewHolder) holder).authorAvatar_iv);
             }
 
-//            ((ContentViewHolder) holder).replyNum_tv.setText(article.);
             ((ContentViewHolder) holder).authorAvatar_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -169,14 +149,10 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             });
 
             if (!article.getAttachmentList().isEmpty()) {
-//                Toast.makeText(mContext, "附件", Toast.LENGTH_SHORT).show();
                 RecyclerView recyclerView = new RecyclerView(((ContentViewHolder) holder).root_cl.getContext());
-//                recyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
                 recyclerView.setLayoutManager(new FullyGridLayoutManager(mContext, 3));
                 recyclerView.addItemDecoration(new GridSpacingItemDecoration(3,
                         DensityUtil.dip2px(mContext, 4), false));
-//                recyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.HORIZONTAL));
-//                recyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
                 recyclerView.setAdapter(new AttachmentAdapter(mContext, mBoardId, article.getId(), article.getAttachmentList()));
                 ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.startToStart = 0;
@@ -186,19 +162,6 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                 recyclerView.setLayoutParams(params);
                 ((ContentViewHolder) holder).root_cl.addView(recyclerView);
             }
-
-            View.OnLongClickListener longClickListener = new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (mItemListener != null) {
-                        mItemListener.onItemLongClick(article, position);
-                    }
-                    return true;
-                }
-            };
-
-            ((ContentViewHolder) holder).postContent_tv.setOnLongClickListener(longClickListener);
-            ((ContentViewHolder) holder).itemView.setOnLongClickListener(longClickListener);
         }
     }
 
@@ -249,7 +212,8 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             authorUsername_tv = itemView.findViewById(R.id.authorUsername_textView);
             postTime_tv = itemView.findViewById(R.id.postTime_textView);
             postContent_tv = itemView.findViewById(R.id.postContent_textView);
-            postContent_tv.setMovementMethod(LinkMovementMethod.getInstance());
+            // item的点击事件消失
+            postContent_tv.setMovementMethod(ArticleTextView.LocalLinkMovementMethod.getInstance());
             replyNum_tv = itemView.findViewById(R.id.replyNum_textView);
         }
     }
@@ -269,7 +233,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             replierUsername_tv = itemView.findViewById(R.id.authorUsername_textView);
             replyTime_tv = itemView.findViewById(R.id.postTime_textView);
             replyContent_tv = itemView.findViewById(R.id.postContent_textView);
-            replyContent_tv.setMovementMethod(LinkMovementMethod.getInstance());
+            replyContent_tv.setMovementMethod(FixedMovementTextView.LocalLinkMovementMethod.getInstance());
         }
     }
 

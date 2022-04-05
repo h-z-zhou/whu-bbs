@@ -39,7 +39,6 @@ public class DetailArticleActivity extends AppCompatActivity {
     DetailArticleAdapter articleAdapter;
 
     TextView reply_tv;
-//    ImageView favor_iv;
     MotionEvent mTouchEvent;
 
     @Override
@@ -145,7 +144,11 @@ public class DetailArticleActivity extends AppCompatActivity {
         articleAdapter.setItemListener(new AdapterItemListener<DetailArticle>() {
             @Override
             public void onItemClick(DetailArticle data, int position) {
-
+                Intent intent = new Intent(DetailArticleActivity.this, ReplyActivity.class);
+                intent.putExtra("article", data);
+                intent.putExtra("groupId", mViewModel.getBriefArticle().getGID());
+                intent.putExtra("boardId", mViewModel.getBriefArticle().getBoardID());
+                startActivity(intent);
             }
 
             @Override
@@ -188,8 +191,6 @@ public class DetailArticleActivity extends AppCompatActivity {
 //                }
 //            }
 //        });
-
-
     }
 
     @Override

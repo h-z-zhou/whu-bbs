@@ -1,21 +1,17 @@
 package com.wuda.bbs.ui.article;
 
-import android.text.Editable;
-
-import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.MutableLiveData;
 
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.DetailArticle;
 import com.wuda.bbs.logic.bean.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
-import com.wuda.bbs.ui.base.BaseResponseViewModel;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReplyViewModel extends PostArticleViewModel {
+public class ReplyViewModel extends NewArticleViewModel {
 
     DetailArticle repliedArticle;
     String groupId;
