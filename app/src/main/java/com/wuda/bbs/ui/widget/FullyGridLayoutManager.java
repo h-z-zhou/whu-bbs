@@ -8,12 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-/**
- * @author：luck
- * @date：2016/12/31 2:26 下午
- * @describe：PictureOnlyCameraFragment
- */
-
 public class FullyGridLayoutManager extends GridLayoutManager {
     private final int[] mMeasuredDimension = new int[2];
 

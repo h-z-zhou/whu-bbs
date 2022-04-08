@@ -119,6 +119,11 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                 params.topToBottom = ((ReplyViewHolder) holder).replyContent_tv.getId();
                 attachmentImageView.setLayoutParams(params);
                 ((ReplyViewHolder) holder).root_cl.addView(attachmentImageView);
+                ((ReplyViewHolder) holder).attachmentImageView = attachmentImageView;
+            } else {
+                if(((ReplyViewHolder) holder).attachmentImageView != null) {
+                    ((ReplyViewHolder) holder).root_cl.removeView(((ReplyViewHolder) holder).attachmentImageView);
+                }
             }
 
             ((ReplyViewHolder) holder).replierAvatar_iv.setOnClickListener(new View.OnClickListener() {
@@ -170,10 +175,9 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         return mDetailArticleList.size();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     public void updateDataSet(List<DetailArticle> detailArticles) {
         this.mDetailArticleList = detailArticles;
-        this.notifyDataSetChanged();
+        this.notifyItemRangeChanged(0, detailArticles.size());
     }
 
     public void appendArticles(List<DetailArticle> detailArticles) {
@@ -213,7 +217,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             postTime_tv = itemView.findViewById(R.id.postTime_textView);
             postContent_tv = itemView.findViewById(R.id.postContent_textView);
             // item的点击事件消失
-            postContent_tv.setMovementMethod(ArticleTextView.LocalLinkMovementMethod.getInstance());
+            postContent_tv.setMovementMethod(FixedMovementTextView.LocalLinkMovementMethod.getInstance());
             replyNum_tv = itemView.findViewById(R.id.replyNum_textView);
         }
     }
@@ -225,6 +229,8 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         TextView replierUsername_tv;
         TextView replyTime_tv;
         TextView replyContent_tv;
+
+        MaskedAttachmentImageView attachmentImageView;
 
         public ReplyViewHolder(@NonNull View itemView) {
             super(itemView);

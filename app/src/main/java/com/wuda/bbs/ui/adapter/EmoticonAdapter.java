@@ -34,7 +34,7 @@ public class EmoticonAdapter extends RecyclerView.Adapter<EmoticonAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Drawable drawable = EmoticonUtil.getDrawable(mContext, emoticons.get(position));
+        Drawable drawable = EmoticonUtil.getDrawable(emoticons.get(position));
         holder.em_iv.setLayoutParams(new ViewGroup.LayoutParams(drawable.getBounds().width(), drawable.getBounds().height()));
         Glide.with(mContext).load(drawable).into(holder.em_iv);
         if (mOnItemSelectListener != null) {

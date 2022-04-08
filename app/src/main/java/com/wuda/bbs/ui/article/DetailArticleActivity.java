@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -40,6 +44,8 @@ public class DetailArticleActivity extends AppCompatActivity {
 
     TextView reply_tv;
     MotionEvent mTouchEvent;
+
+    ActivityResultLauncher<Intent> resultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +87,15 @@ public class DetailArticleActivity extends AppCompatActivity {
         });
 
         reply_tv = findViewById(R.id.detailArticle_reply_textView);
+
+        resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK) {
+                    mViewModel.requestContentFromServer();
+                }
+            }
+        });
 
         eventBinding();
 
@@ -172,7 +187,8 @@ public class DetailArticleActivity extends AppCompatActivity {
                 intent.putExtra("article", article);
                 intent.putExtra("groupId", mBriefArticle.getGID());
                 intent.putExtra("boardId", mBriefArticle.getBoardID());
-                startActivity(intent);
+//                startActivity(intent);
+                resultLauncher.launch(intent);
             }
         });
 

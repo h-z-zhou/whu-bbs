@@ -41,6 +41,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_send" />
+
+            <ProgressBar
+                android:id="@+id/reply_progressBar"
+                style="@android:style/Widget.Material.Light.ProgressBar.Small"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/reply_send_imageButton"
+                app:layout_constraintStart_toEndOf="@+id/reply_close_imageButton"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText

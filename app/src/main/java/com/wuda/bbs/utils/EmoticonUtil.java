@@ -1,33 +1,52 @@
 package com.wuda.bbs.utils;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.drawable.Drawable;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.application.BBSApplication;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import pl.droidsonroids.gif.GifDrawable;
+
 public class EmoticonUtil {
     private static final Map<String, Integer> emoticons;
-    private static final int ITEM_HEIGHT = 128;
+    private static final int ITEM_HEIGHT = 96;
 
     public static Integer getMipmapId(String name) {
         return emoticons.get(name);
     }
 
-    public static Drawable getDrawable(Context context, String name) {
-        Integer id = emoticons.get(name);
+    public static Drawable getDrawable(String name) {
+        Integer id = getMipmapId(name);
         if (id != null) {
-            @SuppressLint("UseCompatLoadingForDrawables") Drawable drawable = context.getDrawable(id);
+            @SuppressLint("UseCompatLoadingForDrawables") Drawable drawable = BBSApplication.getAppContext().getDrawable(id);
             int height = ITEM_HEIGHT;
             int width = (int) (drawable.getMinimumWidth() * (height * 1.0f / drawable.getMinimumHeight()));
             drawable.setBounds(0, 0, width, height);
             return drawable;
+        }
+        return null;
+    }
+
+    public static GifDrawable getGifDrawable(String name) {
+        Integer id = getMipmapId(name);
+        if (id != null) {
+            try {
+                GifDrawable gifDrawable = new GifDrawable(BBSApplication.getAppContext().getResources(), id);
+                int height = ITEM_HEIGHT;
+                int width = (int) (gifDrawable.getMinimumWidth() * (height * 1.0f / gifDrawable.getMinimumHeight()));
+                gifDrawable.setBounds(0, 0, width, height);
+                return gifDrawable;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
         return null;
     }

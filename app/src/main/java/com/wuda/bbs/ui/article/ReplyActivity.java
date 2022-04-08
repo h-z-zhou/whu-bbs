@@ -1,6 +1,7 @@
 package com.wuda.bbs.ui.article;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,6 +59,8 @@ public class ReplyActivity extends AppCompatActivity {
 
     ImageView close_btn;
     ImageView send_btn;
+    ProgressBar pBar;
+
     EditText content_et;
     ImageView emoticon_iv;
     ImageView photo_iv;
@@ -99,6 +103,7 @@ public class ReplyActivity extends AppCompatActivity {
 
         close_btn = findViewById(R.id.reply_close_imageButton);
         send_btn = findViewById(R.id.reply_send_imageButton);
+        pBar = findViewById(R.id.reply_progressBar);
 
         content_et = findViewById(R.id.newArticle_content_inputEditText);
 
@@ -157,7 +162,7 @@ public class ReplyActivity extends AppCompatActivity {
                         Toast.makeText(ReplyActivity.this, "该版块不可上传附件", Toast.LENGTH_SHORT).show();
                         return;
                     case 0:
-                        Toast.makeText(ReplyActivity.this, "正在判断是否可以上传附件", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ReplyActivity.this, "正在判断是否可以上传附件, 稍候重试", Toast.LENGTH_SHORT).show();
                         mViewModel.detectAttachable();
                         return;
                     case 1:
@@ -199,6 +204,7 @@ public class ReplyActivity extends AppCompatActivity {
         mViewModel.getPostResultMutableLiveData().observe(ReplyActivity.this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
+                setResult(RESULT_OK);
                 finish();
             }
         });
@@ -206,6 +212,9 @@ public class ReplyActivity extends AppCompatActivity {
         mViewModel.getErrorResponseMutableLiveData().observe(ReplyActivity.this, new Observer<ContentResponse<?>>() {
             @Override
             public void onChanged(ContentResponse<?> contentResponse) {
+
+                pBar.setVisibility(View.GONE);
+
                 new ResponseErrorHandlerDialog(ReplyActivity.this)
                         .addErrorResponse(contentResponse)
                         .setOnRetryButtonClickedListener(new BaseCustomDialog.OnButtonClickListener() {
@@ -236,6 +245,7 @@ public class ReplyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mViewModel.content = content_et.getText().toString();
+                pBar.setVisibility(View.VISIBLE);
                 reply();
             }
         });
