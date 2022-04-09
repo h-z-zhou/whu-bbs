@@ -111,6 +111,9 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                         .error(R.drawable.ic_face)
                         .into(((ReplyViewHolder) holder).replierAvatar_iv);
             }
+            if(((ReplyViewHolder) holder).attachmentImageView != null) {
+                ((ReplyViewHolder) holder).root_cl.removeView(((ReplyViewHolder) holder).attachmentImageView);
+            }
             if (!article.getAttachmentList().isEmpty()) {
                 MaskedAttachmentImageView attachmentImageView = new MaskedAttachmentImageView(((ReplyViewHolder) holder).root_cl.getContext());
                 attachmentImageView.addAttachments(article.getAttachmentList(), mBoardId, article.getId());
@@ -120,12 +123,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                 attachmentImageView.setLayoutParams(params);
                 ((ReplyViewHolder) holder).root_cl.addView(attachmentImageView);
                 ((ReplyViewHolder) holder).attachmentImageView = attachmentImageView;
-            } else {
-                if(((ReplyViewHolder) holder).attachmentImageView != null) {
-                    ((ReplyViewHolder) holder).root_cl.removeView(((ReplyViewHolder) holder).attachmentImageView);
-                }
             }
-
             ((ReplyViewHolder) holder).replierAvatar_iv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

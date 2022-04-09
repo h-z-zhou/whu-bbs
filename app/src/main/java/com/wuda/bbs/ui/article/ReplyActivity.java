@@ -71,6 +71,8 @@ public class ReplyActivity extends AppCompatActivity {
     private GridAttachmentAdapter mAttachmentAdapter;
     private final List<LocalMedia> mData = new ArrayList<>();
 
+    boolean posting = false;
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,7 @@ public class ReplyActivity extends AppCompatActivity {
         pBar = findViewById(R.id.reply_progressBar);
 
         content_et = findViewById(R.id.newArticle_content_inputEditText);
+        content_et.setHint("回复@" + repliedArticle.getAuthor());
 
         emoticon_iv = findViewById(R.id.post_action_bar_emoticon_imageView);
         photo_iv = findViewById(R.id.post_action_bar_photo_imageView);
@@ -186,7 +189,6 @@ public class ReplyActivity extends AppCompatActivity {
             }
         });
 
-
         eventBinding();
     }
 
@@ -230,7 +232,11 @@ public class ReplyActivity extends AppCompatActivity {
         root_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                if (posting) {
+                    Toast.makeText(ReplyActivity.this, "回复中，请稍候", Toast.LENGTH_SHORT).show();
+                } else {
+                    finish();
+                }
             }
         });
 
@@ -269,6 +275,7 @@ public class ReplyActivity extends AppCompatActivity {
             return;
         }
 
+        posting = true;
         mViewModel.post();
 
     }
