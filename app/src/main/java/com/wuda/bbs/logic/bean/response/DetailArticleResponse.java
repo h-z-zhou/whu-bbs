@@ -1,6 +1,6 @@
 package com.wuda.bbs.logic.bean.response;
 
-import com.wuda.bbs.logic.bean.DetailArticle;
+import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 
 import java.util.List;
 

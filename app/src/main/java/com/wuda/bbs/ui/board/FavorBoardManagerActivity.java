@@ -11,9 +11,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.bbs.BaseBoard;
+import com.wuda.bbs.logic.bean.bbs.DetailBoard;
+import com.wuda.bbs.logic.bean.bbs.FavBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.FavBoardSelectorAdapter;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;

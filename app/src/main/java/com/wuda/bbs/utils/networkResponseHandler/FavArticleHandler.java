@@ -3,9 +3,9 @@ package com.wuda.bbs.utils.networkResponseHandler;
 import androidx.annotation.NonNull;
 
 import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.FavArticle;
-import com.wuda.bbs.logic.bean.Treasure;
+import com.wuda.bbs.logic.bean.bbs.DetailBoard;
+import com.wuda.bbs.logic.bean.bbs.FavArticle;
+import com.wuda.bbs.logic.bean.bbs.Treasure;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.logic.dao.AppDatabase;

@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.UserInfo;
+import com.wuda.bbs.logic.bean.bbs.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseFragment;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;

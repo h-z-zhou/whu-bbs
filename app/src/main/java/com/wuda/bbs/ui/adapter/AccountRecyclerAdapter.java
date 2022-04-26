@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Account;
+import com.wuda.bbs.logic.bean.bbs.Account;
 import com.wuda.bbs.ui.account.AccountActivity;
 import com.wuda.bbs.ui.account.LoginFragment;
 import com.wuda.bbs.utils.network.NetConst;

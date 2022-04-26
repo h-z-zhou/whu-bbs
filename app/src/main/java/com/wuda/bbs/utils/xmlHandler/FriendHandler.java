@@ -1,6 +1,6 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.bbs.Friend;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

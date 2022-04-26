@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.bbs.Friend;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
 import com.wuda.bbs.ui.user.UserInfoActivity;

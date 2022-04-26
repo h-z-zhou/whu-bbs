@@ -14,8 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wuda.bbs.logic.bean.BriefArticle;
-import com.wuda.bbs.logic.bean.History;
+import com.wuda.bbs.logic.bean.bbs.BriefArticle;
+import com.wuda.bbs.logic.bean.bbs.History;
 import com.wuda.bbs.ui.article.DetailArticleActivity;
 
 import java.text.SimpleDateFormat;

@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.wuda.bbs.logic.bean.Account;
+import com.wuda.bbs.logic.bean.bbs.Account;
 
 public class BBSApplication extends Application {
     private static Context appContext;

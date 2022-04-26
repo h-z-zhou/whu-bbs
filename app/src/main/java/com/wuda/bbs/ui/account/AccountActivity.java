@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.logic.bean.Account;
+import com.wuda.bbs.logic.bean.bbs.Account;
 import com.wuda.bbs.ui.base.NavigationHost;
 
 public class AccountActivity extends AppCompatActivity implements NavigationHost {

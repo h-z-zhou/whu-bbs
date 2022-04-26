@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.bbs.BriefArticle;
 import com.wuda.bbs.ui.article.DetailArticleActivity;
 
 import java.util.List;

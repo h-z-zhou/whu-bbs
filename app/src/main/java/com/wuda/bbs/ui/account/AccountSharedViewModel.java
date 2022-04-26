@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.Account;
-import com.wuda.bbs.logic.bean.UserInfo;
+import com.wuda.bbs.logic.bean.bbs.Account;
+import com.wuda.bbs.logic.bean.bbs.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AccountDao;
 import com.wuda.bbs.logic.dao.AppDatabase;

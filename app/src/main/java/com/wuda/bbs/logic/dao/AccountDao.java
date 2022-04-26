@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.wuda.bbs.logic.bean.Account;
+import com.wuda.bbs.logic.bean.bbs.Account;
 
 import java.util.List;
 

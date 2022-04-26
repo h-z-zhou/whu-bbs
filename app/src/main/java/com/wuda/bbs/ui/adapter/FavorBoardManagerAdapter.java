@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.wuda.bbs.logic.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.bbs.DetailBoard;
 
 import java.util.List;
 

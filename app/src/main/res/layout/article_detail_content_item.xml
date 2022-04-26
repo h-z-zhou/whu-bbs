@@ -38,7 +38,7 @@
         app:layout_constraintStart_toEndOf="@+id/author_avatar_imageView"
         app:layout_constraintTop_toBottomOf="@+id/authorUsername_textView" />
 
-    <com.wuda.bbs.ui.widget.ArticleTextView
+    <com.wuda.bbs.ui.widget.FixedMovementTextView
         android:id="@+id/postContent_textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

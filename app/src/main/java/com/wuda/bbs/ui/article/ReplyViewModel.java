@@ -3,8 +3,8 @@ package com.wuda.bbs.ui.article;
 import androidx.lifecycle.MutableLiveData;
 
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.DetailArticle;
-import com.wuda.bbs.logic.bean.WebResult;
+import com.wuda.bbs.logic.bean.bbs.DetailArticle;
+import com.wuda.bbs.logic.bean.bbs.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 

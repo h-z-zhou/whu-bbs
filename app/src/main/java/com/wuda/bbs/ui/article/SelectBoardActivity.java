@@ -9,8 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.bbs.BaseBoard;
+import com.wuda.bbs.logic.bean.bbs.DetailBoard;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.DetailBoardDao;
 import com.wuda.bbs.ui.adapter.BoardListAdapter;

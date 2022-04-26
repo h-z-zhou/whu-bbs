@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BBS">
         <activity
+            android:name=".ui.campus.CampusActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.article.SelectBoardActivity"
             android:exported="false" />
         <activity

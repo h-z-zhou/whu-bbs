@@ -1,6 +1,6 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.logic.bean.DetailArticle;
+import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 import com.wuda.bbs.logic.bean.response.DetailArticleResponse;
 
 import org.xml.sax.Attributes;

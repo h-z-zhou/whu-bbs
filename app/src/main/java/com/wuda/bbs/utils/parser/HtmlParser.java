@@ -1,7 +1,7 @@
 package com.wuda.bbs.utils.parser;
 
-import com.wuda.bbs.logic.bean.BriefArticle;
-import com.wuda.bbs.logic.bean.Treasure;
+import com.wuda.bbs.logic.bean.bbs.BriefArticle;
+import com.wuda.bbs.logic.bean.bbs.Treasure;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 

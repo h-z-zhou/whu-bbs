@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.DetailBoard;
+import com.wuda.bbs.logic.bean.bbs.BaseBoard;
+import com.wuda.bbs.logic.bean.bbs.DetailBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.BoardListAdapter;
 import com.wuda.bbs.ui.board.BoardActivity;

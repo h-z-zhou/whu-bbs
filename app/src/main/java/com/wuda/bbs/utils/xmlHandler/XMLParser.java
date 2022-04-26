@@ -1,11 +1,11 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.logic.bean.BriefArticle;
-import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.FavBoard;
-import com.wuda.bbs.logic.bean.Friend;
-import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.logic.bean.UserInfo;
+import com.wuda.bbs.logic.bean.bbs.BriefArticle;
+import com.wuda.bbs.logic.bean.bbs.DetailBoard;
+import com.wuda.bbs.logic.bean.bbs.FavBoard;
+import com.wuda.bbs.logic.bean.bbs.Friend;
+import com.wuda.bbs.logic.bean.bbs.Mail;
+import com.wuda.bbs.logic.bean.bbs.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.DetailArticleResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;

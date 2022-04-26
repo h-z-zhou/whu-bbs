@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.logic.bean.MailContent;
+import com.wuda.bbs.logic.bean.bbs.Mail;
+import com.wuda.bbs.logic.bean.bbs.MailContent;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;

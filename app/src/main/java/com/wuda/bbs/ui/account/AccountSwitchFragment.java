@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Account;
+import com.wuda.bbs.logic.bean.bbs.Account;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.AccountRecyclerAdapter;
 import com.wuda.bbs.ui.base.BaseFragment;

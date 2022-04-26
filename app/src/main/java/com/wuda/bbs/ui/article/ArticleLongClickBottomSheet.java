@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.DetailArticle;
+import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 
 public class ArticleLongClickBottomSheet extends BottomSheetDialogFragment {
 

@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.bbs.FavBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FavorBoardDao;

@@ -3,7 +3,7 @@ package com.wuda.bbs.ui.account;
 import androidx.lifecycle.MutableLiveData;
 
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.Account;
+import com.wuda.bbs.logic.bean.bbs.Account;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseResponseViewModel;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.History;
+import com.wuda.bbs.logic.bean.bbs.History;
 import com.wuda.bbs.ui.adapter.HistoryAdapter;
 
 import java.util.ArrayList;

@@ -3,7 +3,7 @@ package com.wuda.bbs.ui.drawer;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.wuda.bbs.logic.bean.History;
+import com.wuda.bbs.logic.bean.bbs.History;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.HistoryDao;
 

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.bbs.BriefArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.BriefArticleAdapter;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;

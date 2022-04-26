@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Attachment;
+import com.wuda.bbs.logic.bean.bbs.Attachment;
 import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.validator.MimeValidator;
 

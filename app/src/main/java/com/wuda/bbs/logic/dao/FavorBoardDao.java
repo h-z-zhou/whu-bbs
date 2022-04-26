@@ -6,8 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.bbs.FavBoard;
 
 import java.util.List;
 

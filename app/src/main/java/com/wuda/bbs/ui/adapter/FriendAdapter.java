@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.bbs.Friend;
 import com.wuda.bbs.utils.network.NetConst;
 
 import java.util.List;

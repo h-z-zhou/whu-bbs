@@ -1,6 +1,6 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.logic.bean.Mail;
+import com.wuda.bbs.logic.bean.bbs.Mail;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 
 import org.xml.sax.Attributes;

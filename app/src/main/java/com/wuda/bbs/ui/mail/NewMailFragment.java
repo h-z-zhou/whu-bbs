@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.google.android.material.textfield.TextInputEditText;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.WebResult;
+import com.wuda.bbs.logic.bean.bbs.WebResult;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 

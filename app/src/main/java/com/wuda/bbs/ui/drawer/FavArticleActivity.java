@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.FavArticle;
+import com.wuda.bbs.logic.bean.bbs.FavArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.FavArticleAdapter;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;

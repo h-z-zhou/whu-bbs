@@ -37,7 +37,7 @@ import com.luck.picture.lib.interfaces.OnResultCallbackListener;
 import com.luck.picture.lib.utils.DensityUtil;
 import com.luck.picture.lib.utils.MediaUtils;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.bbs.BaseBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.EmoticonAdapter;
 import com.wuda.bbs.ui.adapter.GridAttachmentAdapter;

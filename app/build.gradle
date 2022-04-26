@@ -10,8 +10,8 @@ android {
         applicationId "com.wuda.bbs"
         minSdk 23
         targetSdk 31
-        versionCode 1
-        versionName "0.0.1"
+        versionCode 2
+        versionName "0.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -62,6 +62,8 @@ dependencies {
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
     // https://mvnrepository.com/artifact/cn.dreamtobe.kpswitch/library
     implementation 'cn.dreamtobe.kpswitch:library:1.6.2'
+
+    implementation 'org.sufficientlysecure:html-textview:4.0'
 
 
     implementation 'androidx.room:room-common:2.4.2'

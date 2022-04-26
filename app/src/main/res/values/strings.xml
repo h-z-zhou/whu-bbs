@@ -24,4 +24,43 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="title_activity_board">BoardActivity</string>
     <string name="drawer_menu_friend">我的好友</string>
+
+
+    <string name="info_tab_announcement">通知</string>
+    <string name="info_tab_lecture">论坛</string>
+    <string name="info_tab_movie">电影</string>
+    <string name="unhandle_exception"><![CDATA[<div><center><b>出错啦！<br />我也不知道怎么回事，你自己看着办吧…</b></center></div>]]></string>
+    <string name="network_error">网络错误</string>
+    <string name="no_calendar"><![CDATA[<center><big><b>尚无资料</b></big></center>]]></string>
+    <!-- 电影 -->
+    <string name="movie_type"><b>类型：</b></string>
+    <string name="movie_actors"><b>主演：</b></string>
+    <string name="movie_time"><b>时间：</b></string>
+    <string name="movie_place"><b>地点：</b></string>
+    <string name="movie_storyline"><b>剧情简介\n</b></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="movie_poster">Poster</string>
+    <string name="yellow_page_dial_to">前往拨号</string>
+    <string name="unread_info_clear_all">清除所有</string>
+    <string name="clear_all_button">ClearAll</string>
+    <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
+
+    <!-- 成绩 -->
+    <string name="score_all">全部</string>
+    <string name="score_name">课程</string>
+    <string name="score_credit">学分</string>
+    <string name="score_gpa">分数/GPA</string>
+    <string name="score_back2schedule">课表</string>
+    <string name="score_total">课程总数：</string>
+    <string name="score_avgScore">平均分</string>
+    <string name="login_username">学号</string>
+    <string name="login_password">密码</string>
+    <string name="login_btn">登录</string>
+    <string name="login_hint_username">学号</string>
+    <string name="login_hint_password">密码</string>
+    <string name="title_schedule_table">课表</string>
+    <string name="title_toolkit">工具</string>
+    <string name="title_myself">我</string>
+    <string name="lib_search_no_kw">请输入关键词！</string>
+    <string name="lib_search_amount">检索结果总数：</string>
 </resources>

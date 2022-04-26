@@ -1,8 +1,8 @@
 package com.wuda.bbs.ui.board;
 
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.BriefArticle;
+import com.wuda.bbs.logic.bean.bbs.BaseBoard;
+import com.wuda.bbs.logic.bean.bbs.BriefArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.utils.networkResponseHandler.TopicArticleHandler;
 

@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.bbs.BaseBoard;
 
 public class BoardActivity extends AppCompatActivity {
 

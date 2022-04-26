@@ -23,7 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.bbs.FavBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.MainActivity;
 import com.wuda.bbs.ui.article.NewArticleActivity;

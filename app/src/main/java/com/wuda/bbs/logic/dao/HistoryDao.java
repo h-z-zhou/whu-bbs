@@ -5,7 +5,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.wuda.bbs.logic.bean.History;
+import com.wuda.bbs.logic.bean.bbs.History;
 
 import java.util.List;
 

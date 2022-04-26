@@ -7,11 +7,11 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.logic.bean.Account;
-import com.wuda.bbs.logic.bean.DetailBoard;
-import com.wuda.bbs.logic.bean.FavBoard;
-import com.wuda.bbs.logic.bean.Friend;
-import com.wuda.bbs.logic.bean.History;
+import com.wuda.bbs.logic.bean.bbs.Account;
+import com.wuda.bbs.logic.bean.bbs.DetailBoard;
+import com.wuda.bbs.logic.bean.bbs.FavBoard;
+import com.wuda.bbs.logic.bean.bbs.Friend;
+import com.wuda.bbs.logic.bean.bbs.History;
 
 @Database(version = 1, entities = {Account.class, DetailBoard.class, FavBoard.class, History.class, Friend.class})
 public abstract class AppDatabase extends RoomDatabase {

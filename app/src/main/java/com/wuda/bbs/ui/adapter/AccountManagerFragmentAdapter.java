@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.FragmentEntry;
+import com.wuda.bbs.logic.bean.bbs.FragmentEntry;
 import com.wuda.bbs.ui.account.AccountActivity;
 import com.wuda.bbs.ui.account.MyInfoFragment;
 import com.wuda.bbs.ui.account.SetParamFragment;

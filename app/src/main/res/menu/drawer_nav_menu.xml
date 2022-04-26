@@ -17,5 +17,11 @@
             android:icon="@drawable/ic_people"
             android:title="@string/drawer_menu_friend" />
     </group>
+    <group >
+        <item
+            android:id="@+id/drawer_nav_campus"
+            android:icon="@drawable/ic_school"
+            android:title="校园生活" />
+    </group>
 
 </menu>

@@ -1,8 +1,7 @@
 package com.wuda.bbs.utils.xmlHandler;
 
 import com.wuda.bbs.application.BBSApplication;
-import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.logic.bean.FavBoard;
+import com.wuda.bbs.logic.bean.bbs.FavBoard;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

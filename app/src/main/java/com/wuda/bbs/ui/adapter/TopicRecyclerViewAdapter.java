@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.DetailArticle;
+import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.utils.network.NetConst;
 

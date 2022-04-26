@@ -3,7 +3,7 @@ package com.wuda.bbs.ui.drawer;
 import androidx.lifecycle.MutableLiveData;
 
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.bbs.Friend;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;

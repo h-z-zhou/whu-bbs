@@ -14,7 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BaseBoard;
+import com.wuda.bbs.logic.bean.bbs.BaseBoard;
 
 import java.util.List;
 

@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Friend;
+import com.wuda.bbs.logic.bean.bbs.Friend;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.FriendDao;
 import com.wuda.bbs.ui.adapter.FriendAdapter;

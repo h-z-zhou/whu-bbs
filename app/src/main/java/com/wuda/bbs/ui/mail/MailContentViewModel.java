@@ -3,8 +3,8 @@ package com.wuda.bbs.ui.mail;
 import androidx.lifecycle.MutableLiveData;
 
 import com.wuda.bbs.logic.NetworkEntry;
-import com.wuda.bbs.logic.bean.Mail;
-import com.wuda.bbs.logic.bean.MailContent;
+import com.wuda.bbs.logic.bean.bbs.Mail;
+import com.wuda.bbs.logic.bean.bbs.MailContent;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseResponseViewModel;
 import com.wuda.bbs.utils.networkResponseHandler.WebMailContentHandler;

@@ -25,6 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
+import com.wuda.bbs.ui.campus.CampusActivity;
 import com.wuda.bbs.ui.drawer.FavArticleActivity;
 import com.wuda.bbs.ui.drawer.FriendActivity;
 import com.wuda.bbs.ui.drawer.HistoryActivity;
@@ -116,8 +117,12 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, HistoryActivity.class);
                 } else if (item.getItemId() == R.id.drawer_nav_friend) {
                     intent = new Intent(MainActivity.this, FriendActivity.class);
-                } else { // (item.getItemId() == R.id.drawer_nav_setting) {
+                } else if (item.getItemId() == R.id.drawer_nav_friend) {
                     intent = new Intent(MainActivity.this, FriendActivity.class);
+                } else if (item.getItemId() == R.id.drawer_nav_campus) {
+                    intent = new Intent(MainActivity.this, CampusActivity.class);
+                } else {
+                    intent = new Intent();
                 }
 
                 startActivity(intent);

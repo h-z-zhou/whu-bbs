@@ -13,7 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Attachment;
+import com.wuda.bbs.logic.bean.bbs.Attachment;
 import com.wuda.bbs.ui.adapter.AttachmentPager2Adapter;
 import com.wuda.bbs.utils.network.NetConst;
 

@@ -1,6 +1,6 @@
 package com.wuda.bbs.utils.xmlHandler;
 
-import com.wuda.bbs.logic.bean.Attachment;
+import com.wuda.bbs.logic.bean.bbs.Attachment;
 
 import java.util.ArrayList;
 import java.util.List;

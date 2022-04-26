@@ -1,10 +1,7 @@
 package com.wuda.bbs.ui.adapter;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.BaseBoard;
-import com.wuda.bbs.ui.board.BoardActivity;
+import com.wuda.bbs.logic.bean.bbs.BaseBoard;
 
 
 import java.util.List;

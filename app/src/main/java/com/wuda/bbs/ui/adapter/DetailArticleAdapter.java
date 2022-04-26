@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,17 +20,17 @@ import com.bumptech.glide.Glide;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.luck.picture.lib.utils.DensityUtil;
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.DetailArticle;
-import com.wuda.bbs.ui.article.AttachmentActivity;
+import com.wuda.bbs.logic.bean.bbs.DetailArticle;
+import com.wuda.bbs.ui.article.ImageActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
-import com.wuda.bbs.ui.widget.ArticleTextView;
 import com.wuda.bbs.ui.widget.FixedMovementTextView;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.ui.widget.MaskedAttachmentImageView;
 import com.wuda.bbs.utils.ContentTextUtil;
+import com.wuda.bbs.utils.articleSpan.ArticleRichText;
+import com.wuda.bbs.utils.articleSpan.listener.OnImageClickListener;
 import com.wuda.bbs.utils.network.NetConst;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -135,7 +134,17 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         } else if (holder instanceof ContentViewHolder) {
             ((ContentViewHolder) holder).authorUsername_tv.setText(article.getAuthor());
             ((ContentViewHolder) holder).postTime_tv.setText(article.getTime());
-            ((ContentViewHolder) holder).postContent_tv.setContentText(article.getContent(), article.getAttachmentList(), mBoardId, article.getId());
+//            ((ContentViewHolder) holder).postContent_tv.setContentText(article.getContent(), article.getAttachmentList(), mBoardId, article.getId());
+            ArticleRichText.build(article.getContent())
+                    .setOnImageClickListener(new OnImageClickListener() {
+                        @Override
+                        public void onImageClick(String url) {
+                            Intent intent = new Intent(mContext, ImageActivity.class);
+                            intent.putExtra("url", url);
+                            mContext.startActivity(intent);
+                        }
+                    })
+                    .into(((ContentViewHolder) holder).postContent_tv);
             if (!article.getUserFaceImg().equals("wForum/")) {
                 Glide.with(mContext)
                         .load(NetConst.BASE + "/" + article.getUserFaceImg())
@@ -204,7 +213,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         ImageView authorAvatar_iv;
         TextView authorUsername_tv;
         TextView postTime_tv;
-        ArticleTextView postContent_tv;
+        FixedMovementTextView postContent_tv;
         TextView replyNum_tv;
 
         public ContentViewHolder(@NonNull View itemView) {

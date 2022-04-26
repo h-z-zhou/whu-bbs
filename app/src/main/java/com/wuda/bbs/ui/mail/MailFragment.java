@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
-import com.wuda.bbs.logic.bean.Mail;
+import com.wuda.bbs.logic.bean.bbs.Mail;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.MainActivity;
 import com.wuda.bbs.ui.adapter.AdapterItemListener;
