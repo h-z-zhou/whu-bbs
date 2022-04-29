@@ -10,8 +10,8 @@ android {
         applicationId "com.wuda.bbs"
         minSdk 23
         targetSdk 31
-        versionCode 2
-        versionName "0.0.2"
+        versionCode 3
+        versionName "0.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -54,7 +54,7 @@ dependencies {
     implementation 'pokercc.android.ExpandableRecyclerView:expandableRecyclerView:0.8.1'
     implementation 'io.github.lucksiege:pictureselector:v3.0.5'
     // 图片压缩 (按需引入)
-    implementation 'io.github.lucksiege:compress:v3.0.5'
+//    implementation 'io.github.lucksiege:compress:v3.0.5'
     // 图片裁剪 (按需引入)
     implementation 'io.github.lucksiege:ucrop:v3.0.5'
 //    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
@@ -68,8 +68,8 @@ dependencies {
 
     implementation 'androidx.room:room-common:2.4.2'
     implementation 'androidx.room:room-runtime:2.4.2'
-    implementation 'androidx.navigation:navigation-fragment:2.4.1'
-    implementation 'androidx.navigation:navigation-ui:2.4.1'
+    implementation 'androidx.navigation:navigation-fragment:2.4.2'
+    implementation 'androidx.navigation:navigation-ui:2.4.2'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     annotationProcessor 'androidx.room:room-compiler:2.4.2'
 

@@ -103,7 +103,12 @@ public class DetailArticleActivity extends AppCompatActivity {
         eventBinding();
 
         mViewModel.requestContentFromServer();
-        mViewModel.add2history();
+
+        assert briefArticle != null;
+        if (briefArticle.getReID() == null) {
+            // 从回文转寄跳转时缺重要数据（标题，作者等）
+            mViewModel.add2history();
+        }
     }
 
     @Override

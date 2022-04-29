@@ -26,6 +26,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.ui.campus.CampusActivity;
+import com.wuda.bbs.ui.drawer.AboutActivity;
 import com.wuda.bbs.ui.drawer.FavArticleActivity;
 import com.wuda.bbs.ui.drawer.FriendActivity;
 import com.wuda.bbs.ui.drawer.HistoryActivity;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         toolbar = findViewById(R.id.detailArticle_toolbar);
+        toolbar.setTitle("主页");
 //        toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
 //        if(getSupportActionBar() != null) {
@@ -121,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, FriendActivity.class);
                 } else if (item.getItemId() == R.id.drawer_nav_campus) {
                     intent = new Intent(MainActivity.this, CampusActivity.class);
+                } else if (item.getItemId() == R.id.drawer_nav_about) {
+                    intent = new Intent(MainActivity.this, AboutActivity.class);
                 } else {
                     intent = new Intent();
                 }

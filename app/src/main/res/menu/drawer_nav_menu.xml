@@ -4,24 +4,38 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/drawer_nav_fav_article"
-            android:icon="@drawable/ic_favor"
-            android:title="@string/drawer_menu_fav_article" />
-        <item
-            android:id="@+id/drawer_nav_history"
-            android:icon="@drawable/ic_menu_history"
-            android:title="@string/drawer_menu_history" />
-        <item
-            android:id="@+id/drawer_nav_friend"
-            android:icon="@drawable/ic_people"
-            android:title="@string/drawer_menu_friend" />
+
+            <item
+                android:id="@+id/drawer_nav_history"
+                android:icon="@drawable/ic_menu_history"
+                android:title="@string/drawer_menu_history" />
+            <item
+                android:id="@+id/drawer_nav_fav_article"
+                android:icon="@drawable/ic_favor"
+                android:title="@string/drawer_menu_fav_article" />
+            <item
+                android:id="@+id/drawer_nav_friend"
+                android:icon="@drawable/ic_people"
+                android:title="@string/drawer_menu_friend" />
+
     </group>
     <group >
-        <item
-            android:id="@+id/drawer_nav_campus"
-            android:icon="@drawable/ic_school"
-            android:title="校园生活" />
+
+        <item android:title="其他">
+
+            <menu>
+                <item
+                    android:id="@+id/drawer_nav_campus"
+                    android:icon="@drawable/ic_school"
+                    android:title="校园生活" />
+                <item
+                    android:id="@+id/drawer_nav_about"
+                    android:icon="@drawable/ic_info"
+                    android:title="关于" />
+            </menu>
+
+        </item>
+
     </group>
 
 </menu>
