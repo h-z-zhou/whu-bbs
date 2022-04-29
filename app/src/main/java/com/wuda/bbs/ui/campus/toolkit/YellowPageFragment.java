@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.campus.ContactBean;
+import com.wuda.bbs.logic.bean.campus.ToolBean;
 import com.wuda.bbs.ui.adapter.AdapterItemListener;
 import com.wuda.bbs.ui.adapter.YellowPageAdapter;
 import com.wuda.bbs.ui.campus.CampusActivity;
 import com.wuda.bbs.ui.campus.ToolFragment;
 import com.wuda.bbs.ui.campus.detial.YellowPageDetailFragment;
 import com.wuda.bbs.ui.campus.detial.YellowPageUtil;
+import com.wuda.bbs.utils.campus.ServerURL;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class YellowPageFragment extends ToolFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tool = new ToolBean(R.drawable.ic_yellow_page, "#dacd5e", "电话本", ServerURL.YELLOW_PAGES, YellowPageFragment.class);
     }
 
     @Nullable

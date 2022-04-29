@@ -1,7 +1,11 @@
 package com.wuda.bbs.ui.article;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -122,6 +126,20 @@ public class DetailArticleActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<DetailArticle> detailArticles) {
                 articleAdapter.updateDataSet(detailArticles);
+                if (mViewModel.getBriefArticle().getReID() != null) {
+                    int pos = articleAdapter.reID2Pos(mViewModel.getBriefArticle().getReID());
+                    article_rv.scrollToPosition(pos);
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            View itemView = article_rv.getLayoutManager().findViewByPosition(0);
+//                            ValueAnimator animator = ObjectAnimator.ofInt(article_rv, "backgroundColor", 0x00ff0000, 0x6600ff00);//对背景色颜色进行改变，操作的属性为"backgroundColor",此处必须这样写，不能全小写,后面的颜色为在对应颜色间进行渐变
+//                            animator.setDuration(3000);
+//                            animator.setEvaluator(new ArgbEvaluator());//如果要颜色渐变必须要ArgbEvaluator，来实现颜色之间的平滑变化，否则会出现颜色不规则跳动
+//                            animator.start();
+//                        }
+//                    }, 200);
+                }
             }
         });
 

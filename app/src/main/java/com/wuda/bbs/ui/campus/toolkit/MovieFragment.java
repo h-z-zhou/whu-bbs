@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.campus.InfoBaseBean;
+import com.wuda.bbs.logic.bean.campus.ToolBean;
 import com.wuda.bbs.ui.adapter.AdapterItemListener;
 import com.wuda.bbs.ui.adapter.InfoAdapter;
 import com.wuda.bbs.ui.campus.CampusActivity;
@@ -34,6 +35,7 @@ public class MovieFragment extends ToolFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tool = new ToolBean(R.drawable.ic_movie, "#986764", "梅操电影", ServerURL.MOVIE, MovieFragment.class);
     }
 
     @Nullable

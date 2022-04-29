@@ -13,6 +13,8 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.campus.ContactBean;
 import com.wuda.bbs.logic.bean.campus.ToolBean;
 import com.wuda.bbs.ui.campus.ToolFragment;
+import com.wuda.bbs.ui.campus.toolkit.YellowPageFragment;
+import com.wuda.bbs.utils.campus.ServerURL;
 
 
 public class YellowPageDetailFragment extends ToolFragment {
@@ -36,7 +38,7 @@ public class YellowPageDetailFragment extends ToolFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             contact = (ContactBean) getArguments().getSerializable("contact");
-            tool = contact;
+            tool = new ToolBean(R.drawable.ic_yellow_page, "#dacd5e", "电话本", ServerURL.YELLOW_PAGES, YellowPageFragment.class);
         }
     }
 

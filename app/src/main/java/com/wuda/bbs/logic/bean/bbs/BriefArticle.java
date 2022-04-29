@@ -8,6 +8,8 @@ public class BriefArticle implements Serializable {
     String title;
     String author;
     String GID;
+    // 回文转寄
+    String reID;
     String replyNum;
     String time;
     int flag;
@@ -66,6 +68,14 @@ public class BriefArticle implements Serializable {
 
     public void setGID(String GID) {
         this.GID = GID;
+    }
+
+    public String getReID() {
+        return reID;
+    }
+
+    public void setReID(String reID) {
+        this.reID = reID;
     }
 
     public String getReplyNum() {

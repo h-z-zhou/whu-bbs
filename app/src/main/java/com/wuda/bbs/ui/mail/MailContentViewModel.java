@@ -7,6 +7,7 @@ import com.wuda.bbs.logic.bean.bbs.Mail;
 import com.wuda.bbs.logic.bean.bbs.MailContent;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.base.BaseResponseViewModel;
+import com.wuda.bbs.utils.networkResponseHandler.ReplyInfoMailContentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebMailContentHandler;
 
 import java.util.HashMap;
@@ -16,17 +17,21 @@ public class MailContentViewModel extends BaseResponseViewModel {
     // TODO: Implement the ViewModel
     Mail mail;
     String boxName;
-    private MutableLiveData<MailContent> mailContent;
+    private MutableLiveData<MailContent> mailContentMutableLiveData;
+    private MutableLiveData<String> replyArticleUrlMutableLivaData;
 
-    public MailContentViewModel() {
-        mailContent = new MutableLiveData<>();
+    public MutableLiveData<MailContent> getMailContentMutableLiveData() {
+        if (mailContentMutableLiveData == null) {
+            mailContentMutableLiveData = new MutableLiveData<>();
+        }
+        return mailContentMutableLiveData;
     }
 
-    public MutableLiveData<MailContent> getMailContent() {
-        if (mailContent == null) {
-            mailContent = new MutableLiveData<>();
+    public MutableLiveData<String> getReplyArticleUrlMutableLivaData() {
+        if (replyArticleUrlMutableLivaData == null) {
+            replyArticleUrlMutableLivaData = new MutableLiveData<>();
         }
-        return mailContent;
+        return replyArticleUrlMutableLivaData;
     }
 
     //    private void requestMailContent() {
@@ -55,7 +60,26 @@ public class MailContentViewModel extends BaseResponseViewModel {
             @Override
             public void onResponseHandled(ContentResponse<MailContent> response) {
                 if (response.isSuccessful()) {
-                    mailContent.postValue(response.getContent());
+                    MailContent mailContent = response.getContent();
+
+                    mailContentMutableLiveData.postValue(mailContent);
+                } else {
+                    errorResponseMutableLiveData.postValue(response);
+                }
+            }
+        });
+    }
+
+    public void requestReplyArticleUrl() {
+        Map<String, String> form = new HashMap<>();
+        form.put("boxname", boxName);
+        form.put("num", mail.getNum());
+
+        NetworkEntry.requestMailContent(form, new ReplyInfoMailContentHandler() {
+            @Override
+            public void onResponseHandled(ContentResponse<String> response) {
+                if (response.isSuccessful()) {
+                    getReplyArticleUrlMutableLivaData().postValue(response.getContent());
                 } else {
                     errorResponseMutableLiveData.postValue(response);
                 }

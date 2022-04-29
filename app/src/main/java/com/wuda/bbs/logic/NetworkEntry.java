@@ -26,6 +26,7 @@ import com.wuda.bbs.utils.networkResponseHandler.MailListHandler;
 import com.wuda.bbs.utils.networkResponseHandler.RecommendArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.MyUserDataHandler;
 import com.wuda.bbs.utils.networkResponseHandler.RegisterHandler;
+import com.wuda.bbs.utils.networkResponseHandler.ReplyInfoMailContentHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SetPasswordResponseHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SettingParamHandler;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
@@ -287,6 +288,10 @@ public class NetworkEntry {
 
     public static void requestMailContent(Map<String, String> form, WebMailContentHandler handler) {
         mRootServiceGBKWrapper.get("bbsmailcon.php", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void requestMailContent(Map<String, String> form, ReplyInfoMailContentHandler handler) {
+        mRootServiceGBKWrapper.get("wForum/usermail.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     public static void sendMail(Map<String, String> form, WebResultHandler handler) {

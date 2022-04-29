@@ -22,6 +22,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.campus.CampusBuilding;
+import com.wuda.bbs.logic.bean.campus.ToolBean;
 import com.wuda.bbs.ui.campus.ToolFragment;
 import com.wuda.bbs.utils.campus.FreeRoomParser;
 import com.wuda.bbs.utils.campus.HttpUtil;
@@ -75,6 +76,7 @@ public class FreeRoomFragment extends ToolFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tool = new ToolBean(R.drawable.ic_room, "#723d23", "空教室", ServerURL.FREE_ROOM, FreeRoomFragment.class);
         if (getArguments() != null) {
         }
     }

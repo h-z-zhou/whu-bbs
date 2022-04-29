@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.campus.BookItemBean;
+import com.wuda.bbs.logic.bean.campus.ToolBean;
 import com.wuda.bbs.ui.adapter.AdapterItemListener;
 import com.wuda.bbs.ui.adapter.BookAdapter;
 import com.wuda.bbs.ui.campus.CampusActivity;
@@ -78,6 +79,7 @@ public class LibBookSearchFragment extends ToolFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tool = new ToolBean(R.drawable.ic_search, "#ac3242", "查找图书", ServerURL.LIB_SEARCH, LibBookSearchFragment.class);
         if (getArguments() != null) {
         }
     }

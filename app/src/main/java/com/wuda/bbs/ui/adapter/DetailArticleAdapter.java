@@ -1,5 +1,8 @@
 package com.wuda.bbs.ui.adapter;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +12,7 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -192,6 +196,22 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         this.notifyItemRangeInserted(this.mDetailArticleList.size()-detailArticles.size(), this.mDetailArticleList.size());
     }
 
+    public int reID2Pos(String reID) {
+        // 二分？？？
+        int pos = -1;
+
+        for (int i=0; i<mDetailArticleList.size(); i++) {
+            if (mDetailArticleList.get(i).getId().equals(reID)) {
+                pos = i;
+                break;
+            }
+        }
+
+        return pos;
+    }
+
+
+
     private SpannableStringBuilder replyContentBuilder(TextView textView, DetailArticle detailArticle) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
@@ -248,6 +268,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             replyContent_tv = itemView.findViewById(R.id.postContent_textView);
             replyContent_tv.setMovementMethod(FixedMovementTextView.LocalLinkMovementMethod.getInstance());
         }
+
     }
 
 }

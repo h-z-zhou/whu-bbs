@@ -48,6 +48,7 @@ public class SchoolCalendarFragment extends ToolFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        tool = new ToolBean(R.drawable.ic_calendar, "#abc344", "校历", ServerURL.CALENDAR, SchoolCalendarFragment.class);
     }
 
     @Override
