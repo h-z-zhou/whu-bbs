@@ -21,10 +21,11 @@ import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.mail.SendMailActivity;
 import com.wuda.bbs.utils.network.NetConst;
 
-public class UserInfoActivity extends AppCompatActivity {
+public class UserInfoActivity extends CustomizedThemeActivity {
 
     private View root;
 

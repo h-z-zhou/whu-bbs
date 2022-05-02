@@ -17,11 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.History;
 import com.wuda.bbs.ui.adapter.HistoryAdapter;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryActivity extends AppCompatActivity {
+public class HistoryActivity extends CustomizedThemeActivity {
 
     RecyclerView history_rv;
     HistoryAdapter adapter;

@@ -29,6 +29,10 @@
                     android:icon="@drawable/ic_school"
                     android:title="校园生活" />
                 <item
+                    android:id="@+id/drawer_nav_color"
+                    android:icon="@drawable/ic_color_lens"
+                    android:title="主题" />
+                <item
                     android:id="@+id/drawer_nav_about"
                     android:icon="@drawable/ic_info"
                     android:title="关于" />

@@ -17,13 +17,14 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.FavArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.FavArticleAdapter;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavArticleActivity extends AppCompatActivity {
+public class FavArticleActivity extends CustomizedThemeActivity {
 
     FavArticleViewModel mViewModel;
 

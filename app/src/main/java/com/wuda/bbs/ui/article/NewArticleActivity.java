@@ -41,6 +41,7 @@ import com.wuda.bbs.logic.bean.bbs.BaseBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.EmoticonAdapter;
 import com.wuda.bbs.ui.adapter.GridAttachmentAdapter;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.ui.widget.InfoDialog;
@@ -54,7 +55,7 @@ import cn.dreamtobe.kpswitch.util.KPSwitchConflictUtil;
 import cn.dreamtobe.kpswitch.util.KeyboardUtil;
 import cn.dreamtobe.kpswitch.widget.KPSwitchPanelFrameLayout;
 
-public class NewArticleActivity extends AppCompatActivity {
+public class NewArticleActivity extends CustomizedThemeActivity {
 
     private TextView boardName_tv;
     private TextInputEditText title_et;

@@ -8,8 +8,9 @@ import android.view.View;
 
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.BaseBoard;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 
-public class BoardActivity extends AppCompatActivity {
+public class BoardActivity extends CustomizedThemeActivity {
 
     BaseBoard board;
 

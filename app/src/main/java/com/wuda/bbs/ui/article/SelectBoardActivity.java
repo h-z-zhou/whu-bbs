@@ -14,6 +14,7 @@ import com.wuda.bbs.logic.bean.bbs.DetailBoard;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.DetailBoardDao;
 import com.wuda.bbs.ui.adapter.BoardListAdapter;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,7 +22,7 @@ import java.util.List;
 
 import pokercc.android.expandablerecyclerview.ExpandableRecyclerView;
 
-public class SelectBoardActivity extends AppCompatActivity {
+public class SelectBoardActivity extends CustomizedThemeActivity {
 
     ExpandableRecyclerView board_erv;
 

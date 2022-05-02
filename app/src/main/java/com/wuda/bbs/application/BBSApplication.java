@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.wuda.bbs.logic.bean.bbs.Account;
+import com.wuda.bbs.utils.ThemeManager;
 
 public class BBSApplication extends Application {
     private static Context appContext;
@@ -19,6 +20,8 @@ public class BBSApplication extends Application {
         String passwd = sp.getString("passwd", "");
         String avatar = sp.getString("avatar", "");
         account = new Account(id, passwd, avatar, Account.FLAG_CURRENT);
+
+        ThemeManager.loadColorTheme(appContext);
     }
 
     public static void setAccount(Account account) {

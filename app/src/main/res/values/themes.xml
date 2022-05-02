@@ -15,6 +15,55 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.black" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#212121</item>
+        <item name="colorPrimaryVariant">#000000</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#30E57E</item>
+    </style>
+
+    <style name="Theme.red" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#F10000</item>
+        <item name="colorPrimaryDark">#6E0000</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#F10000</item>
+    </style>
+
+    <style name="Theme.purple" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#79008E</item>
+        <item name="colorPrimaryDark">#5C006C</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#79008E</item>
+    </style>
+
+    <style name="Theme.green" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#009688</item>
+        <item name="colorPrimaryDark">#00655C</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#009688</item>
+    </style>
+
+    <style name="Theme.grey" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#777777</item>
+        <item name="colorPrimaryDark">#303030</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#777777</item>
+    </style>
+
+    <style name="Theme.orange" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#FF5722</item>
+        <item name="colorPrimaryDark">#D53300</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#FF784D</item>
+    </style>
+
+    <style name="Theme.pink" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#E91E63</item>
+        <item name="colorPrimaryDark">#C80145</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">#FF3C7F</item>
+    </style>
+
     <style name="Theme.BBS.ReplyDialog" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowBackground">@android:color/transparent</item>

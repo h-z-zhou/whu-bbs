@@ -21,6 +21,7 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.Friend;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.FriendAdapter;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.CustomDialog;
@@ -29,7 +30,7 @@ import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendActivity extends AppCompatActivity {
+public class FriendActivity extends CustomizedThemeActivity {
 
     FriendViewModel mViewModel;
 

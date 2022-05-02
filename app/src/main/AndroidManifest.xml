@@ -15,6 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BBS">
         <activity
+            android:name=".ui.drawer.ColorThemeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.drawer.AboutActivity"
             android:exported="false" />
         <activity

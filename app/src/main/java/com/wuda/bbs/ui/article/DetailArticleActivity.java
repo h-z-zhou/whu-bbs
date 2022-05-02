@@ -31,13 +31,14 @@ import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.AdapterItemListener;
 import com.wuda.bbs.ui.adapter.DetailArticleAdapter;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.ui.widget.TopicDecoration;
 
 import java.util.List;
 
-public class DetailArticleActivity extends AppCompatActivity {
+public class DetailArticleActivity extends CustomizedThemeActivity {
 
     DetailArticleViewModel mViewModel;
 

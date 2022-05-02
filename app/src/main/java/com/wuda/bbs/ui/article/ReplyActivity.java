@@ -37,6 +37,7 @@ import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.EmoticonAdapter;
 import com.wuda.bbs.ui.adapter.GridAttachmentAdapter;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
@@ -50,7 +51,7 @@ import cn.dreamtobe.kpswitch.util.KeyboardUtil;
 import cn.dreamtobe.kpswitch.widget.KPSwitchPanelFrameLayout;
 import cn.dreamtobe.kpswitch.widget.KPSwitchRootLinearLayout;
 
-public class ReplyActivity extends AppCompatActivity {
+public class ReplyActivity extends CustomizedThemeActivity {
 
     ReplyViewModel mViewModel;
 

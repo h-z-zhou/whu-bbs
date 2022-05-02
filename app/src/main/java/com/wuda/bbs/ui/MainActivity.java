@@ -25,15 +25,18 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.campus.CampusActivity;
 import com.wuda.bbs.ui.drawer.AboutActivity;
+import com.wuda.bbs.ui.drawer.ColorThemeActivity;
 import com.wuda.bbs.ui.drawer.FavArticleActivity;
 import com.wuda.bbs.ui.drawer.FriendActivity;
 import com.wuda.bbs.ui.drawer.HistoryActivity;
 import com.wuda.bbs.ui.account.AccountActivity;
+import com.wuda.bbs.utils.ThemeManager;
 import com.wuda.bbs.utils.network.NetConst;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends CustomizedThemeActivity {
 
     Toolbar toolbar;
     DrawerLayout drawer;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottom_nav;
 
     ActivityResultLauncher<Intent> mAccountActivityLauncher;
+    ActivityResultLauncher<Intent> mThemeActivityLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +66,16 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+        mThemeActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            recreate();
+                        }
+                    }
+                }
+        );
 
         toolbar = findViewById(R.id.detailArticle_toolbar);
         toolbar.setTitle("主页");
@@ -125,6 +139,11 @@ public class MainActivity extends AppCompatActivity {
                     intent = new Intent(MainActivity.this, CampusActivity.class);
                 } else if (item.getItemId() == R.id.drawer_nav_about) {
                     intent = new Intent(MainActivity.this, AboutActivity.class);
+                } else if(item.getItemId() == R.id.drawer_nav_color) {
+                    intent = new Intent(MainActivity.this, ColorThemeActivity.class);
+                    mThemeActivityLauncher.launch(intent);
+                    drawer.close();
+                    return true;
                 } else {
                     intent = new Intent();
                 }

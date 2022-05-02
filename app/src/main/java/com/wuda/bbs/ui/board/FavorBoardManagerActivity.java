@@ -16,6 +16,7 @@ import com.wuda.bbs.logic.bean.bbs.DetailBoard;
 import com.wuda.bbs.logic.bean.bbs.FavBoard;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.FavBoardSelectorAdapter;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 
@@ -25,7 +26,7 @@ import java.util.List;
 
 import pokercc.android.expandablerecyclerview.ExpandableRecyclerView;
 
-public class FavorBoardManagerActivity extends AppCompatActivity {
+public class FavorBoardManagerActivity extends CustomizedThemeActivity {
 
     FavorBoardManagerViewModel mViewModel;
     ExpandableRecyclerView board_rv;

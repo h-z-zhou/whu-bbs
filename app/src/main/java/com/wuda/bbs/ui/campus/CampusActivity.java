@@ -10,9 +10,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.base.NavigationHost;
 
-public class CampusActivity extends AppCompatActivity implements NavigationHost {
+public class CampusActivity extends CustomizedThemeActivity implements NavigationHost {
 
     ProgressBar progressBar;
 

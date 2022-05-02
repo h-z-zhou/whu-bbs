@@ -26,6 +26,7 @@ import com.wuda.bbs.logic.bean.bbs.MailContent;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.AttachmentAdapter;
 import com.wuda.bbs.ui.article.DetailArticleActivity;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
@@ -35,7 +36,7 @@ import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 import java.util.List;
 import java.util.Map;
 
-public class MailContentActivity extends AppCompatActivity {
+public class MailContentActivity extends CustomizedThemeActivity {
 
     MailContentViewModel mViewModel;
 

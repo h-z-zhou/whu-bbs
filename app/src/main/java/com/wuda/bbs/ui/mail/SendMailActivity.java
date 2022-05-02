@@ -10,9 +10,10 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.base.NavigationHost;
 
-public class SendMailActivity extends AppCompatActivity implements NavigationHost {
+public class SendMailActivity extends CustomizedThemeActivity implements NavigationHost {
 
     SendMailViewModel mViewModel;
 

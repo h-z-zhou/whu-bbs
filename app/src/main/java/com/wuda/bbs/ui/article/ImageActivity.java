@@ -15,8 +15,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.wuda.bbs.R;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 
-public class ImageActivity extends AppCompatActivity {
+public class ImageActivity extends CustomizedThemeActivity {
 
     String url;
 

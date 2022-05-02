@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 
-public class SelectContentActivity extends AppCompatActivity {
+public class SelectContentActivity extends CustomizedThemeActivity {
 
     TextView content_tv;
 

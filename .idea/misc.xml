@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/bg_round.xml" value="0.2025" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.35625" />
+        <entry key="app/src/main/res/drawable/bg_circle.xml" value="0.2075" />
         <entry key="app/src/main/res/drawable/bg_dialog.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/bg_trans.xml" value="0.19" />
         <entry key="app/src/main/res/drawable/drawer_nav_bar.xml" value="0.1984375" />
@@ -73,6 +74,7 @@
         <entry key="app/src/main/res/layout/activity_attachment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_board.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_campus.xml" value="0.31927083333333334" />
+        <entry key="app/src/main/res/layout/activity_color_theme.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/activity_fav_article.xml" value="0.31927083333333334" />
         <entry key="app/src/main/res/layout/activity_favor_board_manager.xml" value="0.31666666666666665" />
         <entry key="app/src/main/res/layout/activity_friend.xml" value="0.31927083333333334" />
@@ -110,6 +112,7 @@
         <entry key="app/src/main/res/layout/board_section_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/board_view.xml" value="0.26510416666666664" />
         <entry key="app/src/main/res/layout/bottom_nav_main.xml" value="0.3359375" />
+        <entry key="app/src/main/res/layout/color_theme_item.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/contact_fragment.xml" value="0.3359375" />
         <entry key="app/src/main/res/layout/content_main.xml" value="0.20380434782608695" />
         <entry key="app/src/main/res/layout/content_setting.xml" value="0.27239583333333334" />
