@@ -31,6 +31,7 @@ import okhttp3.Response;
 public class AnnouncementFragment extends ToolFragment {
 
     RecyclerView recyclerView;
+    List<InfoBaseBean> infoList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,7 +46,11 @@ public class AnnouncementFragment extends ToolFragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         recyclerView = view.findViewById(R.id.list);
 
-        requestFromServer();
+        if (infoList != null) {
+            showInfo();
+        } else {
+            requestFromServer();
+        }
 
         return view;
     }
@@ -69,34 +74,38 @@ public class AnnouncementFragment extends ToolFragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                List<InfoBaseBean> infoList = InfoResponseParser.handleAnnouncementResponse(response.body().string());
-                InfoAdapter infoAdapter = new InfoAdapter(getContext(), infoList);
-                infoAdapter.setAdapterItemListener(new AdapterItemListener<InfoBaseBean>() {
-                    @Override
-                    public void onItemClick(InfoBaseBean data, int position) {
-                        ((CampusActivity) requireActivity()).navigationTo(
-                                AnnouncementDetailFragment.newInstance(data),
-                                true
-                        );
-                    }
-
-                    @Override
-                    public void onItemLongClick(InfoBaseBean data, int position) {
-
-                    }
-                });
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeProgressBar();
-                            assert recyclerView != null;
-                            recyclerView.setAdapter(infoAdapter);
-                        }
-                    });
-                }
+                infoList = InfoResponseParser.handleAnnouncementResponse(response.body().string());
+                showInfo();
             }
         });
 
+    }
+
+    private void showInfo() {
+        InfoAdapter infoAdapter = new InfoAdapter(getContext(), infoList);
+        infoAdapter.setAdapterItemListener(new AdapterItemListener<InfoBaseBean>() {
+            @Override
+            public void onItemClick(InfoBaseBean data, int position) {
+                ((CampusActivity) requireActivity()).navigationTo(
+                        AnnouncementDetailFragment.newInstance(data),
+                        true
+                );
+            }
+
+            @Override
+            public void onItemLongClick(InfoBaseBean data, int position) {
+
+            }
+        });
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    closeProgressBar();
+                    assert recyclerView != null;
+                    recyclerView.setAdapter(infoAdapter);
+                }
+            });
+        }
     }
 }

@@ -36,6 +36,7 @@ import okhttp3.Response;
 public class LectureFragment extends ToolFragment {
 
     RecyclerView recyclerView;
+    List<InfoBaseBean> infoList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +51,11 @@ public class LectureFragment extends ToolFragment {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
         recyclerView = view.findViewById(R.id.list);
 
-        requestFromServer();
+        if (infoList != null) {
+            showInfo();
+        } else {
+            requestFromServer();
+        }
 
         return view;
     }
@@ -84,34 +89,43 @@ public class LectureFragment extends ToolFragment {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                List<InfoBaseBean> infoList = InfoResponseParser.handleLectureResponse(response.body().string());
-                InfoAdapter infoAdapter = new InfoAdapter(getContext(), infoList);
-
-                infoAdapter.setAdapterItemListener(new AdapterItemListener<InfoBaseBean>() {
-                    @Override
-                    public void onItemClick(InfoBaseBean data, int position) {
-                        ((CampusActivity) requireActivity()).navigationTo(
-                                LectureDetailFragment.newInstance(data),
-                                true
-                        );
-                    }
-
-                    @Override
-                    public void onItemLongClick(InfoBaseBean data, int position) {
-
-                    }
-                });
-
-                if (getActivity()!=null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            closeProgressBar();
-                            recyclerView.setAdapter(infoAdapter);
-                        }
-                    });
-                }
+                infoList = InfoResponseParser.handleLectureResponse(response.body().string());
+                showInfo();
             }
         });
+    }
+
+    private void showInfo() {
+
+        if (infoList == null || infoList.isEmpty()) {
+            return;
+        }
+
+        InfoAdapter infoAdapter = new InfoAdapter(getContext(), infoList);
+
+        infoAdapter.setAdapterItemListener(new AdapterItemListener<InfoBaseBean>() {
+            @Override
+            public void onItemClick(InfoBaseBean data, int position) {
+                ((CampusActivity) requireActivity()).navigationTo(
+                        LectureDetailFragment.newInstance(data),
+                        true
+                );
+            }
+
+            @Override
+            public void onItemLongClick(InfoBaseBean data, int position) {
+
+            }
+        });
+
+        if (getActivity()!=null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    closeProgressBar();
+                    recyclerView.setAdapter(infoAdapter);
+                }
+            });
+        }
     }
 }

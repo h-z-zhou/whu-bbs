@@ -36,6 +36,7 @@ public class YellowPageAdapter extends RecyclerView.Adapter<YellowPageAdapter.Vi
         TextView name_tv = new TextView(parent.getContext());
         name_tv.setTextSize(18);
         name_tv.setPadding(32, 32, 32, 32);
+        name_tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         ViewHolder holder = new ViewHolder(name_tv);
 
