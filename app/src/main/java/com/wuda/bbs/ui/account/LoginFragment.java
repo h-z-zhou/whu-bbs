@@ -216,9 +216,9 @@ public class LoginFragment extends BaseFragment {
         mViewModel.pwd = passwd_et.getText().toString();
 
         // 没有成功登录（SharedViewMode初始化时会改变当前用户）
-        if (mViewModel.getAccountResponseLiveData().getValue() == null) {
-            BBSApplication.setAccount(Account.GUEST);
-        }
+//        if (mViewModel.getAccountResponseLiveData().getValue() == null) {
+//            BBSApplication.setAccount(Account.GUEST);
+//        }
     }
 
     private void login() {

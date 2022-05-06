@@ -51,7 +51,7 @@ import cn.dreamtobe.kpswitch.util.KeyboardUtil;
 import cn.dreamtobe.kpswitch.widget.KPSwitchPanelFrameLayout;
 import cn.dreamtobe.kpswitch.widget.KPSwitchRootLinearLayout;
 
-public class ReplyActivity extends CustomizedThemeActivity {
+public class ReplyActivity extends AppCompatActivity {
 
     ReplyViewModel mViewModel;
 

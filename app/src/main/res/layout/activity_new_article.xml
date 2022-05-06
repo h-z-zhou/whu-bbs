@@ -27,7 +27,7 @@
                 android:drawableStart="@drawable/ic_menu_dashboard"
                 android:drawableEnd="@drawable/ic_keyboard_arrow_right"
                 android:drawablePadding="8dp"
-                android:drawableTint="@color/colorPrimaryLight"
+                android:drawableTint="?attr/colorPrimary"
                 android:gravity="center_vertical"
                 android:hint="板块"
                 android:padding="8dp"

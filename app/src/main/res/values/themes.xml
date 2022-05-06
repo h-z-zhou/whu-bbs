@@ -86,7 +86,7 @@
 
     <style name="Widget.BBS.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="cornerRadius">32dp</item>
-        <item name="hintTextColor">@color/colorPrimaryDark</item>
+        <item name="hintTextColor">?attr/colorPrimary</item>
     </style>
 
     <style name="Widget.BBS.LargeRadiusButton" parent="Widget.MaterialComponents.Button">
@@ -97,7 +97,7 @@
     </style>
 
     <style name="Widget.BBS.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textSize">16sp</item>
     </style>
 

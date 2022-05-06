@@ -21,7 +21,7 @@ public class BBSApplication extends Application {
         String avatar = sp.getString("avatar", "");
         account = new Account(id, passwd, avatar, Account.FLAG_CURRENT);
 
-        ThemeManager.loadColorTheme(appContext);
+        ThemeManager.loadColorTheme();
     }
 
     public static void setAccount(Account account) {

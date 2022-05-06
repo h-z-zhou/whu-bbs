@@ -5,7 +5,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -14,9 +15,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,7 +36,6 @@ import com.wuda.bbs.ui.drawer.FavArticleActivity;
 import com.wuda.bbs.ui.drawer.FriendActivity;
 import com.wuda.bbs.ui.drawer.HistoryActivity;
 import com.wuda.bbs.ui.account.AccountActivity;
-import com.wuda.bbs.utils.ThemeManager;
 import com.wuda.bbs.utils.network.NetConst;
 
 public class MainActivity extends CustomizedThemeActivity {
@@ -42,6 +44,8 @@ public class MainActivity extends CustomizedThemeActivity {
     DrawerLayout drawer;
     NavigationView drawer_nav;
     BottomNavigationView bottom_nav;
+
+    SwitchCompat nightMode_switch;
 
     ActivityResultLauncher<Intent> mAccountActivityLauncher;
     ActivityResultLauncher<Intent> mThemeActivityLauncher;
@@ -70,9 +74,10 @@ public class MainActivity extends CustomizedThemeActivity {
                 new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == RESULT_OK) {
-                            recreate();
-                        }
+//                        if (result.getResultCode() == RESULT_OK) {
+//                            recreate();
+//                        }
+                        recreate();
                     }
                 }
         );
@@ -89,6 +94,10 @@ public class MainActivity extends CustomizedThemeActivity {
         drawer = findViewById(R.id.drawer_layout);
         drawer_nav = findViewById(R.id.drawer_nav_view);
 
+        nightMode_switch = drawer_nav.getMenu().findItem(R.id.drawer_nav_color)
+                .getActionView().findViewById(R.id.drawer_dark_theme_switch);
+
+
         bottom_nav = findViewById(R.id.bottom_nav_view);
 //        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
 //                R.id.bottom_nav_home, R.id.bottom_nav_board, R.id.bottom_nav_mail)
@@ -100,6 +109,10 @@ public class MainActivity extends CustomizedThemeActivity {
         eventBinding();
 
         initDrawerHeader();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("theme", MODE_PRIVATE);
+        boolean nightMode = sharedPreferences.getBoolean("night", false);
+        setNightMode(nightMode);
     }
 
     private void eventBinding() {
@@ -107,7 +120,6 @@ public class MainActivity extends CustomizedThemeActivity {
             @Override
             public void onClick(View v) {
                 drawer.openDrawer(GravityCompat.START);
-
             }
         });
 
@@ -156,6 +168,13 @@ public class MainActivity extends CustomizedThemeActivity {
                 return true;
             }
         });
+
+        nightMode_switch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                setNightMode(isChecked);
+            }
+        });
     }
 
     private void initDrawerHeader() {
@@ -182,5 +201,20 @@ public class MainActivity extends CustomizedThemeActivity {
         Intent intent = new Intent(MainActivity.this, AccountActivity.class);
         intent.putExtra("isLogin", BBSApplication.getAccountId().equals("guest") || isLogin);
         mAccountActivityLauncher.launch(intent);
+    }
+
+    private void setNightMode(boolean isNight) {
+
+        nightMode_switch.setChecked(isNight);
+
+        if (isNight) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
+        SharedPreferences.Editor editor = getSharedPreferences("theme", MODE_PRIVATE).edit();
+        editor.putBoolean("night", isNight);
+        editor.apply();
     }
 }

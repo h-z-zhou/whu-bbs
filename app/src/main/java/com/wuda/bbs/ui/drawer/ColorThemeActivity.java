@@ -41,7 +41,7 @@ public class ColorThemeActivity extends CustomizedThemeActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemClick(ThemeManager.ColorThemeItem data, int position) {
-                ThemeManager.saveColorTheme(ColorThemeActivity.this, data.getName());
+                ThemeManager.saveColorTheme(data.getName());
                 // 无效？？？
                 setResult(RESULT_OK);
 

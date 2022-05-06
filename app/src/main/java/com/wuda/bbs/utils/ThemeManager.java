@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.application.BBSApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class ThemeManager {
 
     private static final List<ColorThemeItem> colorThemeList = new ArrayList<ColorThemeItem>();
     static {
-        colorThemeList.add(new ColorThemeItem(R.style.Theme_black, "black"));
+//        colorThemeList.add(new ColorThemeItem(R.style.Theme_black, "black"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_red, "red"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_purple, "purple"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_green, "green"));
@@ -25,6 +26,7 @@ public class ThemeManager {
         colorThemeList.add(new ColorThemeItem(R.style.Theme_orange, "orange"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_pink, "pink"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_BBS, "default"));
+        colorThemeList.add(new ColorThemeItem(R.style.Theme_AppCompat_DayNight, "dark"));
     }
 
     public static int getCurrentColorThemeID() {
@@ -35,17 +37,17 @@ public class ThemeManager {
         return colorThemeList;
     }
 
-    public static void saveColorTheme(Context mContext, String colorTheme) {
+    public static void saveColorTheme(String colorTheme) {
 
         currentColorThemeID = getColorThemeID(colorTheme);
 
-        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = mContext.getSharedPreferences("theme", Context.MODE_PRIVATE).edit();
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = BBSApplication.getAppContext().getSharedPreferences("theme", Context.MODE_PRIVATE).edit();
         editor.putString("color", colorTheme);
         editor.apply();
     }
 
-    public static void loadColorTheme(Context mContext) {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("theme", Context.MODE_PRIVATE);
+    public static void loadColorTheme() {
+        SharedPreferences sharedPreferences = BBSApplication.getAppContext().getSharedPreferences("theme", Context.MODE_PRIVATE);
         String colorTheme = sharedPreferences.getString("color", "default");
         currentColorThemeID = getColorThemeID(colorTheme);
     }

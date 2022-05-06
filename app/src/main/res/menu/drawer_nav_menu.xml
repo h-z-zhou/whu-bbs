@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
@@ -31,7 +32,9 @@
                 <item
                     android:id="@+id/drawer_nav_color"
                     android:icon="@drawable/ic_color_lens"
-                    android:title="主题" />
+                    android:title="主题"
+                    app:actionLayout="@layout/switch_item"
+                    app:showAsAction="always" />
                 <item
                     android:id="@+id/drawer_nav_about"
                     android:icon="@drawable/ic_info"

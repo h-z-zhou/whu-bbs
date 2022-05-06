@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
         home_tl = view.findViewById(R.id.home_tabLayout);
         home_vp2 = view.findViewById(R.id.home_viewPager2);
 
-        home_vp2.setAdapter(new FragmentStateAdapter(requireActivity().getSupportFragmentManager(), getLifecycle()) {
+        home_vp2.setAdapter(new FragmentStateAdapter(getChildFragmentManager(), getLifecycle()) {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
