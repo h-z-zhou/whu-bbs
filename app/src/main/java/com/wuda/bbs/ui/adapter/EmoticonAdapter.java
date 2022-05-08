@@ -2,9 +2,12 @@ package com.wuda.bbs.ui.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +31,9 @@ public class EmoticonAdapter extends RecyclerView.Adapter<EmoticonAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ImageView iv = new ImageView(parent.getContext());
-        iv.setLayoutParams(new ViewGroup.LayoutParams(128, 128));
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(128, 128);
+//        params.gravity = Gravity.CENTER;
+        iv.setLayoutParams(params);
         return new ViewHolder(iv);
     }
 

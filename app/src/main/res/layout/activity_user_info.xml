@@ -9,6 +9,7 @@
     tools:context=".ui.user.UserInfoActivity">
 
     <include layout="@layout/user_info" />
+    <include layout="@layout/transparent_toolbar" />
 
     <Button
         android:id="@+id/userInfo_friend_button"

@@ -26,7 +26,6 @@ public class ThemeManager {
         colorThemeList.add(new ColorThemeItem(R.style.Theme_orange, "orange"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_pink, "pink"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_BBS, "default"));
-        colorThemeList.add(new ColorThemeItem(R.style.Theme_AppCompat_DayNight, "dark"));
     }
 
     public static int getCurrentColorThemeID() {

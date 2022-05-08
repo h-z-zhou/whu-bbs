@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -57,6 +58,14 @@ public class UserInfoActivity extends CustomizedThemeActivity {
         signature_tv = findViewById(R.id.userInfo_signature_textView);
         friend_btn = findViewById(R.id.userInfo_friend_button);
         chat_btn = findViewById(R.id.userInfo_chat_button);
+
+        Toolbar toolbar = findViewById(R.id.tansparent_back_toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
         root.setVisibility(View.INVISIBLE);
 

@@ -72,7 +72,7 @@ public class BoardListAdapter extends ExpandableAdapter<ExpandableAdapter.ViewHo
         board_tv.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         board_tv.setTextSize(16);
         board_tv.setPadding(128, 32, 0, 32);
-        board_tv.setBackgroundColor(mContext.getColor(R.color.bg));
+//        board_tv.setBackgroundColor(mContext.getColor(R.color.bg));
         return new BoardHolder(board_tv);
     }
 
