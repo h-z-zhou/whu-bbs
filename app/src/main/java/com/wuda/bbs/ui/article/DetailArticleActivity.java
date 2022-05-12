@@ -104,6 +104,7 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
         eventBinding();
 
         mViewModel.requestContentFromServer();
+//        mViewModel.requestArticleTreeFromServer();
 
         assert briefArticle != null;
         if (briefArticle.getReID() == null) {

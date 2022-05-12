@@ -3,6 +3,7 @@ package com.wuda.bbs.ui.article;
 import androidx.lifecycle.MutableLiveData;
 
 import com.wuda.bbs.logic.NetworkEntry;
+import com.wuda.bbs.logic.bean.bbs.ArticleTreeNode;
 import com.wuda.bbs.logic.bean.bbs.BriefArticle;
 import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 import com.wuda.bbs.logic.bean.bbs.History;
@@ -11,6 +12,7 @@ import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.dao.AppDatabase;
 import com.wuda.bbs.logic.dao.HistoryDao;
 import com.wuda.bbs.ui.base.BaseResponseViewModel;
+import com.wuda.bbs.utils.networkResponseHandler.ArticleTreeHandler;
 import com.wuda.bbs.utils.networkResponseHandler.DetailArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.WebResultHandler;
 
@@ -63,6 +65,22 @@ public class DetailArticleViewModel extends BaseResponseViewModel {
                 }
             }
 
+        });
+    }
+
+    public void requestArticleTreeFromServer() {
+        Map<String, String> form = new HashMap<>();
+        form.put("bname", mBriefArticle.getBoardID());
+        form.put("ID", mBriefArticle.getGID());
+        NetworkEntry.requestArticleTree(form, new ArticleTreeHandler() {
+            @Override
+            public void onResponseHandled(ContentResponse<ArticleTreeNode> response) {
+                if (response.isSuccessful()) {
+
+                } else {
+                    errorResponseMutableLiveData.postValue(response);
+                }
+            }
         });
     }
 

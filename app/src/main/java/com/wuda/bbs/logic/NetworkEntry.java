@@ -13,6 +13,7 @@ import com.wuda.bbs.utils.network.RootService;
 import com.wuda.bbs.utils.network.RootServiceGBKWrapper;
 import com.wuda.bbs.utils.network.ServiceCreator;
 import com.wuda.bbs.utils.networkResponseHandler.AccountResponseHandler;
+import com.wuda.bbs.utils.networkResponseHandler.ArticleTreeHandler;
 import com.wuda.bbs.utils.networkResponseHandler.AttachmentDetectHandler;
 import com.wuda.bbs.utils.networkResponseHandler.DetailArticleHandler;
 import com.wuda.bbs.utils.networkResponseHandler.DetailBoardHandler;
@@ -226,6 +227,10 @@ public class NetworkEntry {
 
     public static void requestArticleContent(Map<String, String> form, DetailArticleHandler handler) {
         mMobileService.get("read", form).enqueue(new AuthBBSCallback<>(handler));
+    }
+
+    public static void requestArticleTree(Map<String, String> form, ArticleTreeHandler handler) {
+        mRootService.get("wForum/loadtree.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
 
     public static void postArticle(Map<String, String> form, WebResultHandler handler) {
