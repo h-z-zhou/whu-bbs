@@ -1,11 +1,7 @@
 package com.wuda.bbs.ui.article;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -18,7 +14,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -64,18 +60,7 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
             finish();
         }
 
-        article_rv = findViewById(R.id.detailArticle_recyclerView);
-        article_rv.setLayoutManager(new LinearLayoutManager(DetailArticleActivity.this));
-        articleAdapter = new DetailArticleAdapter(
-                DetailArticleActivity.this,
-                mViewModel.getBriefArticle().getGID(),
-                mViewModel.getBriefArticle().getBoardID()
-        );
-
-        article_rv.setAdapter(articleAdapter);
-        article_rv.addItemDecoration(new TopicDecoration(DetailArticleActivity.this));
-
-        toolbar = findViewById(R.id.detailArticle_toolbar);
+        toolbar = findViewById(R.id.back_toolbar);
 
         String title = mViewModel.getBriefArticle().getTitle();
         if (title != null) {
@@ -89,6 +74,35 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
                 finish();
             }
         });
+
+        article_rv = findViewById(R.id.detailArticle_recyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailArticleActivity.this);
+        article_rv.setLayoutManager(linearLayoutManager);
+        articleAdapter = new DetailArticleAdapter(
+                DetailArticleActivity.this,
+                mViewModel.getBriefArticle().getGID(),
+                mViewModel.getBriefArticle().getBoardID()
+        );
+        articleAdapter.setTitle(title);
+
+        article_rv.setAdapter(articleAdapter);
+        article_rv.addItemDecoration(new TopicDecoration(DetailArticleActivity.this));
+
+        article_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int pos = linearLayoutManager.findFirstVisibleItemPosition();
+                ActionBar actionBar = getSupportActionBar();
+                if (pos == 0) {
+                    actionBar.setDisplayShowTitleEnabled(false);
+                } else {
+                    actionBar.setDisplayShowTitleEnabled(true);
+                }
+            }
+        });
+
+
 
         reply_tv = findViewById(R.id.detailArticle_reply_textView);
 

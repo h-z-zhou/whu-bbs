@@ -45,13 +45,13 @@ public class TopicDecoration extends RecyclerView.ItemDecoration {
             View child = parent.getChildAt(i);
             int pos = parent.getChildAdapterPosition(child);
 
-            if (pos == 1) {
+            if (pos == 2) {
 //                float left = child.getLeft();
 //                float right = child.getRight();
                 float top = child.getTop() + contentHeight;
                 float bottom = child.getTop();
                 c.drawRect(recyclerViewLeft, top, recyclerViewRight, bottom, contentPaint);
-            } else {
+            } else if (pos > 2) {
 //                float left = child.getLeft();
 //                float right = child.getRight();
                 float top = child.getTop() + replyHeight;

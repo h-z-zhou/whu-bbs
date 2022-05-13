@@ -1,18 +1,15 @@
 package com.wuda.bbs.ui.adapter;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +38,7 @@ import java.util.List;
 public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     Context mContext;
+    String title;
     List<DetailArticle> mDetailArticleList;
     Intent userInfoIntent;
     String mGroupId;
@@ -48,8 +46,9 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     AdapterItemListener<DetailArticle> mItemListener;
 
-    private final int TYPE_CONTENT = 0;
-    private final int TYPE_REPLY = 1;
+    private final int TYPE_TITLE = 0;
+    private final int TYPE_CONTENT = 1;
+    private final int TYPE_REPLY = 2;
 
     public DetailArticleAdapter(Context context, String groupId, String boardId) {
         mContext = context;
@@ -62,14 +61,28 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemViewType(int position) {
-        return position==0? TYPE_CONTENT: TYPE_REPLY;
+        if (position == 0) {
+            return TYPE_TITLE;
+        } else if (position == 1) {
+            return TYPE_CONTENT;
+        } else {
+            return TYPE_REPLY;
+        }
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder holder;
-        if (viewType == TYPE_CONTENT) {
+        if (viewType == TYPE_TITLE) {
+            TextView textView = new TextView(parent.getContext());
+            textView.setTextSize(20);
+            textView.setTypeface(Typeface.DEFAULT_BOLD);
+            textView.setPadding(32, 32, 32, 0);
+            textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            holder = new TitleHeaderViewHolder(textView);
+            return holder;
+        } else if (viewType == TYPE_CONTENT) {
             holder =  new ContentViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.article_detail_content_item, parent, false));
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -103,8 +116,10 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        DetailArticle article = mDetailArticleList.get(position);
-        if (holder instanceof ReplyViewHolder) {
+        if (holder instanceof TitleHeaderViewHolder) {
+            ((TitleHeaderViewHolder) holder).title_tv.setText(title);
+        } else if (holder instanceof ReplyViewHolder) {
+            DetailArticle article = mDetailArticleList.get(position-1);
             ((ReplyViewHolder) holder).replierUsername_tv.setText(article.getAuthor());
             ((ReplyViewHolder) holder).replyTime_tv.setText(article.getTime());
             ((ReplyViewHolder) holder).replyContent_tv.setText(replyContentBuilder(((ReplyViewHolder) holder).replyContent_tv, article));
@@ -136,6 +151,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             });
 
         } else if (holder instanceof ContentViewHolder) {
+            DetailArticle article = mDetailArticleList.get(position-1);
             ((ContentViewHolder) holder).authorUsername_tv.setText(article.getAuthor());
             ((ContentViewHolder) holder).postTime_tv.setText(article.getTime());
 //            ((ContentViewHolder) holder).postContent_tv.setContentText(article.getContent(), article.getAttachmentList(), mBoardId, article.getId());
@@ -183,7 +199,11 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return mDetailArticleList.size();
+        return mDetailArticleList.size() + 1;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void updateDataSet(List<DetailArticle> detailArticles) {
@@ -226,6 +246,14 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void setItemListener(AdapterItemListener<DetailArticle> itemListener) {
         this.mItemListener = itemListener;
+    }
+
+    static class TitleHeaderViewHolder extends RecyclerView.ViewHolder {
+        TextView title_tv;
+        public TitleHeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            title_tv = (TextView) itemView;
+        }
     }
 
     static class ContentViewHolder extends RecyclerView.ViewHolder {
