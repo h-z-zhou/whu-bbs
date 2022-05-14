@@ -80,7 +80,7 @@ public class MailFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        mail_rv = view.findViewById(R.id.recyclerView);
+        mail_rv = view.findViewById(R.id.shared_recyclerView);
 
         if (getActivity() != null) {
             Toolbar toolbar = ((MainActivity) getActivity()).getToolbar();

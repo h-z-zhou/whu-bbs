@@ -29,10 +29,7 @@
             android:layout_height="16dp"
             android:background="?android:attr/listDivider" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/account_manager_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <include layout="@layout/recycler_view"/>
 
         <View
             android:layout_width="match_parent"

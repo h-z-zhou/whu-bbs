@@ -40,7 +40,7 @@ public class AccountSwitchFragment extends BaseFragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.account_switch_fragment, container, false);
 
-        account_rv = view.findViewById(R.id.recyclerView);
+        account_rv = view.findViewById(R.id.shared_recyclerView);
 
         return view;
     }

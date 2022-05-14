@@ -2,6 +2,7 @@ package com.wuda.bbs.ui.article;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -75,7 +76,7 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
             }
         });
 
-        article_rv = findViewById(R.id.detailArticle_recyclerView);
+        article_rv = findViewById(R.id.shared_recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailArticleActivity.this);
         article_rv.setLayoutManager(linearLayoutManager);
         articleAdapter = new DetailArticleAdapter(
@@ -94,11 +95,8 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 int pos = linearLayoutManager.findFirstVisibleItemPosition();
                 ActionBar actionBar = getSupportActionBar();
-                if (pos == 0) {
-                    actionBar.setDisplayShowTitleEnabled(false);
-                } else {
-                    actionBar.setDisplayShowTitleEnabled(true);
-                }
+                assert actionBar != null;
+                actionBar.setDisplayShowTitleEnabled(pos != 0);
             }
         });
 

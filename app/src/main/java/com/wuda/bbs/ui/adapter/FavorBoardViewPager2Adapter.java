@@ -44,7 +44,7 @@ public class FavorBoardViewPager2Adapter extends RecyclerView.Adapter<FavorBoard
         RecyclerView board_rv;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            board_rv = itemView.findViewById(R.id.recyclerView);
+            board_rv = itemView.findViewById(R.id.shared_recyclerView);
         }
     }
 

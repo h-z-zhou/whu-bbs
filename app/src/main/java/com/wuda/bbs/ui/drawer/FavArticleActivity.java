@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -47,7 +46,7 @@ public class FavArticleActivity extends CustomizedThemeActivity {
             }
         });
 
-        favArticle_rv = findViewById(R.id.recyclerView);
+        favArticle_rv = findViewById(R.id.shared_recyclerView);
         favArticle_rv.setLayoutManager(new LinearLayoutManager(FavArticleActivity.this));
 
         adapter = new FavArticleAdapter(FavArticleActivity.this, new ArrayList<>());

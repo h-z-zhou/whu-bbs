@@ -47,7 +47,7 @@ public class AccountFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.account_fragment, container, false);
 
         currentAvatar_iv = view.findViewById(R.id.account_currentAvatar_imageView);
-        manager_rv = view.findViewById(R.id.account_manager_recyclerView);
+        manager_rv = view.findViewById(R.id.shared_recyclerView);
         switch_btn = view.findViewById(R.id.account_switch_button);
         logout_btn = view.findViewById(R.id.account_logout_button);
         return view;

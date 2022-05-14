@@ -40,7 +40,7 @@ public abstract class ArticleContainerFragment extends Fragment {
 
         article_root_fl = view.findViewById(R.id.article_container_root_frameLayout);
         article_srl = view.findViewById(R.id.article_swipeRefresh);
-        article_rv = view.findViewById(R.id.recyclerView);
+        article_rv = view.findViewById(R.id.shared_recyclerView);
 //        article_rv.setVerticalScrollBarEnabled(true);
 //        article_rv.setScrollBarSize(20);
 //        article_rv.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));\

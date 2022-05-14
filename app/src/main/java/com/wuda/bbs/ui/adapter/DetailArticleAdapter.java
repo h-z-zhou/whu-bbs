@@ -87,7 +87,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = holder.getAbsoluteAdapterPosition();
+                    int position = holder.getAbsoluteAdapterPosition() - 1;
                     mItemListener.onItemClick(mDetailArticleList.get(position), position);
                 }
             });
@@ -97,7 +97,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = holder.getAbsoluteAdapterPosition();
+                    int position = holder.getAbsoluteAdapterPosition() - 1;
                     mItemListener.onItemClick(mDetailArticleList.get(position), position);
                 }
             });
@@ -106,7 +106,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                int position = holder.getAbsoluteAdapterPosition();
+                int position = holder.getAbsoluteAdapterPosition() - 1;
                 mItemListener.onItemLongClick(mDetailArticleList.get(position), position);
                 return true;
             }

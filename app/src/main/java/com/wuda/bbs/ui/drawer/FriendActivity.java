@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -55,7 +54,7 @@ public class FriendActivity extends CustomizedThemeActivity {
         mViewModel = new ViewModelProvider(this).get(FriendViewModel.class);
 
 
-        friend_rv = findViewById(R.id.recyclerView);
+        friend_rv = findViewById(R.id.shared_recyclerView);
         friend_rv.setLayoutManager(new LinearLayoutManager(FriendActivity.this));
 
         adapter = new FriendAdapter(FriendActivity.this, new ArrayList<>());

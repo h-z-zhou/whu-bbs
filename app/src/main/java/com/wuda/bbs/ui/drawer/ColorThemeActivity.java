@@ -1,12 +1,10 @@
 package com.wuda.bbs.ui.drawer;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -33,7 +31,7 @@ public class ColorThemeActivity extends CustomizedThemeActivity {
             }
         });
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.shared_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(ColorThemeActivity.this));
         ColorThemeAdapter adapter = new ColorThemeAdapter(this);
 

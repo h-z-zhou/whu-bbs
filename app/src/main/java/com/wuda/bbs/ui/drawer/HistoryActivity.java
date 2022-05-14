@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -45,7 +44,7 @@ public class HistoryActivity extends CustomizedThemeActivity {
             }
         });
 
-        history_rv = findViewById(R.id.recyclerView);
+        history_rv = findViewById(R.id.shared_recyclerView);
         history_rv.setLayoutManager(new LinearLayoutManager(HistoryActivity.this));
         history_rv.addItemDecoration(new DividerItemDecoration(HistoryActivity.this, DividerItemDecoration.VERTICAL));
 

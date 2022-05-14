@@ -9,6 +9,7 @@
     <pokercc.android.expandablerecyclerview.ExpandableRecyclerView
         android:id="@+id/boardEntrance_expandableRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:overScrollMode="never"/>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

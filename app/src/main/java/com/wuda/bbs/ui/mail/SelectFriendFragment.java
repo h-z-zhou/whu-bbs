@@ -31,7 +31,7 @@ public class SelectFriendFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_select_friend, container, false);
 
-        friend_rv = view.findViewById(R.id.recyclerView);
+        friend_rv = view.findViewById(R.id.shared_recyclerView);
 
         return view;
     }
