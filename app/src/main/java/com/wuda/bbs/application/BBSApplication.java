@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.wuda.bbs.logic.bean.bbs.Account;
 import com.wuda.bbs.utils.ThemeManager;
 
