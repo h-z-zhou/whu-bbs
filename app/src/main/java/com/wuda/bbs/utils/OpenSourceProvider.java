@@ -123,6 +123,13 @@ public class OpenSourceProvider {
                 LICENCE_MIT,
                 "Android平台下的原生Markdown解析器."
         ));
+        openSourceProjectList.add(new OpenSourceProject(
+                "TiebaLite",
+                "HuanCheng65",
+                "https://github.com/HuanCheng65/TiebaLite",
+                LICENCE_APACHE_2,
+                "非官方的贴吧客户端."
+        ));
 
         return openSourceProjectList;
     }

@@ -199,7 +199,11 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        return mDetailArticleList.size() + 1;
+        if (mDetailArticleList.isEmpty()) {
+            return 0;
+        } else {
+            return mDetailArticleList.size() + 1;
+        }
     }
 
     public void setTitle(String title) {

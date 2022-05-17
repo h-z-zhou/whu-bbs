@@ -9,11 +9,6 @@
 
     <include layout="@layout/toolbar" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/about_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp" />
+    <include layout="@layout/recycler_view"/>
 
 </LinearLayout>

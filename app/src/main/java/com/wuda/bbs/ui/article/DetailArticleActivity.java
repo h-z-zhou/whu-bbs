@@ -75,6 +75,7 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
                 finish();
             }
         });
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         article_rv = findViewById(R.id.shared_recyclerView);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(DetailArticleActivity.this);

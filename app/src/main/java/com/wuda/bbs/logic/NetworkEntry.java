@@ -226,7 +226,7 @@ public class NetworkEntry {
     }
 
     public static void requestArticleContent(Map<String, String> form, DetailArticleHandler handler) {
-        mMobileService.get("read", form).enqueue(new AuthBBSCallback<>(handler));
+        mMobileService.get("read", form).enqueue(new NoAuthBBSCallback<>(handler));
     }
 
     public static void requestArticleTree(Map<String, String> form, ArticleTreeHandler handler) {

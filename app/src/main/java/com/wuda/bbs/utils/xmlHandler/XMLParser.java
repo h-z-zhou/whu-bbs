@@ -1,5 +1,6 @@
 package com.wuda.bbs.utils.xmlHandler;
 
+import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.logic.bean.bbs.BriefArticle;
 import com.wuda.bbs.logic.bean.bbs.DetailBoard;
 import com.wuda.bbs.logic.bean.bbs.FavBoard;
@@ -120,8 +121,11 @@ public class XMLParser {
             xmlReader.parse(new InputSource(new StringReader(xmlData)));
             response = detailArticleHandler.getDetailArticleResponse();
         } catch (IOException | SAXException e) {
-            e.printStackTrace();
-            response = new DetailArticleResponse(ResultCode.HANDLE_DATA_ERR, e.getMessage());
+            if (BBSApplication.isLogin())
+                response = new DetailArticleResponse(ResultCode.HANDLE_DATA_ERR, e.getMessage());
+            else {
+                response = new DetailArticleResponse(ResultCode.LOGIN_ERR, "未登陆用户无法查看一年前的帖子");
+            }
         }
 
         return response;
