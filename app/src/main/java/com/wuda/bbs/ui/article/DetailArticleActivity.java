@@ -32,6 +32,7 @@ import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
 import com.wuda.bbs.ui.widget.TopicDecoration;
+import com.wuda.bbs.utils.network.NetConst;
 
 import java.util.List;
 
@@ -136,6 +137,15 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_favor) {
             mViewModel.add2Favor();
+        } else if (item.getItemId() == R.id.menu_share) {
+            String webUrl = NetConst.BASE + "/wForum/disparticle.php?" +
+                    "boardName=" + mViewModel.getBriefArticle().getBoardID() +
+                    "&ID=" + mViewModel.getBriefArticle().getGID();
+
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "珞珈山水： " + webUrl);
+            shareIntent.setType("text/plain");
+            startActivity(shareIntent);
         }
         return super.onOptionsItemSelected(item);
     }
