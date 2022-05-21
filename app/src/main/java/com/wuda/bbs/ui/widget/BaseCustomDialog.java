@@ -81,6 +81,7 @@ public abstract class BaseCustomDialog extends AppCompatDialog {
                 }
             });
         }
+        content_view.invalidate();
     }
 
     public BaseCustomDialog setOnPositiveButtonClickedListener(String text, OnButtonClickListener listener) {

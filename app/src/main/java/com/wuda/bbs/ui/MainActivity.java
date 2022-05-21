@@ -116,10 +116,7 @@ public class MainActivity extends CustomizedThemeActivity {
         initDrawerHeader();
 
         SharedPreferences sharedPreferences = getSharedPreferences("theme", MODE_PRIVATE);
-        int nightMode = sharedPreferences.getInt("nightMode", AppCompatDelegate.MODE_NIGHT_UNSPECIFIED);
-        if (nightMode == AppCompatDelegate.MODE_NIGHT_YES) {
-            nightMode_switch.setChecked(true);
-        }
+        int nightMode = sharedPreferences.getInt("nightMode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(nightMode);
     }
 
@@ -127,6 +124,9 @@ public class MainActivity extends CustomizedThemeActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                    nightMode_switch.setChecked(true);
+                }
                 drawer.openDrawer(GravityCompat.START);
             }
         });

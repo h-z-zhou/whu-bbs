@@ -46,13 +46,13 @@ public class CookieStore implements CookieJar {
 
     @Override
     public void saveFromResponse(@NonNull HttpUrl url, @NonNull List<Cookie> cookies) {
-        if (url.toString().equals(NetConst.MOBILE)) {
+        if (url.host().equals(NetConst.BASE_HOST)) {
             Map<String, Cookie> filter = new HashMap<>();
             for (Cookie cookie: cookies) {
                 filter.put(cookie.name(), cookie);
             }
-            store.put(url.host(), new ArrayList<>(filter.values()));
-            storeCookiesWithXML(new ArrayList<>(filter.values()));
+            if (filter.containsKey("UTMPUSERID"))
+                store.put(url.host(), new ArrayList<>(filter.values()));
         }
     }
 
@@ -67,7 +67,20 @@ public class CookieStore implements CookieJar {
         }
     }
 
-    private void storeCookiesWithXML(List<Cookie> cookies) {
+    public static boolean isLoginBBS() {
+        List<Cookie> cookies = store.get(NetConst.BASE_HOST);
+        assert cookies != null;
+        for (Cookie cookie: cookies) {
+            if (cookie.name().equals("UTMPUSERID")) {
+                return !cookie.value().equals("guest");
+            }
+        }
+        return true;
+    };
+
+    public static void storeCookiesWithXML() {
+
+        List<Cookie> cookies = store.get(NetConst.BASE_HOST);
 
         XmlSerializer xmlSerializer = Xml.newSerializer();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -76,6 +89,7 @@ public class CookieStore implements CookieJar {
             xmlSerializer.startDocument("utf-8", true);
             xmlSerializer.startTag(null, "cookies");
             xmlSerializer.attribute(null, "host", NetConst.BASE_HOST);
+            assert cookies != null;
             for (Cookie cookie: cookies) {
                 xmlSerializer.startTag(null, "cookie");
                 xmlSerializer.attribute(null, cookie.name(), cookie.value());

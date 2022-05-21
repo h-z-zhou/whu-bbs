@@ -24,10 +24,9 @@ public class AuthBBSCallback<T> implements Callback<ResponseBody> {
     }
 
     @Override
-    public void onResponse(@NonNull Call<ResponseBody> call, Response<ResponseBody> response) {
-        String cookies = response.headers().get("Set-Cookie");
+    public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
         // 未登录或浏览器登录致使掉登录
-        if (cookies != null && cookies.contains("UTMPUSERID=guest")) {
+        if (!CookieStore.isLoginBBS()) {
             mContentResponse = new ContentResponse<>();
             mContentResponse.setResultCode(ResultCode.LOGIN_ERR);
         } else {

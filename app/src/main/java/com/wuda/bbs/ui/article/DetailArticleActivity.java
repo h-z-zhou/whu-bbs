@@ -138,12 +138,13 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
         if (item.getItemId() == R.id.menu_favor) {
             mViewModel.add2Favor();
         } else if (item.getItemId() == R.id.menu_share) {
-            String webUrl = NetConst.BASE + "/wForum/disparticle.php?" +
-                    "boardName=" + mViewModel.getBriefArticle().getBoardID() +
-                    "&ID=" + mViewModel.getBriefArticle().getGID();
+            BriefArticle briefArticle = mViewModel.getBriefArticle();
+            String webUrl = NetConst.BASE + "wForum/disparticle.php?" +
+                    "boardName=" + briefArticle.getBoardID() +
+                    "&ID=" + briefArticle.getGID();
 
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "珞珈山水： " + webUrl);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "珞珈山水:\"" + briefArticle.getTitle() + "\" " +  webUrl);
             shareIntent.setType("text/plain");
             startActivity(shareIntent);
         }
@@ -156,6 +157,7 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
             @Override
             public void onChanged(List<DetailArticle> detailArticles) {
                 articleAdapter.updateDataSet(detailArticles);
+                reply_tv.setVisibility(View.VISIBLE);
                 if (mViewModel.getBriefArticle().getReID() != null) {
                     int pos = articleAdapter.reID2Pos(mViewModel.getBriefArticle().getReID());
                     article_rv.scrollToPosition(pos);

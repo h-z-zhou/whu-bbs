@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.wuda.bbs.logic.bean.bbs.Account;
 import com.wuda.bbs.utils.ThemeManager;
+import com.wuda.bbs.utils.network.CookieStore;
 
 public class BBSApplication extends Application {
     private static Context appContext;
@@ -35,6 +36,7 @@ public class BBSApplication extends Application {
             editor.putString("avatar", account.getAvatar());
             editor.apply();
         }
+        CookieStore.storeCookiesWithXML();
     }
 
     public static Context getAppContext() {
