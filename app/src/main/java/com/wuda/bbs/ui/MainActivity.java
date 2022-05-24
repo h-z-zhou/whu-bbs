@@ -1,5 +1,14 @@
 package com.wuda.bbs.ui;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -15,21 +24,12 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
+import com.wuda.bbs.ui.account.AccountActivity;
 import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.campus.CampusActivity;
 import com.wuda.bbs.ui.drawer.AboutActivity;
@@ -37,7 +37,6 @@ import com.wuda.bbs.ui.drawer.ColorThemeActivity;
 import com.wuda.bbs.ui.drawer.FavArticleActivity;
 import com.wuda.bbs.ui.drawer.FriendActivity;
 import com.wuda.bbs.ui.drawer.HistoryActivity;
-import com.wuda.bbs.ui.account.AccountActivity;
 import com.wuda.bbs.utils.network.NetConst;
 
 public class MainActivity extends CustomizedThemeActivity {
@@ -113,8 +112,6 @@ public class MainActivity extends CustomizedThemeActivity {
 
         eventBinding();
 
-        initDrawerHeader();
-
         SharedPreferences sharedPreferences = getSharedPreferences("theme", MODE_PRIVATE);
         int nightMode = sharedPreferences.getInt("nightMode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(nightMode);
@@ -128,6 +125,8 @@ public class MainActivity extends CustomizedThemeActivity {
                     nightMode_switch.setChecked(true);
                 }
                 drawer.openDrawer(GravityCompat.START);
+
+                initDrawerHeader();
             }
         });
 
@@ -194,12 +193,13 @@ public class MainActivity extends CustomizedThemeActivity {
         drawer_userAvatar_iv = header.findViewById(R.id.drawerUserAvatar_imageView);
         drawer_userId_tv = header.findViewById(R.id.drawerUserId_textView);
 
-        if (!BBSApplication.getAccountAvatar().isEmpty()) {
-            Glide.with(MainActivity.this).load(NetConst.BASE +BBSApplication.getAccountAvatar()).into(drawer_userAvatar_iv);
+        if (BBSApplication.isLogin()) {
+            Glide.with(MainActivity.this).load(NetConst.BASE + BBSApplication.getAccountAvatar()).into(drawer_userAvatar_iv);
+            drawer_userId_tv.setText(BBSApplication.getAccountId());
         } else {
             Glide.with(MainActivity.this).load(R.drawable.ic_face).into(drawer_userAvatar_iv);
+            drawer_userId_tv.setText("guest");
         }
-        drawer_userId_tv.setText(BBSApplication.getAccountId());
     }
 
     public Toolbar getToolbar() {
@@ -208,7 +208,7 @@ public class MainActivity extends CustomizedThemeActivity {
 
     public void openAccountActivity(boolean isLogin) {
         Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-        intent.putExtra("isLogin", BBSApplication.getAccountId().equals("guest") || isLogin);
+        intent.putExtra("isLogin", !BBSApplication.isLogin() || isLogin);
         mAccountActivityLauncher.launch(intent);
     }
 

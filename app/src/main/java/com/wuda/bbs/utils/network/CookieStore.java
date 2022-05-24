@@ -28,20 +28,21 @@ import okhttp3.HttpUrl;
 
 public class CookieStore implements CookieJar {
 
-    static Map<String, List<Cookie>> store = new HashMap<>();
+    static Map<String, List<Cookie>> store;
     private static CookieStore cookieStore;
+
+    static {
+        store = new HashMap<>();
+        List<Cookie> cookies = loadCookies();
+        if (!cookies.isEmpty())
+            store.put(NetConst.BASE_HOST, loadCookies());
+    }
 
     public static CookieStore newInstance() {
         if (cookieStore == null) {
             cookieStore = new CookieStore();
         }
         return cookieStore;
-    }
-
-    private CookieStore() {
-        List<Cookie> cookies = loadCookies();
-        if (!cookies.isEmpty())
-            store.put(NetConst.BASE_HOST, loadCookies());
     }
 
     @Override
@@ -76,7 +77,7 @@ public class CookieStore implements CookieJar {
             }
         }
         return true;
-    };
+    }
 
     public static void storeCookiesWithXML() {
 
@@ -110,7 +111,7 @@ public class CookieStore implements CookieJar {
 
     }
 
-    private List<Cookie> loadCookies() {
+    private static List<Cookie> loadCookies() {
         SharedPreferences sp = BBSApplication.getAppContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         String xmlData = sp.getString("cookies", "<?xml version='1.0' encoding='utf-8' standalone='yes' ?><cookies></cookies>");
 

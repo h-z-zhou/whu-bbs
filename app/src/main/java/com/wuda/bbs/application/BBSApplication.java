@@ -52,6 +52,6 @@ public class BBSApplication extends Application {
     }
 
     public static boolean isLogin() {
-        return !account.getId().equals("guest");
+        return CookieStore.isLoginBBS();
     }
 }
