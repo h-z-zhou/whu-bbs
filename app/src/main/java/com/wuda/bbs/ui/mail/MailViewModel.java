@@ -20,7 +20,7 @@ public class MailViewModel extends BaseResponseViewModel {
 
 //    final String[] boxNames = new String[]{"inbox", "sendbox", "deleted"};
 //    final String[] boxTitles = new String[]{"收信箱", "发信箱", "废信箱"};
-    MutableLiveData<Pair<String, String>> box;
+    private MutableLiveData<Pair<String, String>> boxMutableLiveData;
     int selectedPosition = -1;
 
     int currentPage = 0;
@@ -33,14 +33,18 @@ public class MailViewModel extends BaseResponseViewModel {
         return mailListMutableLiveData;
     }
 
-    public MailViewModel() {
-        box = new MutableLiveData<>(new Pair<>("inbox", "收信箱"));
+    public MutableLiveData<Pair<String, String>> getBoxMutableLiveData() {
+        if (boxMutableLiveData == null) {
+            boxMutableLiveData = new MutableLiveData<>();
+        }
+        return boxMutableLiveData;
     }
+
 
     public void requestMailsFromServer() {
         Map<String, String> form = new HashMap<>();
         form.put("list", "1");
-        form.put("boxname", box.getValue().first);
+        form.put("boxname", boxMutableLiveData.getValue().first);
 
         NetworkEntry.requestMailList(form, new MailListHandler() {
             @Override

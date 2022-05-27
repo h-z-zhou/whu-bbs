@@ -102,13 +102,18 @@ public class MailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MailViewModel.class);
-        adapter = new MailAdapter(getContext(), new ArrayList<>(), mViewModel.box.getValue().first);
+
+        if (mViewModel.getBoxMutableLiveData().getValue() == null) {
+            mViewModel.getBoxMutableLiveData().setValue(new Pair<>("inbox", "收信箱"));
+        }
+
+        adapter = new MailAdapter(getContext(), new ArrayList<>(), mViewModel.getBoxMutableLiveData().getValue().first);
         adapter.setAdapterListener(new AdapterItemListener<Mail>() {
             @Override
             public void onItemClick(Mail data, int position) {
                 Intent intent = new Intent(getContext(), MailContentActivity.class);
                 intent.putExtra("mail", data);
-                intent.putExtra("boxName", mViewModel.box.getValue().first);
+                intent.putExtra("boxName", mViewModel.getBoxMutableLiveData().getValue().first);
                 mViewModel.selectedPosition = position;
                 mailContentActivityLauncher.launch(intent);
             }
@@ -201,11 +206,11 @@ public class MailFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.menu_mailbox_inbox) {
-                                mViewModel.box.setValue(new Pair<>("inbox", "收信箱"));
+                                mViewModel.getBoxMutableLiveData().setValue(new Pair<>("inbox", "收信箱"));
                             } else if (item.getItemId() == R.id.menu_mailbox_send_box) {
-                                mViewModel.box.setValue(new Pair<>("sendbox", "发信箱"));
+                                mViewModel.getBoxMutableLiveData().setValue(new Pair<>("sendbox", "发信箱"));
                             } else if (item.getItemId() == R.id.menu_mailbox_delete_box) {
-                                mViewModel.box.setValue(new Pair<>("deleted", "废信箱"));
+                                mViewModel.getBoxMutableLiveData().setValue(new Pair<>("deleted", "废信箱"));
                             }
                             return false;
                         }
@@ -214,16 +219,16 @@ public class MailFragment extends Fragment {
                     popupMenu.show();
                 }
             });
-
-            mViewModel.box.observe(getViewLifecycleOwner(), new Observer<Pair<String, String>>() {
-                @Override
-                public void onChanged(Pair<String, String> box) {
-                    toolbar_tv.setText(box.second);
-                    adapter.changeBox(box.first);
-                    mViewModel.requestMailsFromServer();
-                }
-            });
         }
+
+        mViewModel.getBoxMutableLiveData().observe(getViewLifecycleOwner(), new Observer<Pair<String, String>>() {
+            @Override
+            public void onChanged(Pair<String, String> box) {
+                toolbar_tv.setText(box.second);
+                adapter.changeBox(box.first);
+                mViewModel.requestMailsFromServer();
+            }
+        });
     }
 
 }

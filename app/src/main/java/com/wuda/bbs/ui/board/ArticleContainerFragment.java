@@ -57,8 +57,11 @@ public abstract class ArticleContainerFragment extends Fragment {
         article_rv.setAdapter(adapter);
         eventBinding();
 
-        article_srl.setRefreshing(true);
-        requestArticleFromServer();
+        if (mViewModel.articleList.getValue().isEmpty()) {
+            article_srl.setRefreshing(true);
+
+            requestArticleFromServer();
+        }
     }
 
 
@@ -96,8 +99,6 @@ public abstract class ArticleContainerFragment extends Fragment {
                 }
             }
         });
-
-
 
         article_srl.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

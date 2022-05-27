@@ -78,9 +78,6 @@ public class MainActivity extends CustomizedThemeActivity {
                 new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-//                        if (result.getResultCode() == RESULT_OK) {
-//                            recreate();
-//                        }
                         recreate();
                     }
                 }
@@ -88,12 +85,7 @@ public class MainActivity extends CustomizedThemeActivity {
 
         toolbar = findViewById(R.id.detailArticle_toolbar);
         toolbar.setTitle("主页");
-//        toolbar.setNavigationIcon(R.drawable.ic_menu);
         setSupportActionBar(toolbar);
-//        if(getSupportActionBar() != null) {
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
-//        }
 
         drawer = findViewById(R.id.drawer_layout);
         drawer_nav = findViewById(R.id.drawer_nav_view);
@@ -103,11 +95,7 @@ public class MainActivity extends CustomizedThemeActivity {
 
 
         bottom_nav = findViewById(R.id.bottom_nav_view);
-//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-//                R.id.bottom_nav_home, R.id.bottom_nav_board, R.id.bottom_nav_mail)
-//                .build();
         NavController navController = Navigation.findNavController(this, R.id.bottom_nav_host_fragment_activity_main);
-//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(bottom_nav, navController);
 
         eventBinding();

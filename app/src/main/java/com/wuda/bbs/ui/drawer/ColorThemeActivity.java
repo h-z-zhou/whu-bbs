@@ -40,8 +40,6 @@ public class ColorThemeActivity extends CustomizedThemeActivity {
             @Override
             public void onItemClick(ThemeManager.ColorThemeItem data, int position) {
                 ThemeManager.saveColorTheme(data.getName());
-                // 无效？？？
-                setResult(RESULT_OK);
 
                 adapter.notifyDataSetChanged();
                 recreate();
