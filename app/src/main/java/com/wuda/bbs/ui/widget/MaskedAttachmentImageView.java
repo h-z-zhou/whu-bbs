@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.Attachment;
 import com.wuda.bbs.ui.article.AttachmentActivity;
-import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.validator.MimeValidator;
 
 import java.io.Serializable;
@@ -75,19 +74,15 @@ public class MaskedAttachmentImageView extends RelativeLayout {
         return imageView;
     }
 
-    public void addAttachments(@NonNull List<Attachment> attachmentList, @NonNull String boardId, @NonNull String articleId) {
+    public void addAttachments(@NonNull List<Attachment> attachmentList) {
         mAttachmentList = attachmentList;
-        mBoardId = boardId;
-        mArticleId = articleId;
 
         Attachment attachment = attachmentList.get(0);
-        String url;
-        url = NetConst.ATTACHMENT + "?board=" + mBoardId + "&id=" + mArticleId + "&ap=" + attachment.getId();
 
         MimeValidator.Mime mime = MimeValidator.getMimetype(attachment.getName());
         if (mime.type == MimeValidator.Mime.Type.IMAGE) {
             Glide.with(mContext)
-                    .load(url)
+                    .load(attachment.getUrl())
                     .placeholder(R.drawable.mimetype_image)
                     .into(imageView);
         } else {

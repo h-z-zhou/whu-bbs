@@ -2,7 +2,6 @@ package com.wuda.bbs.ui.article;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -23,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.wuda.bbs.R;
+import com.wuda.bbs.logic.bean.bbs.Attachment;
 import com.wuda.bbs.logic.bean.bbs.BriefArticle;
 import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
@@ -102,8 +102,6 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
             }
         });
 
-
-
         reply_tv = findViewById(R.id.detailArticle_reply_textView);
 
         resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -156,6 +154,17 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
         mViewModel.getDetailArticlesMutableLiveData().observe(DetailArticleActivity.this, new Observer<List<DetailArticle>>() {
             @Override
             public void onChanged(List<DetailArticle> detailArticles) {
+
+                for (DetailArticle article: detailArticles) {
+                    if (!article.getAttachmentList().isEmpty()) {
+                        List<Attachment> attachmentList = article.getAttachmentList();
+                        for (Attachment attachment: attachmentList) {
+                            attachment.setUrl(NetConst.ATTACHMENT + "?board=" + mViewModel.getBriefArticle().getBoardID() + "&id=" + article.getId() + "&ap=" + attachment.getUrl());
+                        }
+                        article.setAttachmentList(attachmentList);
+                    }
+                }
+
                 articleAdapter.updateDataSet(detailArticles);
                 reply_tv.setVisibility(View.VISIBLE);
                 if (mViewModel.getBriefArticle().getReID() != null) {

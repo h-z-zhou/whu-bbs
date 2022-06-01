@@ -5,6 +5,9 @@ import java.util.Map;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 
+/**
+ * 对需使用GBK上传的网络出口进行封装
+ */
 public class RootServiceGBKWrapper {
 
     RootService mRootService;

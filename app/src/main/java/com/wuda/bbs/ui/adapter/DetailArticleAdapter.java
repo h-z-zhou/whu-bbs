@@ -41,8 +41,6 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
     String title;
     List<DetailArticle> mDetailArticleList;
     Intent userInfoIntent;
-    String mGroupId;
-    String mBoardId;
 
     AdapterItemListener<DetailArticle> mItemListener;
 
@@ -52,8 +50,6 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public DetailArticleAdapter(Context context, String groupId, String boardId) {
         mContext = context;
-        mGroupId = groupId;
-        mBoardId = boardId;
         mDetailArticleList = new ArrayList<>();
         userInfoIntent = new Intent(mContext, UserInfoActivity.class);
         userInfoIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -134,7 +130,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
             if (!article.getAttachmentList().isEmpty()) {
                 MaskedAttachmentImageView attachmentImageView = new MaskedAttachmentImageView(((ReplyViewHolder) holder).root_cl.getContext());
-                attachmentImageView.addAttachments(article.getAttachmentList(), mBoardId, article.getId());
+                attachmentImageView.addAttachments(article.getAttachmentList());
                 ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(DensityUtil.dip2px(mContext, 100), ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.startToStart = ((ReplyViewHolder) holder).replyContent_tv.getId();
                 params.topToBottom = ((ReplyViewHolder) holder).replyContent_tv.getId();
@@ -185,7 +181,7 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
                 recyclerView.setLayoutManager(new FullyGridLayoutManager(mContext, 3));
                 recyclerView.addItemDecoration(new GridSpacingItemDecoration(3,
                         DensityUtil.dip2px(mContext, 4), false));
-                recyclerView.setAdapter(new AttachmentAdapter(mContext, mBoardId, article.getId(), article.getAttachmentList()));
+                recyclerView.setAdapter(new AttachmentAdapter(mContext, article.getAttachmentList()));
                 ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 params.startToStart = 0;
                 params.endToEnd = 0;
@@ -300,7 +296,5 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
             replyContent_tv = itemView.findViewById(R.id.postContent_textView);
             replyContent_tv.setMovementMethod(FixedMovementTextView.LocalLinkMovementMethod.getInstance());
         }
-
     }
-
 }

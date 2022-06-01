@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -16,7 +15,6 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.Attachment;
 import com.wuda.bbs.ui.adapter.AttachmentPager2Adapter;
 import com.wuda.bbs.ui.base.CustomizedThemeActivity;
-import com.wuda.bbs.utils.network.NetConst;
 
 import java.util.List;
 
@@ -25,18 +23,12 @@ public class AttachmentActivity extends CustomizedThemeActivity {
     List<Attachment> attachmentList;
     ViewPager2 attachment_vp2;
 
-    String board;
-    String articleId;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         attachmentList = (List<Attachment>) getIntent().getSerializableExtra("attachments");
-        board = getIntent().getStringExtra("board");
-        articleId = getIntent().getStringExtra("articleId");
         int position = getIntent().getIntExtra("position", 0);
-
 
         setContentView(R.layout.activity_attachment);
 
@@ -51,7 +43,7 @@ public class AttachmentActivity extends CustomizedThemeActivity {
         });
 
         attachment_vp2 = findViewById(R.id.attachment_viewPager2);
-        attachment_vp2.setAdapter(new AttachmentPager2Adapter(AttachmentActivity.this, attachmentList, board, articleId));
+        attachment_vp2.setAdapter(new AttachmentPager2Adapter(AttachmentActivity.this, attachmentList));
         attachment_vp2.setCurrentItem(position, false);
 
         attachment_vp2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -73,9 +65,9 @@ public class AttachmentActivity extends CustomizedThemeActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.menu_preview_attachment_download) {
             Attachment attachment = attachmentList.get(attachment_vp2.getCurrentItem());
-            String url = NetConst.ATTACHMENT + "?board=" + board + "&id=" + articleId + "&ap=" + attachment.getId();
+//            String url = NetConst.ATTACHMENT + "?board=" + board + "&id=" + articleId + "&ap=" + attachment.getId();
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
+            intent.setData(Uri.parse(attachment.getUrl()));
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

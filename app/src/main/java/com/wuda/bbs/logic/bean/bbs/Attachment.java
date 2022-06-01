@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class Attachment implements Serializable {
     String name;
     String size;
-    String id;
+    String url;
 
-    public Attachment(String name, String size, String id) {
+    public Attachment(String name, String size, String url) {
         this.name = name;
         this.size = size;
-        this.id = id;
+        this.url = url;
     }
 
     public String getName() {
@@ -29,11 +29,11 @@ public class Attachment implements Serializable {
         this.size = size;
     }
 
-    public String getId() {
-        return id;
+    public String getUrl() {
+        return url;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

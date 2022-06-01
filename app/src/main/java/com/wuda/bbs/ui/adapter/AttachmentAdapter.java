@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.Attachment;
 import com.wuda.bbs.ui.article.AttachmentActivity;
-import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.validator.MimeValidator;
 
 import java.io.Serializable;
@@ -24,14 +23,10 @@ import java.util.List;
 public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.ViewHolder> {
 
     Context mContext;
-    String mBoardId;
-    String mArticleId;
     List<Attachment> mAttachmentList;
 
-    public AttachmentAdapter(Context mContext, String mBoardId, String mArticleId, List<Attachment> mAttachmentList) {
+    public AttachmentAdapter(Context mContext, List<Attachment> mAttachmentList) {
         this.mContext = mContext;
-        this.mBoardId = mBoardId;
-        this.mArticleId = mArticleId;
         this.mAttachmentList = mAttachmentList;
     }
 
@@ -45,8 +40,6 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, AttachmentActivity.class);
                 intent.putExtra("attachments", (Serializable) mAttachmentList);
-                intent.putExtra("board", mBoardId);
-                intent.putExtra("articleId", mArticleId);
                 intent.putExtra("position", holder.getAdapterPosition());
                 mContext.startActivity(intent);
             }
@@ -57,12 +50,11 @@ public class AttachmentAdapter extends RecyclerView.Adapter<AttachmentAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Attachment attachment = mAttachmentList.get(position);
-        String url;
-        url = NetConst.ATTACHMENT + "?board=" + mBoardId + "&id=" + mArticleId + "&ap=" + attachment.getId();
+//        url = NetConst.ATTACHMENT + "?board=" + mBoardId + "&id=" + mArticleId + "&ap=" + attachment.getId();
 
         MimeValidator.Mime mime = MimeValidator.getMimetype(attachment.getName());
         if (mime.type == MimeValidator.Mime.Type.IMAGE) {
-            Glide.with(mContext).load(url).placeholder(R.drawable.mimetype_image).into(holder.bg_iv);
+            Glide.with(mContext).load(attachment.getUrl()).placeholder(R.drawable.mimetype_image).into(holder.bg_iv);
         } else {
             Glide.with(mContext).load(mime.icon).into(holder.bg_iv);
             holder.name_tv.setText(attachment.getName());

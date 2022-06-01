@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,6 +29,7 @@ import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.ui.widget.ResponseErrorHandlerDialog;
+import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.network.NetTool;
 import com.wuda.bbs.utils.networkResponseHandler.SimpleResponseHandler;
 
@@ -189,7 +189,11 @@ public class MailContentActivity extends CustomizedThemeActivity {
         Map<String, String> urlParam = NetTool.extractUrlParam(url);
         // http://bbs.whu.edu.cn/wForum/bbsmailcon.php?boxname=inbox&num=1&ap=234
         // 附件地址不统一？ Glide缓存是否重复
-        recyclerView.setAdapter(new AttachmentAdapter(MailContentActivity.this, urlParam.get("board"), urlParam.get("reID"), attachmentList));
+        for (Attachment attachment: attachmentList) {
+            attachment.setUrl(NetConst.ATTACHMENT + "?board=" + urlParam.get("board") + "&id=" + urlParam.get("reID") + "&ap=" + attachment.getUrl());
+        }
+
+        recyclerView.setAdapter(new AttachmentAdapter(MailContentActivity.this, attachmentList));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         recyclerView.setLayoutParams(params);
         root_ll.addView(recyclerView);

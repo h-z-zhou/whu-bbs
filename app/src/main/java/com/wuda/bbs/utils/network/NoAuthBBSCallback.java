@@ -14,6 +14,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * 不验证登录与否
+ * @param <T>
+ */
 public class NoAuthBBSCallback<T> implements Callback<ResponseBody> {
 
     ContentResponseHandler<T> mResponseHandler;

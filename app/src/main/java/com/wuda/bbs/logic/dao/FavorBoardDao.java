@@ -13,23 +13,23 @@ import java.util.List;
 @Dao
 public interface FavorBoardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insert(List<FavBoard> boardList);
+    void insert(List<FavBoard> boardList);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insert(FavBoard favBoard);
+    void insert(FavBoard favBoard);
 
     @Query("select * from FavBoard")
-    public abstract List<FavBoard> loadAllFavorBoards();
+    List<FavBoard> loadAllFavorBoards();
 
     @Query("select * from FavBoard where favor_by_username = :username")
-    public abstract List<FavBoard> loadFavorBoardByUsername(@NonNull String username);
+    List<FavBoard> loadFavorBoardByUsername(@NonNull String username);
 
     @Query("delete from FavBoard where favor_by_username = :username")
-    public abstract void clearFavorBoardsByUsername(String username);
+    void clearFavorBoardsByUsername(String username);
 
     @Query("delete from FavBoard")
-    public abstract void clearAll();
+    void clearAll();
 
     @Query("delete from FavBoard where id = :id")
-    public abstract void delete(String id);
+    void delete(String id);
 }

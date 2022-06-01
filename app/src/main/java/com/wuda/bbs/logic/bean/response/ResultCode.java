@@ -6,9 +6,9 @@ public enum ResultCode {
     UNKNOWN_ERR(-1, "未定义错误"),
     UNMATCHED_CONTENT_ERR(1, "数据匹配错误"), // 返回内容与定义的处理方式不一致
     CONNECT_ERR(2, "网络连接错误"),
-    LOGIN_ERR(3, "登录失败"),
+    NO_LOGIN_ERR(3, "当前未登录"),
     USER_ERR(4, "该用户不存在"),
-    PASSWORD(5, "密码错误"),
+    LOGIN_ERR(5, "账户不存在或密码错误"),
     EMPTY_DATA_ERR(6, "返回空数据"),
     HANDLE_DATA_ERR(7, "数据处理错误"),
     DATA_IO_ERR(8, "数据IO错误"),

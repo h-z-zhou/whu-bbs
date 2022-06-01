@@ -124,7 +124,7 @@ public class XMLParser {
             if (BBSApplication.isLogin())
                 response = new DetailArticleResponse(ResultCode.HANDLE_DATA_ERR, e.getMessage());
             else {
-                response = new DetailArticleResponse(ResultCode.LOGIN_ERR, "未登陆用户无法查看一年前的帖子");
+                response = new DetailArticleResponse(ResultCode.NO_LOGIN_ERR, "未登陆用户无法查看一年前的帖子");
             }
         }
 

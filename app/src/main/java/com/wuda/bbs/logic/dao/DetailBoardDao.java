@@ -12,17 +12,17 @@ import java.util.List;
 @Dao
 public interface DetailBoardDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    public abstract void insert(List<DetailBoard> detailBoardList);
+    void insert(List<DetailBoard> detailBoardList);
 
     @Query("select * from DetailBoard")
-    public abstract List<DetailBoard> loadAllBoards();
+    List<DetailBoard> loadAllBoards();
 
     @Query("select * from DetailBoard where section = :section")
-    public abstract List<DetailBoard> loadBoardsBySection(String section);
+    List<DetailBoard> loadBoardsBySection(String section);
 
     @Query("select board.* from DetailBoard board group by board.section")
-    public abstract List<DetailBoard> loadBoardsGroupBySection();
+    List<DetailBoard> loadBoardsGroupBySection();
 
     @Query("delete from DetailBoard")
-    public abstract void clearAll();
+    void clearAll();
 }

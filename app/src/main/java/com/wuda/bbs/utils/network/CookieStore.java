@@ -26,23 +26,27 @@ import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 
+/**
+ * 对BBS的Cookies进行存储，同时提供是否已登录的逻辑判断
+ */
 public class CookieStore implements CookieJar {
 
     static Map<String, List<Cookie>> store;
-    private static CookieStore cookieStore;
+    private static CookieStore mCookieStore;
 
     static {
         store = new HashMap<>();
-        List<Cookie> cookies = loadCookies();
+        List<Cookie> cookies = loadCookiesFromXML();
+        // APP启动时使用
         if (!cookies.isEmpty())
-            store.put(NetConst.BASE_HOST, loadCookies());
+            store.put(NetConst.BASE_HOST, cookies);
     }
 
     public static CookieStore newInstance() {
-        if (cookieStore == null) {
-            cookieStore = new CookieStore();
+        if (mCookieStore == null) {
+            mCookieStore = new CookieStore();
         }
-        return cookieStore;
+        return mCookieStore;
     }
 
     @Override
@@ -52,6 +56,7 @@ public class CookieStore implements CookieJar {
             for (Cookie cookie: cookies) {
                 filter.put(cookie.name(), cookie);
             }
+            // 如果用户信息被更新，会存在 "UTMPUSERID" 字段
             if (filter.containsKey("UTMPUSERID"))
                 store.put(url.host(), new ArrayList<>(filter.values()));
         }
@@ -68,17 +73,23 @@ public class CookieStore implements CookieJar {
         }
     }
 
+    /**
+     * 是否已经的登录
+     */
     public static boolean isLoginBBS() {
         List<Cookie> cookies = store.get(NetConst.BASE_HOST);
         assert cookies != null;
         for (Cookie cookie: cookies) {
             if (cookie.name().equals("UTMPUSERID")) {
-                return !cookie.value().equals("guest");
+                return !(cookie.value().equals("guest") || cookie.value().equals("deleted"));
             }
         }
         return true;
     }
 
+    /**
+     * 持久化
+     */
     public static void storeCookiesWithXML() {
 
         List<Cookie> cookies = store.get(NetConst.BASE_HOST);
@@ -111,7 +122,7 @@ public class CookieStore implements CookieJar {
 
     }
 
-    private static List<Cookie> loadCookies() {
+    private static List<Cookie> loadCookiesFromXML() {
         SharedPreferences sp = BBSApplication.getAppContext().getSharedPreferences("user", Context.MODE_PRIVATE);
         String xmlData = sp.getString("cookies", "<?xml version='1.0' encoding='utf-8' standalone='yes' ?><cookies></cookies>");
 

@@ -103,6 +103,9 @@ public class MainActivity extends CustomizedThemeActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("theme", MODE_PRIVATE);
         int nightMode = sharedPreferences.getInt("nightMode", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
         AppCompatDelegate.setDefaultNightMode(nightMode);
+
+        // 夜间模式切换时
+        initDrawerHeader();
     }
 
     private void eventBinding() {
@@ -156,8 +159,6 @@ public class MainActivity extends CustomizedThemeActivity {
                 }
 
                 startActivity(intent);
-
-                drawer_nav.setCheckedItem(-1);
 
                 drawer.close();
                 return true;

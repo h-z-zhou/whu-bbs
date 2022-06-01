@@ -22,6 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class HistoryAdapter extends FooterAdapter<History> {
+
+    private AdapterItemListener<History> mItemListener;
+
     public HistoryAdapter(Context mContext, List<History> mContents) {
         super(mContext, mContents);
     }
@@ -38,14 +41,11 @@ public class HistoryAdapter extends FooterAdapter<History> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                History history = mContents.get(holder.getAbsoluteAdapterPosition());
-                Intent intent = new Intent(mContext, DetailArticleActivity.class);
-                BriefArticle briefArticle = new BriefArticle();
-                briefArticle.setBoardID(history.getBoardID());
-                briefArticle.setGID(history.getGID());
-                briefArticle.setTitle(history.getTitle());
-                intent.putExtra("briefArticle", briefArticle);
-                mContext.startActivity(intent);
+                if (mItemListener != null) {
+                    int pos = holder.getAbsoluteAdapterPosition();
+                    History history = mContents.get(pos);
+                    mItemListener.onItemClick(history, pos);
+                }
             }
         });
 
@@ -67,6 +67,10 @@ public class HistoryAdapter extends FooterAdapter<History> {
 
             ((HistoryViewHolder) holder).history_tv.setText(builder);
         }
+    }
+
+    public void setItemListener(AdapterItemListener<History> itemListener) {
+        this.mItemListener = itemListener;
     }
 
     static class HistoryViewHolder extends ContentViewHolder {

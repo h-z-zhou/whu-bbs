@@ -73,7 +73,7 @@ public class ResponseErrorHandlerDialog extends BaseCustomDialog {
             case PERMISSION_DENIED:
                 this.positive_btn.setVisibility(View.GONE);
                 break;
-            case LOGIN_ERR:
+            case NO_LOGIN_ERR:
                 this.pBtnText = "去登录";
                 this.positive_btn.setOnClickListener(new View.OnClickListener() {
                     @Override

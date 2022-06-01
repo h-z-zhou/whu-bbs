@@ -25,10 +25,5 @@ public class NetConst {
     // 图片
     public static final String ATTACHMENT = "http://bbs.whu.edu.cn/wForum/bbscon.php";
 
-    public static final String FAVOR_BOARD_ERROR = "同学???榭?詹丶?????要??录?模?";
-
-    // 首页背景图
-    public static final String HOME_BG = "http://bbs.whu.edu.cn/indexpages/now/ad.jpg";
-
-    public static final String WEB_READ_MAIL = "http://bbs.whu.edu.cn/bbsmailcon.php?dir=.DIR&num=3&title=%CA%D5%BC%FE%CF%E4";
+    public static final String WEB_READ_MAIL = "http://bbs.whu.edu.cn/bbsmailcon.php";
 }

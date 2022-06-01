@@ -7,6 +7,7 @@ import com.wuda.bbs.logic.bean.bbs.UserInfo;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
 import com.wuda.bbs.utils.network.AuthBBSCallback;
+import com.wuda.bbs.utils.network.CookieStore;
 import com.wuda.bbs.utils.network.MobileService;
 import com.wuda.bbs.utils.network.NoAuthBBSCallback;
 import com.wuda.bbs.utils.network.RootService;
@@ -85,28 +86,8 @@ public class NetworkEntry {
         mMobileService.post(form).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                List<String> cookies = response.headers().values("Set-Cookie");
-
-                Map<String, String> cookiesFilter = new HashMap<>();
-
-                for (String cookie : cookies) {
-                    String[] tmp = cookie.split(";");
-                    if (tmp.length > 0) {
-                        String[] name_value = tmp[0].split("=");
-                        if (name_value.length == 2) {
-                            cookiesFilter.put(name_value[0], name_value[1]);
-                        }
-                    }
-                }
-
-//                AccountResponse accountResponse;
                 ContentResponse<Account> accountResponse;
-
-                // 是否成功登录
-                String userId = cookiesFilter.get("UTMPUSERID");
-                if (userId == null)
-                    userId = "guest";
-                if (userId.equals("guest") || userId.equals("deleted")) {
+                if (!CookieStore.isLoginBBS()) {
                     accountResponse = new ContentResponse<>(ResultCode.LOGIN_ERR, "登录失败，请检查帐号和密码！");
                     handler.onResponseHandled(accountResponse);
                     return;
@@ -131,7 +112,7 @@ public class NetworkEntry {
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 String cookies = response.headers().get("Set-Cookie");
                 if (cookies == null) {
-                    handler.onResponseHandled(new ContentResponse<>(ResultCode.LOGIN_ERR, "退出成功"));
+                    handler.onResponseHandled(new ContentResponse<>(ResultCode.NO_LOGIN_ERR, "退出成功"));
                 } else {
                     handler.onResponseHandled(new ContentResponse<>(ResultCode.UNMATCHED_CONTENT_ERR, "未知错误"));
                 }
@@ -156,7 +137,6 @@ public class NetworkEntry {
     }
 
     public static void findPassword(Map<String, String> form, FindPasswordResponseHandler handler) {
-
         mRootService.post("r/doreset.php", form).enqueue(new NoAuthBBSCallback<>(handler));
     }
 
@@ -306,17 +286,4 @@ public class NetworkEntry {
     public static void deleteMail(Map<String, String> form, SimpleResponseHandler handler) {
         mRootService.get("bbsmailact.php", form).enqueue(new AuthBBSCallback<>(handler));
     }
-
-    // *******************************
-    // Article
-    // *******************************
-
-    // *******************************
-    // Article
-    // *******************************
-
-    // *******************************
-    // Article
-    // *******************************
-
 }

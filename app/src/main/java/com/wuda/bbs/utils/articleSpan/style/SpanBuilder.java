@@ -23,7 +23,7 @@ public class SpanBuilder {
 
         return new UrlImageSpan.Builder()
                 .url(url)
-                .placeholder(R.drawable.ic_add_image)
+                .placeholder(R.drawable.ic_image)
                 .build(textView);
     }
 }

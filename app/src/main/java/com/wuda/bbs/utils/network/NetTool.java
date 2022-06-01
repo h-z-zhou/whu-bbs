@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NetTool {
+    /**
+     * 对传输的数据进行 GBK 编码
+     * @param form 编码数据
+     * @return  GBK编码的数据
+     */
     public static Map<String, String> encodeUrlFormWithGBK(Map<String, String> form) {
         Map<String, String> encodedForm = new HashMap<>();
         for (String key: form.keySet()) {
@@ -21,18 +26,23 @@ public class NetTool {
         return encodedForm;
     }
 
+    /**
+     * 从连接中提取参数
+     * @param url
+     * @return
+     */
     public static Map<String, String> extractUrlParam(String url) {
-        Map<String, String> paramaters = new HashMap<>();
+        Map<String, String> parameters = new HashMap<>();
 
         String params = url.split("\\?")[1];
         String[] param_arr = params.split("&");
         for (String param: param_arr) {
             String[] pair = param.split("=");
             if (pair.length == 2) {
-                paramaters.put(pair[0], pair[1]);
+                parameters.put(pair[0], pair[1]);
             }
         }
 
-        return paramaters;
+        return parameters;
     }
 }

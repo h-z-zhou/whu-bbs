@@ -18,6 +18,7 @@ public abstract class FooterAdapter<T> extends RecyclerView.Adapter<RecyclerView
 
     Context mContext;
     List<T> mContents;
+
     boolean isMore = true;
 
     public FooterAdapter(Context mContext, List<T> mContents) {

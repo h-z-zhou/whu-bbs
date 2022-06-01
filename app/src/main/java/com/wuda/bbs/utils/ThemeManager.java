@@ -16,9 +16,8 @@ public class ThemeManager {
 
     private static int currentColorThemeID = R.style.Theme_red;
 
-    private static final List<ColorThemeItem> colorThemeList = new ArrayList<ColorThemeItem>();
+    private static final List<ColorThemeItem> colorThemeList = new ArrayList<>();
     static {
-//        colorThemeList.add(new ColorThemeItem(R.style.Theme_black, "black"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_red, "red"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_purple, "purple"));
         colorThemeList.add(new ColorThemeItem(R.style.Theme_green, "green"));

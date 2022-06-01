@@ -14,23 +14,19 @@ import com.bumptech.glide.Glide;
 import com.luck.picture.lib.photoview.PhotoView;
 import com.wuda.bbs.R;
 import com.wuda.bbs.logic.bean.bbs.Attachment;
-import com.wuda.bbs.utils.network.NetConst;
 import com.wuda.bbs.utils.validator.MimeValidator;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPager2Adapter.ViewHolder> {
 
     Context mContext;
     List<Attachment> mAttachmentList;
-    String board;
-    String articleId;
 
-    public AttachmentPager2Adapter(Context mContext, List<Attachment> mAttachmentList, String board, String articleId) {
+    public AttachmentPager2Adapter(Context mContext, List<Attachment> mAttachmentList) {
         this.mContext = mContext;
         this.mAttachmentList = mAttachmentList;
-        this.board = board;
-        this.articleId = articleId;
     }
 
     @NonNull
@@ -46,10 +42,8 @@ public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPage
         Attachment attachment = mAttachmentList.get(position);
         MimeValidator.Mime mime = MimeValidator.getMimetype(attachment.getName());
 
-        String url = NetConst.ATTACHMENT + "?board=" + board + "&id=" + articleId + "&ap=" + attachment.getId();
-
         if (mime.type == MimeValidator.Mime.Type.IMAGE) {
-            Glide.with(mContext).load(url).into(holder.photoView);
+            Glide.with(mContext).load(attachment.getUrl()).into(holder.photoView);
             holder.photoView.setZoomable(true);
         } else {
             ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(500, 500);
@@ -60,7 +54,15 @@ public class AttachmentPager2Adapter extends RecyclerView.Adapter<AttachmentPage
             params.endToEnd = 0;
             holder.photoView.setLayoutParams(params);
             Glide.with(mContext).load(mime.icon).into(holder.photoView);
-            holder.filename_tv.setText(attachment.getName());
+
+            DecimalFormat df = new DecimalFormat("#.##");
+            StringBuilder text = new StringBuilder();
+            text.append(attachment.getName())
+                    .append(" (")
+                    .append(df.format(Float.parseFloat(attachment.getSize()) / (1024 * 1024)))
+                    .append("MB")
+                    .append(")");
+            holder.filename_tv.setText(text);
         }
 
     }

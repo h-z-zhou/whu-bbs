@@ -14,6 +14,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
+/**
+ * 对登录与否进行验证
+ * @param <T>
+ */
 public class AuthBBSCallback<T> implements Callback<ResponseBody> {
 
     ContentResponseHandler<T> mResponseHandler;
@@ -28,7 +32,7 @@ public class AuthBBSCallback<T> implements Callback<ResponseBody> {
         // 未登录或浏览器登录致使掉登录
         if (!CookieStore.isLoginBBS()) {
             mContentResponse = new ContentResponse<>();
-            mContentResponse.setResultCode(ResultCode.LOGIN_ERR);
+            mContentResponse.setResultCode(ResultCode.NO_LOGIN_ERR);
         } else {
             ResponseBody body = response.body();
             if (body == null ) {

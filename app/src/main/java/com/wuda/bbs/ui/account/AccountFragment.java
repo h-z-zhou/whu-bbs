@@ -99,7 +99,7 @@ public class AccountFragment extends BaseFragment {
                 mSharedViewModel.logout(new SimpleResponseHandler() {
                     @Override
                     public void onResponseHandled(ContentResponse<Object> response) {
-                        if (response.getResultCode() == ResultCode.LOGIN_ERR) {
+                        if (response.getResultCode() == ResultCode.NO_LOGIN_ERR) {
                             BBSApplication.setAccount(Account.GUEST);
                             // 不改变登录页面数据
 //                            mSharedViewModel.updateCurrentAccount(Account.GUEST);

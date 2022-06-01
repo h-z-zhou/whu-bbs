@@ -13,6 +13,7 @@ public class ServiceCreator {
     private static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(NetConst.BASE)
             .client(new OkHttpClient.Builder()
+                    // 使用自定义 CookieStore
                     .cookieJar(CookieStore.newInstance())
                     .addInterceptor(new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                         @Override
