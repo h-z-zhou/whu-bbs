@@ -85,7 +85,7 @@ public class MyInfoFragment extends BaseFragment {
                     Glide.with(getContext()).load(NetConst.BASE + userInfo.getAvatar()).into(avatar_iv);
                     name_tv.setText(userInfo.getId() + "(" + userInfo.getNickname() + ")" + "\n" + userInfo.getGender());
                     level_tv.append(userInfo.getLevel());
-                    experience_tv.append(userInfo.getExp());
+                    experience_tv.append(userInfo.getExperience());
                     postNum_tv.append(userInfo.getPostNum());
                     signature_tv.append(Html.fromHtml(userInfo.getSignature()));
                 }

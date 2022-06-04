@@ -6,7 +6,7 @@ import com.wuda.bbs.logic.bean.bbs.Attachment;
 import com.wuda.bbs.logic.bean.bbs.MailContent;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
-import com.wuda.bbs.utils.xmlHandler.ArticleContentRegex;
+import com.wuda.bbs.utils.ArticleContentRegex;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

@@ -27,7 +27,6 @@ import com.wuda.bbs.ui.user.UserInfoActivity;
 import com.wuda.bbs.ui.widget.FixedMovementTextView;
 import com.wuda.bbs.ui.widget.FullyGridLayoutManager;
 import com.wuda.bbs.ui.widget.MaskedAttachmentImageView;
-import com.wuda.bbs.utils.ContentTextUtil;
 import com.wuda.bbs.utils.articleSpan.ArticleRichText;
 import com.wuda.bbs.utils.articleSpan.listener.OnImageClickListener;
 import com.wuda.bbs.utils.network.NetConst;
@@ -238,8 +237,8 @@ public class DetailArticleAdapter extends RecyclerView.Adapter<RecyclerView.View
         builder.append("@").append(detailArticle.getReply2username()).append(detailArticle.getReply2content());
         builder.setSpan(new RelativeSizeSpan(0.8f), 0, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         builder.append("\n");
-//        builder.append(detailArticle.getContent());
-        builder.append(ContentTextUtil.getSpannableString(mContext, textView, detailArticle.getContent()));
+
+        builder.append(ArticleRichText.build(detailArticle.getContent()).format());
 
         return builder;
     }

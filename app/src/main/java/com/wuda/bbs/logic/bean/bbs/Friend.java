@@ -9,12 +9,12 @@ public class Friend {
     @PrimaryKey
     @NonNull
     String id;
-    String alias;
+    String experience;
     String avatar;
 
-    public Friend(@NonNull String id, String alias, String avatar) {
+    public Friend(@NonNull String id, String experience, String avatar) {
         this.id = id;
-        this.alias = alias;
+        this.experience = experience;
         this.avatar = avatar;
     }
 
@@ -23,8 +23,8 @@ public class Friend {
         return id;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getExperience() {
+        return experience;
     }
 
     public String getAvatar() {

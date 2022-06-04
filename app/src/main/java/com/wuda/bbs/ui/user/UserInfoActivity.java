@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -134,7 +133,7 @@ public class UserInfoActivity extends CustomizedThemeActivity {
                 Glide.with(UserInfoActivity.this).load(NetConst.BASE + userInfo.getAvatar()).into(avatar_iv);
                 name_tv.setText(userInfo.getId() + "(" + userInfo.getNickname() + ")" + "\n" + userInfo.getGender());
                 level_tv.append(userInfo.getLevel());
-                experience_tv.append(userInfo.getExp());
+                experience_tv.append(userInfo.getExperience());
                 postNum_tv.append(userInfo.getPostNum());
                 signature_tv.append(Html.fromHtml(userInfo.getSignature()));
                 root.setVisibility(View.VISIBLE);

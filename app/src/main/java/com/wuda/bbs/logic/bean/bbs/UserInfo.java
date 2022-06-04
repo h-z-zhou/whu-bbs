@@ -8,7 +8,7 @@ public class UserInfo {
     String photo;
     String level;
     String postNum;
-    String exp;  // experience
+    String experience;
     String signature;
 
     public String getId() {
@@ -74,12 +74,12 @@ public class UserInfo {
         this.postNum = postNum;
     }
 
-    public String getExp() {
-        return exp;
+    public String getExperience() {
+        return experience;
     }
 
-    public void setExp(String exp) {
-        this.exp = exp;
+    public void setExperience(String experience) {
+        this.experience = experience;
     }
 
     public String getSignature() {

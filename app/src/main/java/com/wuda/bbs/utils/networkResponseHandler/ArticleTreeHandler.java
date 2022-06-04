@@ -40,16 +40,6 @@ public abstract class ArticleTreeHandler implements ContentResponseHandler<Artic
                     String href = node.getElementsByTag("a").attr("href");
                     if (href.isEmpty()) continue;
                     String id = NetTool.extractUrlParam(href).get("ID");
-
-                    Log.d("TreeNode", indents + " - " + id);
-//                    if (parentIndents < indents) {
-//                        ArticleTreeNode parent = nodeQueue.peek();
-//                        parent.addChild("");
-//                    } else {
-//                        nodeQueue.poll();
-//                        ArticleTreeNode parent = nodeQueue.peek();
-//
-//                    }
                 }
             }
 

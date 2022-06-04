@@ -1,4 +1,4 @@
-package com.wuda.bbs.utils.xmlHandler;
+package com.wuda.bbs.utils;
 
 import com.wuda.bbs.logic.bean.bbs.Attachment;
 

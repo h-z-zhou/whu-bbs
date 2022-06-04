@@ -43,6 +43,11 @@ public class TagHandler {
         image(content, textView, onImageClickListener);
     }
 
+    public static void handle(SpannableStringBuilder content) {
+        url(content);
+        emoticon(content);
+    }
+
 
     public static boolean url(SpannableStringBuilder content) {
         MATCHER_URL.reset(content);

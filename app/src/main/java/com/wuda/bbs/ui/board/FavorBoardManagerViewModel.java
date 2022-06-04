@@ -88,10 +88,10 @@ public class FavorBoardManagerViewModel extends BaseResponseViewModel {
         FavorBoardDao favorBoardDao = AppDatabase.getDatabase().getFavorBoardDao();
         if (isAdd) {
             form.put("bname", board.getId());
-            favorBoardDao.insert(new FavBoard(board.getId(), board.getName(), BBSApplication.getAccountId()));
+            favorBoardDao.insert(new FavBoard(board.getId(), board.getName(), board.getNum(), BBSApplication.getAccountId()));
         } else {
             // 编号减一
-            form.put("delete", Integer.valueOf(Integer.parseInt(board.getNumber()) - 1).toString());
+            form.put("delete", Integer.valueOf(Integer.parseInt(board.getNum()) - 1).toString());
             favorBoardDao.delete(board.getId());
         }
         form.put("select", "0");

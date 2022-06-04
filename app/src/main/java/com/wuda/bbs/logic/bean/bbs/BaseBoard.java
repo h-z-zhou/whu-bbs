@@ -10,10 +10,12 @@ public class BaseBoard implements Serializable {
     @PrimaryKey
     String id;
     String name;
+    String num;
 
-    public BaseBoard(@NonNull String id, String name) {
+    public BaseBoard(@NonNull String id, String name, String num) {
         this.id = id;
         this.name = name;
+        this.num = num;
     }
 
     @NonNull
@@ -31,5 +33,13 @@ public class BaseBoard implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
     }
 }

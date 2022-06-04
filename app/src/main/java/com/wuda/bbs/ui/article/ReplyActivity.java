@@ -89,7 +89,7 @@ public class ReplyActivity extends AppCompatActivity {
         mViewModel.repliedArticle = repliedArticle;
         mViewModel.groupId = groupId;
         mViewModel.boardId = boardId;
-        mViewModel.getBoardMutableLiveData().postValue(new BaseBoard(boardId, ""));
+        mViewModel.getBoardMutableLiveData().postValue(new BaseBoard(boardId, "", ""));
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_reply);

@@ -45,7 +45,7 @@ public abstract class FavArticleHandler implements ContentResponseHandler<List<F
 
         Map<String, String> num2id = new HashMap<>();
         for (DetailBoard board: allBoards) {
-            num2id.put(board.getNumber(), board.getId());
+            num2id.put(board.getNum(), board.getId());
         }
 
         // url => bbscon.php?bid=102&id=1105517542

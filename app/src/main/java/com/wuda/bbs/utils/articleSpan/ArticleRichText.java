@@ -1,5 +1,6 @@
 package com.wuda.bbs.utils.articleSpan;
 
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.widget.TextView;
 
@@ -30,6 +31,9 @@ public class ArticleRichText {
             textView.setText(content, TextView.BufferType.SPANNABLE);
         }
 
+        public SpannableString format() {
+            TagHandler.handle(content);
+            return SpannableString.valueOf(this.content);
+        }
     }
-
 }

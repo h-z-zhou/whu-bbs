@@ -10,8 +10,8 @@ public class FavBoard extends BaseBoard{
     @ColumnInfo(name = "favor_by_username")
     String favorByUsername;
 
-    public FavBoard(@NonNull String id, String name, @NonNull String favorByUsername) {
-        super(id, name);
+    public FavBoard(@NonNull String id, String name, String num, @NonNull String favorByUsername) {
+        super(id, name, num);
         this.favorByUsername = favorByUsername;
     }
 

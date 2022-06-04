@@ -78,7 +78,8 @@ public class CookieStore implements CookieJar {
      */
     public static boolean isLoginBBS() {
         List<Cookie> cookies = store.get(NetConst.BASE_HOST);
-        assert cookies != null;
+        if (cookies == null)
+            return false;
         for (Cookie cookie: cookies) {
             if (cookie.name().equals("UTMPUSERID")) {
                 return !(cookie.value().equals("guest") || cookie.value().equals("deleted"));
