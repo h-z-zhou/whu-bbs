@@ -1,7 +1,12 @@
 package com.wuda.bbs.ui.article;
 
+import android.app.Service;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -142,7 +147,7 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
                     "&ID=" + briefArticle.getGID();
 
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "珞珈山水:\"" + briefArticle.getTitle() + "\" " +  webUrl);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, "珞珈山水:《" + briefArticle.getTitle() + "》 " +  webUrl);
             shareIntent.setType("text/plain");
             startActivity(shareIntent);
         }
@@ -226,6 +231,12 @@ public class DetailArticleActivity extends CustomizedThemeActivity {
 
             @Override
             public void onItemLongClick(DetailArticle data, int position) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Vibrator vib = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);   //获取系统震动服务
+                    vib.vibrate(VibrationEffect.createOneShot(15, AudioAttributes.USAGE_NOTIFICATION));
+                }
+
                 ArticleLongClickBottomSheet articleLongClickBottomSheet = new ArticleLongClickBottomSheet();
                 articleLongClickBottomSheet.setArticle(data);
                 articleLongClickBottomSheet.show(getSupportFragmentManager(), ArticleLongClickBottomSheet.class.getSimpleName());

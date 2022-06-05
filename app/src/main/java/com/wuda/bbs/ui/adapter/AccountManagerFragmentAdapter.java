@@ -24,7 +24,7 @@ public class AccountManagerFragmentAdapter extends RecyclerView.Adapter<AccountM
     AccountActivity mAccountActivity;
     final FragmentEntry[] mFragmentEntries = new FragmentEntry[] {
             new FragmentEntry(MyInfoFragment.class, "个人主页", R.drawable.ic_home, R.color.QingHaKeZi, ""),
-            new FragmentEntry(SetParamFragment.class, "用户参数", R.drawable.ic_information, R.color.DanCuiLv,""),
+            new FragmentEntry(SetParamFragment.class, "功能设置", R.drawable.ic_information, R.color.DanCuiLv,""),
             new FragmentEntry(SetPasswordFragment.class, "修改密码", R.drawable.ic_lock_reset, R.color.LangHuaLv, "")
     };
 

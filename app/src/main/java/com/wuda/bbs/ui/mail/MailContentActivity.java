@@ -1,7 +1,12 @@
 package com.wuda.bbs.ui.mail;
 
+import android.app.Service;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -20,10 +25,12 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.logic.NetworkEntry;
 import com.wuda.bbs.logic.bean.bbs.Attachment;
 import com.wuda.bbs.logic.bean.bbs.BriefArticle;
+import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 import com.wuda.bbs.logic.bean.bbs.Mail;
 import com.wuda.bbs.logic.bean.bbs.MailContent;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.ui.adapter.AttachmentAdapter;
+import com.wuda.bbs.ui.article.ArticleLongClickBottomSheet;
 import com.wuda.bbs.ui.article.DetailArticleActivity;
 import com.wuda.bbs.ui.base.CustomizedThemeActivity;
 import com.wuda.bbs.ui.widget.BaseCustomDialog;
@@ -122,6 +129,26 @@ public class MailContentActivity extends CustomizedThemeActivity {
                             }
                         })
                         .show();
+            }
+        });
+
+        root_ll.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    Vibrator vib = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);   //获取系统震动服务
+                    vib.vibrate(VibrationEffect.createOneShot(15, AudioAttributes.USAGE_NOTIFICATION));
+                }
+
+                DetailArticle article = new DetailArticle();
+                article.setAuthor(mail.getSender());
+                article.setContent(mViewModel.getMailContentMutableLiveData().getValue().getContent());
+
+                ArticleLongClickBottomSheet articleLongClickBottomSheet = new ArticleLongClickBottomSheet();
+                articleLongClickBottomSheet.setArticle(article);
+                articleLongClickBottomSheet.show(getSupportFragmentManager(), ArticleLongClickBottomSheet.class.getSimpleName());
+                return false;
             }
         });
 
