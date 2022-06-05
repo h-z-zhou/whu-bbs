@@ -197,7 +197,6 @@ public class MainActivity extends CustomizedThemeActivity {
 
     public void openAccountActivity(boolean isLogin) {
         Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-        intent.putExtra("isLogin", !BBSApplication.isLogin() || isLogin);
         mAccountActivityLauncher.launch(intent);
     }
 

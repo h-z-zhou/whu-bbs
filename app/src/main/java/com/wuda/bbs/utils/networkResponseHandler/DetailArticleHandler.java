@@ -7,7 +7,6 @@ import com.wuda.bbs.logic.bean.bbs.DetailArticle;
 import com.wuda.bbs.logic.bean.response.ContentResponse;
 import com.wuda.bbs.logic.bean.response.DetailArticleResponse;
 import com.wuda.bbs.logic.bean.response.ResultCode;
-import com.wuda.bbs.utils.ArticleContentRegex;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

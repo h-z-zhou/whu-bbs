@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -23,8 +22,6 @@ public class AccountActivity extends CustomizedThemeActivity implements Navigati
     Toolbar toolbar;
     AccountSharedViewModel mViewModel;
 
-    boolean isLogin;  // go to login page
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,14 +36,7 @@ public class AccountActivity extends CustomizedThemeActivity implements Navigati
             }
         });
 
-        if (savedInstanceState!=null && savedInstanceState.containsKey("isLogin")) {
-            isLogin = savedInstanceState.getBoolean("isLogin");
-            return;
-        } else {
-            isLogin = getIntent().getBooleanExtra("isLogin", true);
-        }
-
-        if (isLogin) {
+        if (!BBSApplication.isLogin()) {
             navigationTo(new LoginFragment(), false);
         } else {
             navigationTo(new AccountFragment(), false);
@@ -88,11 +78,4 @@ public class AccountActivity extends CustomizedThemeActivity implements Navigati
         }
 
     }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("isLogin", isLogin);
-    }
-
 }

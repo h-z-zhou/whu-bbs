@@ -93,7 +93,7 @@ public abstract class TopicArticleHandler implements ContentResponseHandler<List
                             briefArticle.setTime(parser.nextText());
                             break;
                         case "flag":
-                            briefArticle.setFlag(parser.nextText().equals("HOT")? BriefArticle.FLAG_TOP: BriefArticle.FLAG_NORMAL);
+                            briefArticle.setFlag(parser.nextText().equals("TOP")? BriefArticle.FLAG_TOP: BriefArticle.FLAG_NORMAL);
                             break;
                     }
                 } else if (event == XmlPullParser.END_TAG) {

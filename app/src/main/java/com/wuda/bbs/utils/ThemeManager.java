@@ -67,7 +67,7 @@ public class ThemeManager {
 
     public static int getThemePrimaryColor(Context mContext, int resId) {
         int[] attrs = {R.attr.colorPrimary};
-        @SuppressLint("Recycle") TypedArray array = mContext.obtainStyledAttributes(resId, attrs);
+        @SuppressLint({"Recycle", "ResourceType"}) TypedArray array = mContext.obtainStyledAttributes(resId, attrs);
         return array.getColor(0, Color.BLACK);
     }
 

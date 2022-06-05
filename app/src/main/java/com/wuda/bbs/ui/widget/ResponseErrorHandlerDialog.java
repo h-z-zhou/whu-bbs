@@ -79,7 +79,6 @@ public class ResponseErrorHandlerDialog extends BaseCustomDialog {
                     @Override
                     public void onClick(View v) {
                         Intent loginIntent = new Intent(getContext(), AccountActivity.class);
-                        loginIntent.putExtra("isLogin", true);
                         mContext.startActivity(loginIntent);
                         pBtnText = "重试";
                         positive_btn.setText(pBtnText);

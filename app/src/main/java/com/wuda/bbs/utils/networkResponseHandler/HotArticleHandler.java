@@ -79,7 +79,7 @@ public abstract class HotArticleHandler implements ContentResponseHandler<List<B
                         case "board":
                             briefArticle.setBoardID(parser.nextText());
                             break;
-                        case "boardName":
+                        case "boardname":
                             briefArticle.setBoardName(parser.nextText());
                             break;
                         case "groupid":

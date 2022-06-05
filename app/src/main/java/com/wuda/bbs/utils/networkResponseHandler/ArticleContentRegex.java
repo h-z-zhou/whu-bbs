@@ -1,4 +1,4 @@
-package com.wuda.bbs.utils;
+package com.wuda.bbs.utils.networkResponseHandler;
 
 import com.wuda.bbs.logic.bean.bbs.Attachment;
 

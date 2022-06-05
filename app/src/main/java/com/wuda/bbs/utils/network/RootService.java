@@ -40,8 +40,7 @@ public interface RootService {
     @POST("{page}")
     Call<ResponseBody> uploadFiles(@Path("page") String page, @QueryMap Map<String, String> queryMap, @Part("counter") RequestBody counter, @Part List<MultipartBody.Part> files);
 
-    // without encoder
-    // for GBK Wrapper
+    // 不使用默认编码，上传中文部分使用的是GBK编码，以下三个方法提供给GBKWrapper
     @GET("{page}")
     Call<ResponseBody> _get(@Path("page") String page, @QueryMap(encoded = true) Map<String, String> form);
 

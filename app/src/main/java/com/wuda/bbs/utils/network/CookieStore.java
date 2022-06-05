@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
@@ -33,13 +34,20 @@ public class CookieStore implements CookieJar {
 
     static Map<String, List<Cookie>> store;
     private static CookieStore mCookieStore;
+    private static boolean isLogin = false;
 
     static {
         store = new HashMap<>();
         List<Cookie> cookies = loadCookiesFromXML();
         // APP启动时使用
-        if (!cookies.isEmpty())
+        if (!cookies.isEmpty()) {
             store.put(NetConst.BASE_HOST, cookies);
+            for (Cookie cookie: cookies) {
+                if (cookie.name().equals("UTMPUSERID")) {
+                    isLogin = !(cookie.value().equals("guest") || cookie.value().equals("deleted"));
+                }
+            }
+        }
     }
 
     public static CookieStore newInstance() {
@@ -57,8 +65,11 @@ public class CookieStore implements CookieJar {
                 filter.put(cookie.name(), cookie);
             }
             // 如果用户信息被更新，会存在 "UTMPUSERID" 字段
-            if (filter.containsKey("UTMPUSERID"))
+            if (filter.containsKey("UTMPUSERID")) {
                 store.put(url.host(), new ArrayList<>(filter.values()));
+                String user = Objects.requireNonNull(filter.get("UTMPUSERID")).value();
+                isLogin = !(user.equals("guest") || user.equals("deleted"));
+            }
         }
     }
 
@@ -77,15 +88,7 @@ public class CookieStore implements CookieJar {
      * 是否已经的登录
      */
     public static boolean isLoginBBS() {
-        List<Cookie> cookies = store.get(NetConst.BASE_HOST);
-        if (cookies == null)
-            return false;
-        for (Cookie cookie: cookies) {
-            if (cookie.name().equals("UTMPUSERID")) {
-                return !(cookie.value().equals("guest") || cookie.value().equals("deleted"));
-            }
-        }
-        return true;
+        return isLogin;
     }
 
     /**
