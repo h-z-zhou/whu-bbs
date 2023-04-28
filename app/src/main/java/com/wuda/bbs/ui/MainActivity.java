@@ -31,7 +31,6 @@ import com.wuda.bbs.R;
 import com.wuda.bbs.application.BBSApplication;
 import com.wuda.bbs.ui.account.AccountActivity;
 import com.wuda.bbs.ui.base.CustomizedThemeActivity;
-import com.wuda.bbs.ui.campus.CampusActivity;
 import com.wuda.bbs.ui.drawer.AboutActivity;
 import com.wuda.bbs.ui.drawer.ColorThemeActivity;
 import com.wuda.bbs.ui.drawer.FavArticleActivity;
@@ -145,8 +144,6 @@ public class MainActivity extends CustomizedThemeActivity {
                     intent = new Intent(MainActivity.this, FriendActivity.class);
                 } else if (item.getItemId() == R.id.drawer_nav_friend) {
                     intent = new Intent(MainActivity.this, FriendActivity.class);
-                } else if (item.getItemId() == R.id.drawer_nav_campus) {
-                    intent = new Intent(MainActivity.this, CampusActivity.class);
                 } else if (item.getItemId() == R.id.drawer_nav_about) {
                     intent = new Intent(MainActivity.this, AboutActivity.class);
                 } else if(item.getItemId() == R.id.drawer_nav_color) {

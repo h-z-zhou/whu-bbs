@@ -31,8 +31,8 @@ public class EmoticonAdapter extends RecyclerView.Adapter<EmoticonAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ImageView iv = new ImageView(parent.getContext());
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(128, 128);
-//        params.gravity = Gravity.CENTER;
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 128);
+        params.gravity = Gravity.CENTER;
         iv.setLayoutParams(params);
         return new ViewHolder(iv);
     }
